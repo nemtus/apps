@@ -5,6 +5,7 @@ import {
   getAuth,
   signInWithPopup,
   linkWithPopup,
+  unlink,
   signOut as baseSignOut,
   fetchSignInMethodsForEmail,
   GoogleAuthProvider,
@@ -111,6 +112,9 @@ const authErrorHandler = async (
         if (!signInResult.user) {
           throw Error('Not authenticated');
         }
+        if (!signInResult.user.emailVerified) {
+          throw Error('Email not verified');
+        }
         const signInProvider =
           convertProviderNameToAuthProvider(signInProviderName);
         if (!signInProvider) {
@@ -122,6 +126,10 @@ const authErrorHandler = async (
         );
         if (!linkResult.user) {
           throw Error('Account link failed');
+        }
+        if (!linkResult.user.emailVerified) {
+          await unlink(linkResult.user, signInProvider.providerId);
+          throw Error('Email not verified');
         }
         return;
       } catch (error) {
@@ -136,7 +144,13 @@ const authErrorHandler = async (
 // Note: Auth sign in with popup methods
 const signInWithGooglePopup = async () => {
   try {
-    await signInWithPopup(auth, googleProvider);
+    const signInResult = await signInWithPopup(auth, googleProvider);
+    if (!signInResult.user) {
+      throw Error('Not authenticated');
+    }
+    if (!signInResult.user.emailVerified) {
+      throw Error('Email not verified');
+    }
   } catch (error) {
     console.error(error);
     await authErrorHandler(error, 'google');
@@ -144,7 +158,13 @@ const signInWithGooglePopup = async () => {
 };
 const signInWithFacebookPopup = async () => {
   try {
-    await signInWithPopup(auth, facebookProvider);
+    const signInResult = await signInWithPopup(auth, facebookProvider);
+    if (!signInResult.user) {
+      throw Error('Not authenticated');
+    }
+    if (!signInResult.user.emailVerified) {
+      throw Error('Email not verified');
+    }
   } catch (error) {
     console.error(error);
     await authErrorHandler(error, 'facebook');
@@ -152,7 +172,13 @@ const signInWithFacebookPopup = async () => {
 };
 const signInWithTwitterPopup = async () => {
   try {
-    await signInWithPopup(auth, twitterProvider);
+    const signInResult = await signInWithPopup(auth, twitterProvider);
+    if (!signInResult.user) {
+      throw Error('Not authenticated');
+    }
+    if (!signInResult.user.emailVerified) {
+      throw Error('Email not verified');
+    }
   } catch (error) {
     console.error(error);
     await authErrorHandler(error, 'twitter');
@@ -160,7 +186,13 @@ const signInWithTwitterPopup = async () => {
 };
 const signInWithGithubPopup = async () => {
   try {
-    await signInWithPopup(auth, githubProvider);
+    const signInResult = await signInWithPopup(auth, githubProvider);
+    if (!signInResult.user) {
+      throw Error('Not authenticated');
+    }
+    if (!signInResult.user.emailVerified) {
+      throw Error('Email not verified');
+    }
   } catch (error) {
     console.error(error);
     await authErrorHandler(error, 'github');
@@ -168,7 +200,13 @@ const signInWithGithubPopup = async () => {
 };
 const signInWithYahooPopup = async () => {
   try {
-    await signInWithPopup(auth, yahooProvider);
+    const signInResult = await signInWithPopup(auth, yahooProvider);
+    if (!signInResult.user) {
+      throw Error('Not authenticated');
+    }
+    if (!signInResult.user.emailVerified) {
+      throw Error('Email not verified');
+    }
   } catch (error) {
     console.error(error);
     await authErrorHandler(error, 'yahoo');
@@ -176,7 +214,13 @@ const signInWithYahooPopup = async () => {
 };
 const signInWithMicrosoftPopup = async () => {
   try {
-    await signInWithPopup(auth, microsoftProvider);
+    const signInResult = await signInWithPopup(auth, microsoftProvider);
+    if (!signInResult.user) {
+      throw Error('Not authenticated');
+    }
+    if (!signInResult.user.emailVerified) {
+      throw Error('Email not verified');
+    }
   } catch (error) {
     console.error(error);
     await authErrorHandler(error, 'microsoft');
@@ -184,7 +228,13 @@ const signInWithMicrosoftPopup = async () => {
 };
 const signInWithApplePopup = async () => {
   try {
-    await signInWithPopup(auth, appleProvider);
+    const signInResult = await signInWithPopup(auth, appleProvider);
+    if (!signInResult.user) {
+      throw Error('Not authenticated');
+    }
+    if (!signInResult.user.emailVerified) {
+      throw Error('Email not verified');
+    }
   } catch (error) {
     console.error(error);
     await authErrorHandler(error, 'apple');
