@@ -26,7 +26,13 @@ img {
 	line-height: 38px;
 	padding: 15px 0 10px;
 	text-align: center;
+	transition: 0.3s;
 	width: 308px;
+}
+
+.button:hover {
+	cursor: pointer;
+	opacity: 0.7;
 }
 
 .button-white {
@@ -364,6 +370,66 @@ header {
 	width: 543px;
 }
 
+.modal_pop {
+	height: 100vh;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100vw;
+	z-index: 9997 !important;
+}
+
+.modal_pop-bg {
+	height: 100vh;
+	left: 50%;
+	position: fixed;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 100vw;
+	z-index: 9998 !important;
+}
+
+.modal_pop_main {
+	backdrop-filter: blur(7px);
+	background: rgba(0, 0, 0, 0.7);
+	height: 71vh;
+	left: 50%;
+	position: fixed;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 80vw;
+	z-index: 9999 !important;
+}
+
+.modal_pop_main-title {
+	color: #FFFFFF;
+	font-size: 20px;
+	font-weight: 600;
+	letter-spacing: 0.18em;
+	line-height: 30px;
+	margin-top: 13%;
+	text-align: center;
+}
+
+.modal_pop_main-message {
+	color: #FFFFFF;
+	font-size: 16px;
+	font-weight: 600;
+	letter-spacing: 0.18em;
+	line-height: 49px;
+	margin: 0 auto;
+	margin-top: 6.5%;
+	width: 78%;
+}
+
+.modal_pop_main-link a {
+	color: #D04A3D;
+	font-size: 16px;
+	font-weight: 600;
+	letter-spacing: 0.18em;
+	line-height: 49px;
+}
+
 .connection {
 	background: url(../img/connection-bg.png) no-repeat center center/cover;
 	background-attachment: fixed;
@@ -501,6 +567,15 @@ header {
 	font-weight: 300;
 	line-height: 20px;
 	margin-top: 26px;
+}
+
+.article-flex-right-message-2 {
+	color: #797979;
+	display: inline-block;
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 16px;
+	margin-top: 46px;
 }
 
 .article-flex-left {
@@ -808,6 +883,22 @@ footer::before {
 	display: none;
 }
 
+.modal_pop_main-title {
+	letter-spacing: 0;
+	margin-top: 30%;
+}
+
+.modal_pop_main-message {
+	letter-spacing: 0;
+	line-height: 40px;
+	margin-top: 20%;
+}
+
+.modal_pop_main-link a {
+	letter-spacing: 0;
+	line-height: 40px;
+}
+
 .connection {
 	background-attachment: scroll;
 	min-height: 650px;
@@ -850,20 +941,24 @@ footer::before {
 }
 
 .article-flex-right {
+	text-align: center;
 	width: 75%;
 }
 
 .article-flex-right-title {
 	font-size: 14px;
 	line-height: 24px;
-	text-align: center;
 }
 
 .article-flex-right-message {
 	font-size: 10px;
 	line-height: 18px;
 	margin-top: 20px;
-	text-align: center;
+}
+
+.article-flex-right-message-2 {
+	font-size: 10px;
+	margin-top: 30px;
 }
 
 .article-flex-left {
