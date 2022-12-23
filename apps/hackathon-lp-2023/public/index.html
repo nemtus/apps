@@ -1,89 +1,405 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
-
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/9.14.0/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/9.14.0/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/9.14.0/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/9.14.0/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/9.14.0/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/9.14.0/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/9.14.0/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/9.14.0/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/9.14.0/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/9.14.0/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <meta property="og:url" content="ページのURL"> -->
+    <meta property="og:title" content="NEMTUS Hackathon 2023" />
+    <meta
+      property="og:description"
+      content="NEMTUSが開催する2023年度のハッカソンイベント特設サイトです。特定非営利活動法人 NEM技術普及推進会 NEMTUSは、日本においてブロックチェーン(NEM/Symbol)技術の普及や発展を促進するNPO法人です。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="./assets/img/ogp.png" />
+    <meta
+      name="description"
+      content="NEMTUSが開催する2023年度のハッカソンイベント特設サイトです。特定非営利活動法人 NEM技術普及推進会 NEMTUSは、日本においてブロックチェーン(NEM/Symbol)技術の普及や発展を促進するNPO法人です。"
+    />
+    <title>NEMTUS Hackathon 2023</title>
+    <link rel="stylesheet" href="./assets/css/reset.css" />
+    <link rel="stylesheet" href="./assets/css/style.css" />
   </head>
+
   <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
+    <header>
+      <div class="header-video-area">
+        <video
+          class="header-video"
+          poster=""
+          webkit-playsinline
+          playsinline
+          muted
+          autoplay
+          loop
+        >
+          <source src="./assets/img/movie.mp4" />
+          <p>こちらの環境では動画を再生できません</p>
+        </video>
+      </div>
+
+      <div class="header-content-area">
+        <div class="header-content-area-inner">
+          <ul class="header-list">
+            <!-- <li><a href="/">エントリー作品一覧</a></li> -->
+            <!-- <li><a href="/">受賞作品一覧</a></li> -->
+          </ul>
+
+          <div class="header-logo">
+            <img
+              src="./assets/img/header-logo.png"
+              alt="HACK+ NEMTUS Hackathon 2023"
+            />
+          </div>
+
+          <div class="scroll">SCROLL</div>
+        </div>
+      </div>
+    </header>
+
+    <div class="header-sp">
+      <div class="drawer-icon">
+        <div class="drawer-icon-bars">
+          <div class="drawer-icon-bar1"></div>
+          <div class="drawer-icon-bar2"></div>
+          <div class="drawer-icon-bar3"></div>
+        </div>
+      </div>
+
+      <div class="drawer-content">
+        <ul class="drawer-content-items">
+          <!-- <li class="drawer-content-item">
+            <a href="/">エントリー作品一覧</a>
+          </li> -->
+          <!-- <li class="drawer-content-item"><a href="/">受賞作品一覧</a></li> -->
+        </ul>
+      </div>
+
+      <div class="drawer-background"></div>
     </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+    <main>
+      <section class="info">
+        <div class="info-inner fuwa">
+          <ul class="info-container">
+            <li class="info-container-item">
+              <p class="info-container-item-left">賞金</p>
+              <p class="info-container-item-right">最優秀賞 20,000 XYM</p>
+            </li>
+            <li class="info-container-item">
+              <p class="info-container-item-left">優秀賞</p>
+              <p class="info-container-item-right">
+                10,000 XYM (応募数増で解放予定)
+              </p>
+            </li>
+            <li class="info-container-item">
+              <p class="info-container-item-left">特別賞</p>
+              <p class="info-container-item-right">
+                6,000 XYM (応募数増で解放予定)
+              </p>
+            </li>
+            <li class="info-container-item">
+              <p class="info-container-item-left">その他</p>
+              <p class="info-container-item-right">
+                各スポンサーからスポンサー賞を予定
+              </p>
+            </li>
+            <li class="info-container-item">
+              <p class="info-container-item-left">エントリー期間</p>
+              <p class="info-container-item-right">
+                2022年12月26日(日)0時0分～<br />
+                2023年1月31日(火)23時59分
+              </p>
+            </li>
+            <li class="info-container-item">
+              <p class="info-container-item-left">成果物提出期限</p>
+              <p class="info-container-item-right">2023年3月20日(月)23時59分</p>
+            </li>
+            <li class="info-container-item">
+              <p class="info-container-item-left">審査期間</p>
+              <p class="info-container-item-right">
+                2023年3月21日(火)～<br />
+                2023年3月28日(月)
+              </p>
+            </li>
+            <li class="info-container-item">
+              <p class="info-container-item-left">結果発表</p>
+              <p class="info-container-item-right">2023年4月1(土)</p>
+            </li>
+            <li class="info-container-item">
+              <p class="info-container-item-left">授賞式</p>
+              <p class="info-container-item-right">2023年4月上旬</p>
+            </li>
+          </ul>
+        </div>
+      </section>
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
-      });
-    </script>
+      <section class="welcome">
+        <div class="welcome-inner">
+          <div class="welcome-left fuwa">
+            <h2 class="section-title">
+              ようこそ、進化へ<br />
+              HACK+ 開催
+            </h2>
+            <p class="welcome-message section-message">
+              「NEMTUS Hackathon HACK+ 2023」は、<br />
+              参加者が多様なアイデアや技術を持ち寄り競うことによって、<br
+                class="br-pc"
+              />
+              NEM/Symbolのコミュニティや同経済圏がより活性化し<br
+                class="br-pc"
+              />
+              技術の普及が加速することを目的としたハッカソンイベントです。
+            </p>
+
+            <div class="button button-white show_pop-1">
+              エントリー方法はこちら
+            </div>
+            <br />
+            <div class="button button-white mt-22 show_pop-2">
+              応募作品提出方法はこちら
+            </div>
+          </div>
+          <div class="welcome-right fuwa">
+            <img
+              src="./assets/img/welcome-img.png"
+              alt="HACK+ NEMTUS Hackathon 2023"
+            />
+          </div>
+        </div>
+      </section>
+
+      <div class="modal_pop modal_pop-1">
+        <div class="modal_pop-bg js-modal-close"></div>
+        <div class="modal_pop_main modal_pop_main-1">
+          <h3 class="modal_pop_main-title">エントリー方法</h3>
+          <p class="modal_pop_main-message">
+            ①まずは<span class="modal_pop_main-link"
+              ><a
+                href="https://docs.google.com/forms/d/e/1FAIpQLSfyKQKzvMNs_I6cL_OKBRzZkNcq5JULaLSOStTpPTsbwmzgxA/viewform"
+                >こちら</a
+              ></span
+            >のgoogleフォームよりエントリー情報を入力ください。<br />
+            ②次に<span class="modal_pop_main-link"
+              ><a href="https://nemtus-hackathon.web.app/">こちら</a></span
+            >のリンクよりサインインしてエントリーボタンをクリックしていただきエントリー完了となります。
+          </p>
+        </div>
+      </div>
+
+      <div class="modal_pop modal_pop-2">
+        <div class="modal_pop-bg js-modal-close"></div>
+        <div class="modal_pop_main modal_pop_main-2">
+          <h3 class="modal_pop_main-title">応募作品提出方法</h3>
+          <p class="modal_pop_main-message">
+            準備中です。準備でき次第改めてアナウンスいたします。
+          </p>
+          <!-- <p class="modal_pop_main-message">
+            ①まずは<span class="modal_pop_main-link"
+              ><a href="/">こちら</a></span
+            >のgoogleフォームより応募作品情報を入力ください。<br />
+            ②次に<span class="modal_pop_main-link"><a href="/">こちら</a></span
+            >のリンクより応募作品提出情報をブロックチェーンに刻んでいただき応募完了となります。
+          </p> -->
+        </div>
+      </div>
+
+      <section class="connection">
+        <div class="connection-inner">
+          <div class="connection-content fuwa">
+            <h2 class="section-title">
+              Connection<br />
+              ～つなげる世界～
+            </h2>
+            <p class="connection-message section-message">
+              募集作品のテーマとして、<br />
+              NIS1/Symbol/mijinのいずれかを組み込んだ<br />
+              便利ツール、他チェーンとの連携<br class="br-pc" />
+              実社会・既存サービスとの接続 / 連携作品を募集します。<br />
+              参加規約の制約内で、クリエイティビティーを<br />
+              発揮してください。
+            </p>
+            <a
+              href="https://drive.google.com/file/d/14lByhJKtgqho-vmZeEgAlR0RruZw0Iax/view"
+              class="button button-white"
+              >参加規約</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <section class="entry">
+        <div class="entry-inner">
+          <div class="entry-container fuwa">
+            <h2 class="entry-title section-title">参加方法</h2>
+            <p class="entry-message section-message">
+              ハッカソン参加希望者は、事前にエントリーを実施する必要があります。<br />
+              その後、募集締め切りまでに応募作品を完成させ、所定の方法で<br />
+              提出することで応募完了となります。詳しくは、募集要項及びエントリー方法をご確認ください。
+            </p>
+            <!-- <br /> -->
+            <!-- <a href="/" class="button button-blue">エントリーする</a> -->
+          </div>
+        </div>
+      </section>
+
+      <section class="member">
+        <div class="member-inner fuwa">
+          <h2 class="member-title section-title">審査員</h2>
+          <div class="member-items">
+            <a href="https://twitter.com/NCOSIGIMCITYNRE" class="member-item">
+              <img
+                src="./assets/img/member01.png"
+                alt="gimre NEM/Symbol Core Developer"
+              />
+            </a>
+            <a href="https://twitter.com/0x6861746366574" class="member-item">
+              <img
+                src="./assets/img/member02.png"
+                alt="Hatchet NEM/Symbol Core Developer"
+              />
+            </a>
+            <a href="https://twitter.com/Jaguar0625" class="member-item">
+              <img
+                src="./assets/img/member03.png"
+                alt="Jaguar NEM/Symbol Core Developer"
+              />
+            </a>
+            <a href="https://twitter.com/pyonta" class="member-item">
+              <img
+                src="./assets/img/member04.png"
+                alt="高橋ピョン太　フリーライター"
+              />
+            </a>
+            <a href="https://twitter.com/h_gocchi" class="member-item">
+              <img
+                src="./assets/img/member05.png"
+                alt="後藤博之［ごっつ］  NPO法人NEMTUS 理事長・Atomos-Seed代表"
+              />
+            </a>
+            <a href="https://twitter.com/noritaka_okabe" class="member-item">
+              <img
+                src="./assets/img/member06.png"
+                alt="岡部典孝　JPYC株式会社　代表取締役"
+              />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="article">
+        <div class="article-inner fuwa">
+          <div class="article-flex">
+            <div class="article-flex-left">
+              <img src="./assets/img/article-img.png" alt="NEMTUS" />
+            </div>
+
+            <div class="article-flex-right">
+              <h3 class="article-flex-right-title">
+                NEMTUSメンバーによる<br />
+                ハッカソン関連イベント企画中
+              </h3>
+              <p class="article-flex-right-message">
+                勉強会、Meetup等のイベントの実施を検討中です。お楽しみに。
+              </p>
+
+              <!-- <a href="/" class="article-flex-right-message-2">
+                ○勉強会 2023/01/1* 14:00～15:00 貸会議室
+              </a> -->
+            </div>
+          </div>
+          <!-- <div class="article-button-container">
+            <a href="/" class="button button-red">記事一覧</a>
+          </div> -->
+        </div>
+      </section>
+
+      <!-- <section class="sponser">
+        <div class="sponser-inner fuwa">
+          <h2 class="sponser-title">SPONSER</h2>
+          <p class="sponser-text">
+            NEMTUS Hackathon HACK+ 2023 を支援して頂くスポンサー
+          </p>
+          <div class="sponser-items">
+            <div class="sponser-item">
+              <img src="./assets/img/sponser-img-1.png" alt="NEMTUS" />
+            </div>
+            <div class="sponser-item">
+              <img src="./assets/img/sponser-img-1.png" alt="NEMTUS" />
+            </div>
+          </div>
+        </div>
+      </section> -->
+
+      <section class="about">
+        <div class="about-inner fuwa">
+          <div class="about-left">
+            <h2 class="section-title">
+              NEMTUS<br />
+              とは？
+            </h2>
+          </div>
+          <div class="about-right">
+            <p class="about-text">
+              特定非営利活動法人 NEM技術普及推進会 NEMTUSは、<br />
+              日本においてNEM/Symbol技術の普及や発展を促進する<br />
+              NPO法人です。
+            </p>
+
+            <!-- <a href="/" class="button button-white">エントリーする</a> -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-left">
+          <div class="footer-sns-icons">
+            <a
+              href="https://twitter.com/NemtusOfficial"
+              class="footer-sns-icon-1"
+            >
+              <object
+                data="./assets/img/icon_twitter.svg"
+                type="image/svg+xml"
+              ></object>
+            </a>
+            <a
+              href="https://www.youtube.com/channel/UCfJ9GvY4ZoSi_RHYQjbsEZA"
+              class="footer-sns-icon-2"
+            >
+              <object
+                data="./assets/img/icon_youtube.svg"
+                type="image/svg+xml"
+              ></object>
+            </a>
+            <a href="https://nemtus.com/" class="footer-sns-icon-3">
+              <object
+                data="./assets/img/icon_nemuts.svg"
+                type="image/svg+xml"
+              ></object>
+            </a>
+            <a href="https://zenn.dev/nemtus" class="footer-sns-icon-4">
+              <object
+                data="./assets/img/icon_zenn.svg"
+                type="image/svg+xml"
+              ></object>
+            </a>
+            <a href="https://github.com/nemtus" class="footer-sns-icon-5">
+              <object
+                data="./assets/img/icon_github.svg"
+                type="image/svg+xml"
+              ></object>
+            </a>
+          </div>
+        </div>
+        <div class="footer-right">
+          <p class="copyright">© NEMTUS All Rights Reserved 2021</p>
+        </div>
+      </div>
+      <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+      <script src="./assets/js/style.js"></script>
+    </footer>
   </body>
 </html>
