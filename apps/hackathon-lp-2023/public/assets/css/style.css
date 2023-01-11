@@ -688,7 +688,7 @@ footer::before {
 	width: 36px;
 }
 
-.footer-sns-icon-1 object {
+.footer-sns-icon-1 img {
 	content: "";
 	left: 0;
 	position: absolute;
@@ -703,7 +703,7 @@ footer::before {
 	width: 41px;
 }
 
-.footer-sns-icon-2 object {
+.footer-sns-icon-2 img {
 	content: "";
 	left: 0;
 	position: absolute;
@@ -718,7 +718,7 @@ footer::before {
 	width: 29px;
 }
 
-.footer-sns-icon-3 object {
+.footer-sns-icon-3 img {
 	content: "";
 	left: 0;
 	position: absolute;
@@ -733,7 +733,7 @@ footer::before {
 	width: 29px;
 }
 
-.footer-sns-icon-4 object {
+.footer-sns-icon-4 img {
 	content: "";
 	left: 0;
 	position: absolute;
@@ -748,7 +748,7 @@ footer::before {
 	width: 29px;
 }
 
-.footer-sns-icon-5 object {
+.footer-sns-icon-5 img {
 	content: "";
 	left: 0;
 	position: absolute;
