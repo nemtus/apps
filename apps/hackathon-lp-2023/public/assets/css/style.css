@@ -326,6 +326,11 @@ header {
 	width: 310px;
 }
 
+.info-container-item-right-new {
+	color: #13edf6;
+	font-size: 20px;
+}
+
 .welcome {
 	background: url(../img/welcome-bg.png) no-repeat center center/cover;
 	background-attachment: fixed;
@@ -569,13 +574,21 @@ header {
 	margin-top: 26px;
 }
 
-.article-flex-right-message-2 {
+.article-flex-right-message-2-first {
 	color: #797979;
 	display: inline-block;
 	font-size: 13px;
 	font-weight: 400;
 	line-height: 16px;
 	margin-top: 46px;
+}
+
+.article-flex-right-message-2 {
+	color: #797979;
+	display: inline-block;
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 16px;
 }
 
 .article-flex-left {
@@ -956,9 +969,13 @@ footer::before {
 	margin-top: 20px;
 }
 
-.article-flex-right-message-2 {
+.article-flex-right-message-2-first {
 	font-size: 10px;
 	margin-top: 30px;
+}
+
+.article-flex-right-message-2 {
+	font-size: 10px;
 }
 
 .article-flex-left {
