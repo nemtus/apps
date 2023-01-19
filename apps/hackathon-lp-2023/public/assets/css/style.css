@@ -326,6 +326,11 @@ header {
 	width: 310px;
 }
 
+.info-container-item-right-new {
+	color: #13edf6;
+	font-size: 20px;
+}
+
 .welcome {
 	background: url(../img/welcome-bg.png) no-repeat center center/cover;
 	background-attachment: fixed;
