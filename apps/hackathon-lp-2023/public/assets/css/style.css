@@ -635,7 +635,7 @@ header {
 
 .sponser-item {
 	display: inline-block;
-	height: 80px;
+	/* height: 80px; */
 	width: 332px;
 }
 
