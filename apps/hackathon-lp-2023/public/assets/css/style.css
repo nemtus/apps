@@ -639,6 +639,13 @@ header {
 	width: 332px;
 }
 
+.sponser-item-4 {
+	display: inline-block;
+	/* height: 80px; */
+	width: 332px;
+	margin-top: 60px;
+}
+
 .about {
 	background: #0B1253;
 	padding: 141px 0 100px;
@@ -1008,6 +1015,11 @@ footer::before {
 
 .sponser-item {
 	width: 35%;
+}
+
+.sponser-item-4 {
+	width: 35%;
+	margin-top: 8px;
 }
 
 .about {
