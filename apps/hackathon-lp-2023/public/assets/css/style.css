@@ -534,6 +534,17 @@ header {
 	width: 250px;
 }
 
+.community-vote-title {
+	text-align: center;
+	margin-top: 24px;
+	margin-bottom: 24px;
+}
+
+.community-vote-message {
+	display: inline-block;
+	text-align: left;
+}
+
 .article {
 	padding: 132px 0 110px;
 }
@@ -940,6 +951,14 @@ footer::before {
 .member-item {
 	height: 170px;
 	width: 155px;
+}
+
+.community-vote-title {
+	text-align: center;
+}
+
+.community-vote-message {
+	text-align: left;
 }
 
 .article {
