@@ -637,6 +637,8 @@ header {
 	display: inline-block;
 	/* height: 80px; */
 	width: 332px;
+	margin-top: auto;
+	margin-bottom: auto;
 }
 
 .about {
@@ -1008,6 +1010,8 @@ footer::before {
 
 .sponser-item {
 	width: 35%;
+	margin-top: auto;
+	margin-bottom: auto;
 }
 
 .about {
