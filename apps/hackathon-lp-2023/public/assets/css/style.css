@@ -637,13 +637,8 @@ header {
 	display: inline-block;
 	/* height: 80px; */
 	width: 332px;
-}
-
-.sponser-item-4 {
-	display: inline-block;
-	/* height: 80px; */
-	width: 332px;
-	margin-top: 60px;
+	margin-top: auto;
+	margin-bottom: auto;
 }
 
 .about {
@@ -1015,11 +1010,8 @@ footer::before {
 
 .sponser-item {
 	width: 35%;
-}
-
-.sponser-item-4 {
-	width: 35%;
-	margin-top: 8px;
+	margin-top: auto;
+	margin-bottom: auto;
 }
 
 .about {
