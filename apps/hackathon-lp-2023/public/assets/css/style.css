@@ -121,7 +121,7 @@ header {
 .header-list li a {
 	color: #FFFFFF;
 	font-family: "Inter";
-	font-size: 12px;
+	font-size: 14px;
 	font-weight: 400;
 	line-height: 15px;
 }
@@ -542,7 +542,7 @@ header {
 
 .community-vote-message {
 	display: inline-block;
-	text-align: left;
+	text-align: center;
 }
 
 .article {
@@ -958,7 +958,7 @@ footer::before {
 }
 
 .community-vote-message {
-	text-align: left;
+	text-align: center;
 }
 
 .article {
