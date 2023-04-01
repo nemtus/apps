@@ -512,6 +512,7 @@ header {
 	margin: 0 auto;
 	position: relative;
 	width: 90%;
+	/* text-align: center; */
 }
 
 .member-title {
@@ -542,7 +543,7 @@ header {
 
 .community-vote-message {
 	display: inline-block;
-	text-align: center;
+	/* text-align: center; */
 }
 
 .article {
@@ -958,7 +959,7 @@ footer::before {
 }
 
 .community-vote-message {
-	text-align: center;
+	/* text-align: center; */
 }
 
 .article {
