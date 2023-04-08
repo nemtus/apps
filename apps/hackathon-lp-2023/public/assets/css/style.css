@@ -322,6 +322,10 @@ header {
 	width: 130px;
 }
 
+.info-container-item-left-small {
+	font-size: 13px;
+}
+
 .info-container-item-right {
 	width: 310px;
 }
