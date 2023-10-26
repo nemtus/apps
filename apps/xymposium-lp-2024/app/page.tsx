@@ -1,113 +1,353 @@
-import Image from 'next/image'
+import SymbolBanner from "@/assets/symbol-banner.png";
+import SymbolLogo from "@/assets/symbol-logo.png";
+import TokyoEditionToranomon from "@/assets/tokyo-edition-toranomon.jpeg";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Footer } from "@/components/ui/footer";
+import { H1, H2, H3, Paragraph } from "@/components/ui/typography";
+import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
+export default async function IndexPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <>
+      <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
+        <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center justify-center min-h-[60vh] md:min-h-[50vh] lg:min-h-[40vh]">
+          <H1>Symbol/NEM Xymposium 2023 東京</H1>
+          <Paragraph className="max-w-[42rem] text-muted-foreground leading-8">
+            コミュニティ向けのイベントとして、 &quot;Community Xymposium&quot;
+            を日本のNEM/Symbolコミュニティ有志により開催いたします。
+          </Paragraph>
+          <Button>参加登録はこちら</Button>
         </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+      </section>
+      <section
+        id="features"
+        className="flex flex-col justify-between gap-6 sm:gap-5 md:gap-10 lg:flex-row container space-y-6 bg-slate-50 py-8 dark:bg-transparent md:py-12"
+      >
+        <div className="flex flex-col justify-center text-center md:text-left gap-10 lg:py-12 lg:text-left w-full lg:w-5/12 xl:py-24">
+          <H2>What&lsquo;s in Xymposium?</H2>
+          <p>
+            2023年12月19日（火）に東京エディション虎ノ門において、Symbol/XYM
+            のシンポジウム &quot;Xymposium&quot;
+            を開催することが発表がされました。
+            このイベントは、ブロックチェーン・クリプト業界関係者向けのイベントとされ、一般のコミュニティ向けのイベントではございません。よって、コミュニティ向けのイベントとして
+            &quot;Community Xymposium&quot;
+            を日本のNEM/Symbolコミュニティ有志により開催いたします。
+          </p>
+          {/* <Button>参加登録はこちら</Button> */}
+        </div>
+        <div className="overflow-hidden lg:h-auto w-full lg:w-7/12 flex justify-center items-center">
+          <Image
+            className="rounded-lg shadow-lg animate-in"
+            src={TokyoEditionToranomon}
+            alt="Xymposium 虎ノ門 2023 バナー"
+            width={1024}
+          />
+        </div>
+      </section>
+      <section
+        id="features"
+        className="container space-y-6 bg-slate-50 py-8 dark:bg-transparent md:py-12 lg:py-24"
+      >
+        <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
+          <H2>参加者</H2>
+          <Paragraph className="max-w-[85%] text-muted-foreground">
+            このイベントでは &quot; Xymposium &quot; にあわせて来日する
+            NEM/Symbol
+            コア開発者の1人である、ハチェット氏と、来日の意向を表明している数人のコアチームメンバーを招待する他、日々活動しているコミュニティメンバーの来場も予定されています。
+          </Paragraph>
+        </div>
+        <div className="mx-auto grid justify-center gap-4 grid-cols-1 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
+          <Card className="flex flex-col justify-between p-2">
+            <CardHeader>icon</CardHeader>
+            <CardContent className="flex flex-col gap-3">
+              <CardTitle className="text-base">ハチェット</CardTitle>
+              <CardDescription>Symbol/NEM コア開発者</CardDescription>
+            </CardContent>
+          </Card>
+          <Card className="flex flex-col justify-between p-2">
+            <CardHeader>icon</CardHeader>
+            <CardContent className="flex flex-col gap-3">
+              <CardTitle className="text-base">ジャガー</CardTitle>
+              <CardDescription>Symbol/NEM コア開発者</CardDescription>
+            </CardContent>
+          </Card>
+          <Card className="flex flex-col justify-between p-2">
+            <CardHeader>icon</CardHeader>
+            <CardContent className="flex flex-col gap-3">
+              <CardTitle className="text-base">ギムレ</CardTitle>
+              <CardDescription>Symbol/NEM コア開発者</CardDescription>
+            </CardContent>
+          </Card>
+          <Card className="flex flex-col justify-between p-2">
+            <CardHeader>icon</CardHeader>
+            <CardContent className="flex flex-col gap-3">
+              <CardTitle className="text-base">NEMTUS</CardTitle>
+              <CardDescription>何か説明</CardDescription>
+            </CardContent>
+          </Card>
+          <Card className="flex flex-col justify-between p-2">
+            <CardHeader>icon</CardHeader>
+            <CardContent className="flex flex-col gap-3">
+              <CardTitle className="text-base">Opening Line</CardTitle>
+              <CardDescription>何か説明</CardDescription>
+            </CardContent>
+          </Card>
+          <Card className="flex flex-col justify-between p-2">
+            <CardHeader>icon</CardHeader>
+            <CardContent className="flex flex-col gap-3">
+              <CardTitle className="text-base">その他</CardTitle>
+              <CardDescription>何か説明</CardDescription>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+      {/* <section
+        id="symbol"
+        className="relative container space-y-6 py-8 dark:bg-transparent md:py-12 lg:py-24 min-h-[70vh] space-x-4 md:max-w-[64rem] justify-center grid grid-cols-1 md:grid-cols-2"
+      >
+        <div className="z-20 flex flex-col justify-center space-y-4">
+          <h2 className="text-7xl font-extrabold text-center sm:text-8xl md:text-left md:text-9xl">
+            Symbol
+          </h2>
+          <Paragraph className="text-center md:text-left text-muted-foreground">
+            NEMに新たな思想を吹き込んだパブリックブロックチェーン
+          </Paragraph>
+          <div className="flex justify-center md:justify-start">
+            <Button variant={"default"}>Symbol について知る</Button>
+          </div>
+        </div>
+        <div className="z-10 flex flex-col justify-center items-center translate-y-0 sm:translate-y-20 md:translate-y-0">
+          <Image src={SymbolLogo} alt="symbol-logo" height={400} width={400} />
+        </div>
+        <Lottie
+          className="absolute opacity-50 blur-sm min-h-[80vh] left-0 right-0 m-auto"
+          animationData={BlockchainAnimation}
         />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+      </section> */}
+      <section
+        id="event"
+        className="container space-y-10 py-8 md:py-12 lg:py-24 min-h-[60vh] md:max-w-[64rem]"
+      >
+        <div>
+          <H3 className="py-10">開催概要</H3>
+          <div className="mx-auto grid justify-center gap-8 grid-cols-1 sm:grid-cols-2">
+            <div>
+              <Paragraph className="font-bold">日程</Paragraph>
+              <Paragraph>2023年 12月 19日（火）</Paragraph>
+            </div>
+            <div>
+              <Paragraph className="font-bold">時間</Paragraph>
+              <Paragraph>19時 30分 〜 21時 30分</Paragraph>
+            </div>
+            <div>
+              <Paragraph className="font-bold">会場</Paragraph>
+              <Paragraph>
+                東京都新宿区歌舞伎町2丁目19-15 てなむタウンビル 6F
+              </Paragraph>
+              <Link
+                href={"https://cryptoloungegox.com/"}
+                target="_blank"
+                rel="noopener"
+                style={{ textDecoration: "underline" }}
+              >
+                Crypto Lounge GOX
+              </Link>
+            </div>
+            <div>
+              <Paragraph className="font-bold">参加費</Paragraph>
+              <Paragraph>n,000 円</Paragraph>
+            </div>
+          </div>
+        </div>
+        <div>
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3240.1452653779897!2d139.70233157639942!3d35.69804272904928!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188d4b4435021b%3A0x486162795e138187!2sCrypto%20Lounge%20GOX!5e0!3m2!1sja!2sjp!4v1698197282425!5m2!1sja!2sjp"
+            style={{ border: 0, width: "100%", height: 450 }}
+            allowFullScreen={false}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </section>
+      <hr />
+      <section
+        id="programs"
+        className="container space-y-6 py-20 min-h-[60vh] space-x-4 items-center md:max-w-[64rem]"
+      >
+        <Paragraph className="font-semibold text-indigo-500 text-center">
+          メッセージ
+        </Paragraph>
+        <H2 className="text-center">プログラム</H2>
+        <div className="mx-auto grid justify-center gap-8 grid-cols-1 sm:grid-cols-2">
+          {[
+            {
+              image: SymbolBanner,
+              alt: "banner",
+              title: "バナー",
+              description: "何か説明",
+            },
+            {
+              image: SymbolBanner,
+              alt: "banner",
+              title: "バナー",
+              description: "何か説明",
+            },
+            {
+              image: SymbolBanner,
+              alt: "banner",
+              title: "バナー",
+              description: "何か説明",
+            },
+            {
+              image: SymbolBanner,
+              alt: "banner",
+              title: "バナー",
+              description: "何か説明",
+            },
+          ].map((item, index) => (
+            <Card key={index}>
+              <Image
+                src={item.image}
+                alt={item.description}
+                width={1024}
+                height={300}
+              />
+              <CardHeader>
+                <CardTitle className="text-base">{item.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription>{item.description}</CardDescription>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+      <hr />
+      <section
+        id="booth"
+        className="container space-y-6 py-20 min-h-[60vh]  md:max-w-[64rem] flex flex-col items-stretch"
+      >
+        <Paragraph className="font-semibold text-indigo-500 text-center">
+          気になる企業、チームと交流しましょう
+        </Paragraph>
+        <H2 className="text-center ml-0 pb-10">出典ブース</H2>
+        <div className="grid gap-8 sm:grid-cols-2 md:gap-12 xl:grid-cols-3 xl:gap-16">
+          {[
+            {
+              image: SymbolLogo,
+              alt: "logo",
+              title: "Company Name",
+              href: "https://google.com",
+              description:
+                "Filler text is dummy text which has no meaning however looks very similar to real text.",
+            },
+            {
+              image: SymbolLogo,
+              alt: "logo",
+              title: "Company Name",
+              href: "https://google.com",
+              description:
+                "Filler text is dummy text which has no meaning however looks very similar to real text.",
+            },
+            {
+              image: SymbolLogo,
+              alt: "logo",
+              title: "Company Name",
+              href: "https://google.com",
+              description:
+                "Filler text is dummy text which has no meaning however looks very similar to real text.",
+            },
+            {
+              image: SymbolLogo,
+              alt: "logo",
+              title: "Company Name",
+              href: "https://google.com",
+              description:
+                "Filler text is dummy text which has no meaning however looks very similar to real text.",
+            },
+          ].map((item, index) => (
+            <div className="flex gap-4 md:gap-6" key={index}>
+              <div>
+                <Image
+                  src={item.image}
+                  alt={item.alt}
+                  height={100}
+                  width={100}
+                />
+              </div>
+              <div>
+                <Paragraph className="text-2xl font-bold pb-1">
+                  {item.title}
+                </Paragraph>
+                <Paragraph className="text-muted-foreground">
+                  {item.description}
+                </Paragraph>
+                <Link
+                  className="font-bold text-indigo-500 transition duration-100 hover:text-indigo-600 active:text-indigo-700"
+                  href={item.href}
+                >
+                  More
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+      <section
+        id="booth"
+        className="container space-y-6 py-20 min-h-[60vh]  md:max-w-[64rem] flex flex-col items-stretch"
+      >
+        <H2 className="text-center ml-0">よくある質問</H2>
+        <Paragraph className="text-muted-foreground text-center">
+          ご不明点がありましたら、**** まで、ご連絡下さい
+        </Paragraph>
+        {[
+          {
+            question: "question 1",
+            answer: "answer 1",
+          },
+          {
+            question: "question 2",
+            answer: "answer 2",
+          },
+          {
+            question: "question 3",
+            answer: "answer 3",
+          },
+          {
+            question: "question 4",
+            answer: "answer 4",
+          },
+          {
+            question: "question 5",
+            answer: "answer 5",
+          },
+        ].map((item, index) => (
+          <Accordion type="single" collapsible key={index}>
+            <AccordionItem value={index.toString()}>
+              <AccordionTrigger>{item.question}</AccordionTrigger>
+              <AccordionContent>{item.answer}</AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        ))}
+      </section>
+      <section>
+        <Footer />
+      </section>
+    </>
+  );
 }
