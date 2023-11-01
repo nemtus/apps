@@ -16,7 +16,9 @@ const nextConfig = withPWA({
   //   locales: ["en", "ja"],
   //   defaultLocale: "en",
   // },
-  images: {},
+  images: {
+    domains: ["https://www.google.com/maps/"],
+  },
   reactStrictMode: true,
 });
 

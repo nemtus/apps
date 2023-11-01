@@ -1,0 +1,8 @@
+{
+  "appService.zipIgnorePattern": [
+    "node_modules{,/**}",
+    ".vscode{,/**}"
+  ],
+  "appService.defaultWebAppToDeploy": "/subscriptions/a73caabc-b02c-48fa-bc3f-8a7801255634/resourceGroups/symbol-xymposium2023/providers/Microsoft.Web/sites/symbol-community",
+  "appService.deploySubpath": "."
+}

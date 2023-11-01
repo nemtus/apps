@@ -1,0 +1,189 @@
+"use client";
+
+import * as React from "react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Icons } from "@/components/ui/icons";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { H1, Paragraph } from "@/components/ui/typography";
+import { navigations } from "@/lib/navigations";
+import { TextValidation, cn } from "@/lib/utils";
+import { ISignUpUser } from "@/models/user";
+import { useRouter } from "next/navigation";
+
+interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+export function SignUpForm({ className, ...props }: UserAuthFormProps) {
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const router = useRouter();
+
+  async function onSubmit(event: React.SyntheticEvent) {
+    event.preventDefault();
+    setIsLoading(true);
+    const form: any = event.currentTarget;
+    const body: ISignUpUser = {
+      email: form.email.value,
+      password: form.password.value,
+      phone: form.phoneNumber.value,
+      firstName: form.firstName.value,
+      lastName: form.lastName.value,
+    };
+
+    if (body.email && !TextValidation.isEmail(body.email)) {
+      return alert("Invalid email address");
+    }
+    if (body.phone && !TextValidation.isSymbol(body.phone)) {
+      return alert("Invalid phone number");
+    }
+    if (!body.firstName && !TextValidation.isSymbol(body.firstName)) {
+      return alert("You must enter your first name to continue");
+    }
+    if (!body.lastName && !TextValidation.isSymbol(body.lastName)) {
+      return alert("You must enter your last name to continue");
+    }
+    if (!body.password) {
+      return alert("You must enter your password to continue");
+    }
+    if (!form.terms.value) {
+      return alert("You must agree to the terms of service to continue");
+    }
+
+    fetch("/api/auth/sign-up", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    })
+      .then(() => {
+        alert("メールを送信しました。メール本文に記載のURLより本登録を進めて下さい");
+        router.push(navigations.index);
+      })
+      .catch(() => {
+        alert("登録に失敗しました。再度やり直して下さい");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
+  return (
+    <div className={cn("grid gap-6", className)} {...props}>
+      <Card className="py-4">
+        <CardContent className="flex flex-col space-y-6">
+          <div className="flex flex-col space-y-2 text-center">
+            <H1 className="pb-0 text-2xl sm:text-2xl md:text-2xl font-semibold tracking-tight">Create an account</H1>
+            <Paragraph className="text-sm text-muted-foreground">
+              Enter your email below to create your account
+            </Paragraph>
+          </div>
+          <form onSubmit={onSubmit}>
+            <div className="grid gap-2">
+              <div className="grid gap-2 grid-cols-2">
+                <div>
+                  <Label className="sr-only" htmlFor="lastName">
+                    Last Name
+                  </Label>
+                  <Input
+                    id="lastName"
+                    required={true}
+                    placeholder="last name"
+                    type="text"
+                    autoCapitalize="none"
+                    autoComplete="family-name"
+                    autoCorrect="off"
+                    disabled={isLoading}
+                  />
+                </div>
+                <div>
+                  <Label className="sr-only" htmlFor="firstName">
+                    First Name
+                  </Label>
+                  <Input
+                    id="firstName"
+                    required={true}
+                    placeholder="first name"
+                    type="text"
+                    autoCapitalize="none"
+                    autoComplete="given-name"
+                    autoCorrect="off"
+                    disabled={isLoading}
+                  />
+                </div>
+              </div>
+              <div>
+                <Label className="sr-only" htmlFor="phoneNumber">
+                  Phone Number
+                </Label>
+                <Input
+                  id="phoneNumber"
+                  required={true}
+                  placeholder="phone number"
+                  type="tel"
+                  autoCapitalize="none"
+                  autoComplete="tel"
+                  autoCorrect="off"
+                  disabled={isLoading}
+                />
+              </div>
+              <div>
+                <Label className="sr-only" htmlFor="email">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  required={true}
+                  placeholder="name@example.com"
+                  type="email"
+                  autoCapitalize="none"
+                  autoComplete="email"
+                  autoCorrect="off"
+                  disabled={isLoading}
+                />
+              </div>
+              <div>
+                <Label className="sr-only" htmlFor="password">
+                  Password
+                </Label>
+                <Input
+                  id="password"
+                  required={true}
+                  placeholder="password"
+                  type="password"
+                  autoCapitalize="none"
+                  autoComplete="new-password"
+                  autoCorrect="off"
+                  disabled={isLoading}
+                  pattern="(?=.*\d)(?=.*[a-z]).{8,}"
+                  onInput={(e) => {
+                    if (e.currentTarget.validity.patternMismatch) {
+                      e.currentTarget.setCustomValidity(
+                        "Passwords must be at least 8 characters long and contain at least one lowercase letter, and one number."
+                      );
+                    } else {
+                      e.currentTarget.setCustomValidity("");
+                    }
+                  }}
+                />
+              </div>
+              <div className="flex items-center justify-center space-x-2 py-3">
+                <Checkbox id="terms" required={true} disabled={isLoading} />
+                <Label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="terms"
+                >
+                  Accept terms and conditions
+                </Label>
+              </div>
+              <Button disabled={isLoading}>
+                {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
+                Sign In with Email
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

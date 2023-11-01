@@ -1,24 +1,13 @@
 import SymbolBanner from "@/assets/symbol-banner.png";
 import SymbolLogo from "@/assets/symbol-logo.png";
 import TokyoEditionToranomon from "@/assets/tokyo-edition-toranomon.jpeg";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Footer } from "@/components/ui/footer";
+import { Link } from "@/components/ui/link";
 import { H1, H2, H3, Paragraph } from "@/components/ui/typography";
+import { navigations } from "@/lib/navigations";
 import Image from "next/image";
-import Link from "next/link";
 
 export default async function IndexPage() {
   return (
@@ -30,7 +19,9 @@ export default async function IndexPage() {
             コミュニティ向けのイベントとして、 &quot;Community Xymposium&quot;
             を日本のNEM/Symbolコミュニティ有志により開催いたします。
           </Paragraph>
-          <Button>参加登録はこちら</Button>
+          <Link variant="button" size="button" href={navigations.auth.index}>
+            参加登録はこちら
+          </Link>
         </div>
       </section>
       <section
@@ -40,17 +31,15 @@ export default async function IndexPage() {
         <div className="flex flex-col justify-center text-center md:text-left gap-10 lg:py-12 lg:text-left w-full lg:w-5/12 xl:py-24">
           <H2>What&lsquo;s in Xymposium?</H2>
           <p>
-            2023年12月19日（火）に東京エディション虎ノ門において、Symbol/XYM
-            のシンポジウム &quot;Xymposium&quot;
+            2023年12月19日（火）に東京エディション虎ノ門において、Symbol/XYM のシンポジウム &quot;Xymposium&quot;
             を開催することが発表がされました。
             このイベントは、ブロックチェーン・クリプト業界関係者向けのイベントとされ、一般のコミュニティ向けのイベントではございません。よって、コミュニティ向けのイベントとして
-            &quot;Community Xymposium&quot;
-            を日本のNEM/Symbolコミュニティ有志により開催いたします。
+            &quot;Community Xymposium&quot; を日本のNEM/Symbolコミュニティ有志により開催いたします。
           </p>
-          {/* <Button>参加登録はこちら</Button> */}
         </div>
         <div className="overflow-hidden lg:h-auto w-full lg:w-7/12 flex justify-center items-center">
           <Image
+            loading="eager"
             className="rounded-lg shadow-lg animate-in"
             src={TokyoEditionToranomon}
             alt="Xymposium 虎ノ門 2023 バナー"
@@ -58,15 +47,11 @@ export default async function IndexPage() {
           />
         </div>
       </section>
-      <section
-        id="features"
-        className="container space-y-6 bg-slate-50 py-8 dark:bg-transparent md:py-12 lg:py-24"
-      >
+      <section id="participant" className="container space-y-6 bg-slate-50 py-8 dark:bg-transparent md:py-12 lg:py-24">
         <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
           <H2>参加者</H2>
           <Paragraph className="max-w-[85%] text-muted-foreground">
-            このイベントでは &quot; Xymposium &quot; にあわせて来日する
-            NEM/Symbol
+            このイベントでは &quot; Xymposium &quot; にあわせて来日する NEM/Symbol
             コア開発者の1人である、ハチェット氏と、来日の意向を表明している数人のコアチームメンバーを招待する他、日々活動しているコミュニティメンバーの来場も予定されています。
           </Paragraph>
         </div>
@@ -115,33 +100,7 @@ export default async function IndexPage() {
           </Card>
         </div>
       </section>
-      {/* <section
-        id="symbol"
-        className="relative container space-y-6 py-8 dark:bg-transparent md:py-12 lg:py-24 min-h-[70vh] space-x-4 md:max-w-[64rem] justify-center grid grid-cols-1 md:grid-cols-2"
-      >
-        <div className="z-20 flex flex-col justify-center space-y-4">
-          <h2 className="text-7xl font-extrabold text-center sm:text-8xl md:text-left md:text-9xl">
-            Symbol
-          </h2>
-          <Paragraph className="text-center md:text-left text-muted-foreground">
-            NEMに新たな思想を吹き込んだパブリックブロックチェーン
-          </Paragraph>
-          <div className="flex justify-center md:justify-start">
-            <Button variant={"default"}>Symbol について知る</Button>
-          </div>
-        </div>
-        <div className="z-10 flex flex-col justify-center items-center translate-y-0 sm:translate-y-20 md:translate-y-0">
-          <Image src={SymbolLogo} alt="symbol-logo" height={400} width={400} />
-        </div>
-        <Lottie
-          className="absolute opacity-50 blur-sm min-h-[80vh] left-0 right-0 m-auto"
-          animationData={BlockchainAnimation}
-        />
-      </section> */}
-      <section
-        id="event"
-        className="container space-y-10 py-8 md:py-12 lg:py-24 min-h-[60vh] md:max-w-[64rem]"
-      >
+      <section id="event" className="container space-y-10 py-8 md:py-12 lg:py-24 min-h-[60vh] md:max-w-[64rem]">
         <div>
           <H3 className="py-10">開催概要</H3>
           <div className="mx-auto grid justify-center gap-8 grid-cols-1 sm:grid-cols-2">
@@ -155,9 +114,7 @@ export default async function IndexPage() {
             </div>
             <div>
               <Paragraph className="font-bold">会場</Paragraph>
-              <Paragraph>
-                東京都新宿区歌舞伎町2丁目19-15 てなむタウンビル 6F
-              </Paragraph>
+              <Paragraph>東京都新宿区歌舞伎町2丁目19-15 てなむタウンビル 6F</Paragraph>
               <Link
                 href={"https://cryptoloungegox.com/"}
                 target="_blank"
@@ -184,13 +141,8 @@ export default async function IndexPage() {
         </div>
       </section>
       <hr />
-      <section
-        id="programs"
-        className="container space-y-6 py-20 min-h-[60vh] space-x-4 items-center md:max-w-[64rem]"
-      >
-        <Paragraph className="font-semibold text-indigo-500 text-center">
-          メッセージ
-        </Paragraph>
+      <section id="programs" className="container space-y-6 py-20 min-h-[60vh] space-x-4 items-center md:max-w-[64rem]">
+        <Paragraph className="font-semibold text-indigo-500 text-center">メッセージ</Paragraph>
         <H2 className="text-center">プログラム</H2>
         <div className="mx-auto grid justify-center gap-8 grid-cols-1 sm:grid-cols-2">
           {[
@@ -220,12 +172,7 @@ export default async function IndexPage() {
             },
           ].map((item, index) => (
             <Card key={index}>
-              <Image
-                src={item.image}
-                alt={item.description}
-                width={1024}
-                height={300}
-              />
+              <Image loading="lazy" src={item.image} alt={item.description} width={1024} height={300} />
               <CardHeader>
                 <CardTitle className="text-base">{item.title}</CardTitle>
               </CardHeader>
@@ -252,54 +199,38 @@ export default async function IndexPage() {
               alt: "logo",
               title: "Company Name",
               href: "https://google.com",
-              description:
-                "Filler text is dummy text which has no meaning however looks very similar to real text.",
+              description: "Filler text is dummy text which has no meaning however looks very similar to real text.",
             },
             {
               image: SymbolLogo,
               alt: "logo",
               title: "Company Name",
               href: "https://google.com",
-              description:
-                "Filler text is dummy text which has no meaning however looks very similar to real text.",
+              description: "Filler text is dummy text which has no meaning however looks very similar to real text.",
             },
             {
               image: SymbolLogo,
               alt: "logo",
               title: "Company Name",
               href: "https://google.com",
-              description:
-                "Filler text is dummy text which has no meaning however looks very similar to real text.",
+              description: "Filler text is dummy text which has no meaning however looks very similar to real text.",
             },
             {
               image: SymbolLogo,
               alt: "logo",
               title: "Company Name",
               href: "https://google.com",
-              description:
-                "Filler text is dummy text which has no meaning however looks very similar to real text.",
+              description: "Filler text is dummy text which has no meaning however looks very similar to real text.",
             },
           ].map((item, index) => (
             <div className="flex gap-4 md:gap-6" key={index}>
               <div>
-                <Image
-                  src={item.image}
-                  alt={item.alt}
-                  height={100}
-                  width={100}
-                />
+                <Image loading="lazy" src={item.image} alt={item.alt} height={100} width={100} />
               </div>
               <div>
-                <Paragraph className="text-2xl font-bold pb-1">
-                  {item.title}
-                </Paragraph>
-                <Paragraph className="text-muted-foreground">
-                  {item.description}
-                </Paragraph>
-                <Link
-                  className="font-bold text-indigo-500 transition duration-100 hover:text-indigo-600 active:text-indigo-700"
-                  href={item.href}
-                >
+                <Paragraph className="text-2xl font-bold pb-1">{item.title}</Paragraph>
+                <Paragraph className="text-muted-foreground pb-3">{item.description}</Paragraph>
+                <Link variant="button" size="button" href={item.href}>
                   More
                 </Link>
               </div>
@@ -308,7 +239,7 @@ export default async function IndexPage() {
         </div>
       </section>
       <section
-        id="booth"
+        id="questions"
         className="container space-y-6 py-20 min-h-[60vh]  md:max-w-[64rem] flex flex-col items-stretch"
       >
         <H2 className="text-center ml-0">よくある質問</H2>
