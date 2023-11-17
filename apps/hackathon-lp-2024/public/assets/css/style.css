@@ -371,6 +371,10 @@ header {
 	line-height: 24px;
 }
 
+.info-container-item-right-span-glay-under {
+	text-decoration: underline;
+}
+
 .info-container-item-2 {
 	align-items: flex-start;
 }
@@ -977,6 +981,10 @@ footer::before {
 
 .info-container-item-right-span-glay {
 	font-size: 12px;
+}
+
+.info-container-item-right-span-glay-under {
+	text-decoration: underline;
 }
 
 .welcome {
