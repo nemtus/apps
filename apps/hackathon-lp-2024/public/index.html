@@ -1,89 +1,374 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+<html lang="ja">
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/10.5.2/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/10.5.2/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/10.5.2/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/10.5.2/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/10.5.2/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/10.5.2/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/10.5.2/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/10.5.2/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/10.5.2/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/10.5.2/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- <meta property="og:url" content="ページのURL"> -->
+	<meta property="og:title" content="NEMTUS Hackathon 2024">
+	<meta property="og:description" content="特定非営利活動法人 NEM技術普及推進会 NEMTUSは、
+    日本においてNEM/Symbol技術の普及や発展を促進するNPO法人です。">
+	<meta property="og:type" content="website">
+	<meta property="og:image" content="./assets/img/ogp.png">
+	<meta name="description" content="特定非営利活動法人 NEM技術普及推進会 NEMTUSは、
+    日本においてNEM/Symbol技術の普及や発展を促進するNPO法人です。">
+	<title>NEMTUS Hackathon 2024</title>
+	<link rel="stylesheet" href="./assets/css/reset.css">
+	<link rel="stylesheet" href="./assets/css/style.css">
+</head>
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
+<body>
+	<header>
+		<div class="header-video-area">
+			<video class="header-video" poster="" webkit-playsinline playsinline muted autoplay loop>
+				<source src="./assets/img/movie.mp4">
+				<p>こちらの環境では動画を再生できません</p>
+			</video>
+		</div>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+		<div class="header-content-area">
+			<div class="header-content-area-inner">
+				<ul class="header-list">
+					<li><a href="/">HOME</a></li>
+					<li><a href="/">提出作品一覧</a></li>
+					<li><a href="/">受賞作品一覧</a></li>
+				</ul>
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
-      });
-    </script>
-  </body>
+				<div class="header-logo">
+					<img src="./assets/img/header-logo.png" alt="HACK+ NEMTUS Hackathon 2024">
+				</div>
+
+				<div class="scroll">SCROLL</div>
+			</div>
+		</div>
+	</header>
+
+	<div class="header-sp">
+		<div class="drawer-icon">
+			<div class="drawer-icon-bars">
+				<div class="drawer-icon-bar1"></div>
+				<div class="drawer-icon-bar2"></div>
+				<div class="drawer-icon-bar3"></div>
+			</div>
+		</div>
+
+		<div class="drawer-content">
+			<ul class="drawer-content-items">
+				<li class="drawer-content-item"><a href="/">HOME</a></li>
+				<li class="drawer-content-item"><a href="/">提出作品一覧</a></li>
+				<li class="drawer-content-item"><a href="/">受賞作品一覧</a></li>
+			</ul>
+		</div>
+
+		<div class="drawer-background"></div>
+	</div>
+
+	<main>
+		<section class="info">
+			<div class="info-inner fuwa">
+				<ul class="info-container">
+					<h2 class="info-title">
+						<&nbsp;賞金&nbsp;>
+					</h2>
+					<li class="info-container-item">
+						<p class="info-container-item-left">最優秀賞 (1st)</p>
+						<p class="info-container-item-right"><span class="info-container-item-right-span-blue">35,000</span> XYM</p>
+					</li>
+					<li class="info-container-item">
+						<p class="info-container-item-left">優秀賞 (2nd)</p>
+						<p class="info-container-item-right"><span class="info-container-item-right-span-blue">20,000</span> XYM</p>
+					</li>
+					<li class="info-container-item">
+						<p class="info-container-item-left">特別賞 (3rd)</p>
+						<p class="info-container-item-right"><span class="info-container-item-right-span-blue">15,000</span> XYM</p>
+					</li>
+					<li class="info-container-item">
+						<p class="info-container-item-left">その他</p>
+						<p class="info-container-item-right">各スポンサーからスポンサー賞を予定</p>
+					</li>
+					<li class="info-container-item">
+						<p class="info-container-item-left">withB賞</p>
+						<p class="info-container-item-right"><span class="info-container-item-right-span-blue">10万円相当</span> XYM</p>
+					</li>
+					<li class="info-container-item">
+						<p class="info-container-item-left">StirHosyu賞</p>
+						<p class="info-container-item-right"><span class="info-container-item-right-span-blue">10,000</span> XYM</p>
+					</li>
+					<li class="info-container-item">
+						<p class="info-container-item-left">NEWRON賞</p>
+						<p class="info-container-item-right">桑茶ティート【TEA&EAT】</p>
+					</li>
+					<li class="info-container-item">
+						<p class="info-container-item-left">Hexabase賞</p>
+						<p class="info-container-item-right">ノベルティグッズ</p>
+					</li>
+				</ul>
+				<ul class="info-container">
+					<h2 class="info-title">
+						<&nbsp;スケジュール&nbsp;>
+					</h2>
+					<li class="info-container-item info-container-item-2">
+						<p class="info-container-item-left info-container-item-left-under">キックオフイベント</p>
+						<p class="info-container-item-right">
+							2023年12月16日(土) 11時～17時<br>
+							<span class="info-container-item-right-span-glay">
+								@ (メイン会場) docomo R&D OPEN LAB ODAIBA、<br>
+								(サテライト会場) 京都会場検討中 ※1
+							</span>
+						</p>
+					</li>
+					<li class="info-container-item info-container-item-2">
+						<p class="info-container-item-left">エントリー期間</p>
+						<p class="info-container-item-right">
+							2023年12月18日(月)0時0分～2024年3月13日(水)23時59分
+						</p>
+					</li>
+					<li class="info-container-item info-container-item-2">
+						<p class="info-container-item-left info-container-item-left-under">ハッカソン開発合宿</p>
+						<p class="info-container-item-right">
+							2024年1月13日(土)～2024年1月14日(日)<br>
+							<span class="info-container-item-right-span-glay">
+								@ 東京エリア ※2
+							</span>
+						</p>
+					</li>
+					<li class="info-container-item info-container-item-2">
+						<p class="info-container-item-left info-container-item-left-under">ハッカソン開発合宿</p>
+						<p class="info-container-item-right">
+							2024年2月17日(土)～2024年2月18日(日)<br>
+							<span class="info-container-item-right-span-glay">
+								@ 地方エリア ※3
+							</span>
+						</p>
+					</li>
+					<li class="info-container-item info-container-item-2">
+						<p class="info-container-item-left">成果提出期限</p>
+						<p class="info-container-item-right">
+							2024年3月13日(水)23時59分
+						</p>
+					</li>
+					<li class="info-container-item info-container-item-2">
+						<p class="info-container-item-left">審査・コミュニティ投票期間</p>
+						<p class="info-container-item-right">
+							2024年3月14日(木)～2024年3月28日(木)23時59分
+						</p>
+					</li>
+					<li class="info-container-item info-container-item-2">
+						<p class="info-container-item-left info-container-item-left-under">ピッチイベント・授賞式</p>
+						<p class="info-container-item-right">
+							2024年3月31日(日) 11時～20時 <br>
+							<span class="info-container-item-right-span-glay">
+								@ (メイン会場) docomo R&D OPEN LAB ODAIBA、<br>
+								(サテライト会場) 京都会場検討中 ※4
+							</span>
+						</p>
+					</li>
+				</ul>
+			</div>
+		</section>
+
+		<section class="welcome">
+			<div class="welcome-inner">
+				<div class="welcome-inner-flex fuwa">
+					<div class="welcome-left">
+						<h2 class="section-title">
+							ようこそ、進化へ<br>
+							HACK+ 開催
+						</h2>
+						<p class="welcome-message section-message">
+							「NEMTUS Hackathon HACK+ 2024」は、<br>
+							参加者が多様なアイデアや技術を持ち寄り競うことによって、<br class="br-pc">
+							NEM/Symbolのコミュニティや同経済圏がより活性化し<br class="br-pc">
+							技術の普及が加速することを目的としたハッカソンイベントです。
+						</p>
+					</div>
+					<div class="welcome-right">
+						<img src="./assets/img/header-logo.png" alt="HACK+ NEMTUS Hackathon 2024">
+					</div>
+				</div>
+				<div class="welcome-buttons">
+					<div class="button button-white show_pop-1">エントリー方法はこちら</div><br class="only-950">
+					<div class="button button-white show_pop-2">応募作品提出方法はこちら</div><br class="only-950">
+					<a href="/" class="button button-white">過去の Hackathon はこちら</a>
+				</div>
+			</div>
+		</section>
+
+		<div class="modal_pop modal_pop-1">
+			<div class="modal_pop-bg js-modal-close"></div>
+			<div class="modal_pop_main modal_pop_main-1">
+				<h3 class="modal_pop_main-title">エントリー方法</h3>
+				<p class="modal_pop_main-message">
+					①まずは<span class="modal_pop_main-link"><a href="/">こちら</a></span>のgoogleフォームよりエントリー情報を入力ください。<br>
+					②次に<span class="modal_pop_main-link"><a href="/">こちら</a></span>のリンクよりエントリー情報をブロックチェーンに刻んでいただきエントリー完了となります。
+				</p>
+			</div>
+		</div>
+
+		<div class="modal_pop modal_pop-2">
+			<div class="modal_pop-bg js-modal-close"></div>
+			<div class="modal_pop_main modal_pop_main-2">
+				<h3 class="modal_pop_main-title">応募方法</h3>
+				<p class="modal_pop_main-message">
+					①まずは<span class="modal_pop_main-link"><a href="/">こちら</a></span>のgoogleフォームより応募作品情報を入力ください。<br>
+					②次に<span class="modal_pop_main-link"><a href="/">こちら</a></span>のリンクより応募作品提出情報をブロックチェーンに刻んでいただき応募完了となります。
+				</p>
+			</div>
+		</div>
+
+		<section class="connection">
+			<div class="connection-inner">
+				<div class="connection-content fuwa">
+					<h2 class="section-title">
+						Real Impact<br>
+						<span>～実社会における課題解決～</span>
+					</h2>
+					<p class="connection-message section-message">
+						ブロックチェーン技術はその革新性やポテンシャルを謳うものの、<br>
+						具体的な社会的価値の実現までが見えにくい現状があります。<br>
+						NEMTUS主催の第3回目ハッカソンとなる“Real Impact”では、<br>
+						単なる技術的な実験ではなく、実際の社会問題を解決し、<br>
+						人々の生活にポジティブな影響をもたらす<br>
+						ブロックチェーンアプリケーションやシステムの開発を重視します。<br>
+						参加規約内で、クリエイティビティを発揮してください。<br>
+					</p>
+					<a href="/" class="button button-white">参加規約</a>
+				</div>
+			</div>
+		</section>
+
+		<section class="entry">
+			<div class="entry-inner">
+				<div class="entry-container fuwa">
+					<h2 class="entry-title section-title">参加方法</h2>
+					<p class="entry-message section-message">
+						ハッカソン参加希望者は、事前にエントリーを実施する必要があります。<br>
+						その後、募集締め切りまでに応募作品を完成させ、所定の方法で提出することで応募完了となります。<br>
+						詳しくは、募集要項及びエントリー方法をご確認ください。
+					</p><br>
+					<a href="/" class="button button-blue">エントリーする</a>
+				</div>
+			</div>
+		</section>
+
+		<section class="member">
+			<div class="member-inner fuwa">
+				<h2 class="member-title section-title">審査員</h2>
+				<div class="member-items">
+					<a href="https://twitter.com/NCOSIGIMCITYNRE" class="member-item">
+						<img src="./assets/img/member01.png" alt="gimre NEM/Symbol Core Developer">
+					</a>
+					<a href="https://twitter.com/0x6861746366574" class="member-item">
+						<img src="./assets/img/member02.png" alt="Hatchet NEM/Symbol Core Developer">
+					</a>
+					<a href="https://twitter.com/Jaguar0625" class="member-item">
+						<img src="./assets/img/member03.png" alt="Jaguar NEM/Symbol Core Developer">
+					</a>
+					<a href="https://twitter.com/pyonta" class="member-item">
+						<img src="./assets/img/member04.png" alt="高橋ピョン太　フリーライター">
+					</a>
+					<a href="https://twitter.com/h_gocchi" class="member-item">
+						<img src="./assets/img/member05.png" alt="後藤博之［ごっつ］  NPO法人NEMTUS 理事長・Atomos-Seed代表">
+					</a>
+					<a href="https://twitter.com/noritaka_okabe" class="member-item">
+						<img src="./assets/img/member06.png" alt="岡部典孝　JPYC株式会社　代表取締役">
+					</a>
+				</div>
+
+				<div class="member-content">
+					<h2 class="member-title section-title">コミュニティ投票</h2>
+					<p class="member-content-text">
+						審査員による審査に加え、提出作品に対するコミュニティの皆様による「投票」を実施します。以下の「投票方法解説動画はこちら」から投票方法を確認の上、「コミュニティ投票はこちら」からハッカソンWebアプリにサインインしてぜひ投票ください。
+					</p>
+					<p class="member-content-text">
+						投票では、提出作品数 17作品 X 5点/作品 = 85点 の持ち点総数を、全作品に対して良いと思う作品ほど多く割り振って点数をつけます。持ち点はすべて使い切って頂く必要があります。同時に、作品に対するメッセージを任意で140字まで入力可能です。作品への感想や制作チームへの応援メッセージ等、ぜひ入力ください。
+					</p>
+					<p class="member-content-text member-content-text-glay">
+						※提出された投票結果はNEMTUSメンバーにて確認の後ブロックチェーンに刻まれます。<br>
+						※ ブロックチェーンに刻まれたデータは消すことはできないことにご注意ください。
+					</p>
+					<div class="member-buttons">
+						<a href="https://www.youtube.com/watch?v=tX1APQDTOIQ" target="_blank" class="button button-white">投票方法解説動画はこちら</a><br class="only-950">
+						<a href="https://nemtus-hackathon.web.app/" target="_blank" class="button button-white">コミュニティ投票はこちら</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="sponser">
+			<div class="sponser-inner fuwa">
+				<h2 class="sponser-title">SPONSER</h2>
+				<p class="sponser-text">NEMTUS Hackathon HACK+ 2024<br class="only-950"> を支援して頂くスポンサー</p>
+				<div class="sponser-items">
+					<div class="sponser-item">
+						<img src="./assets/img/sponser-img-1.png" alt="HEXABASE">
+					</div>
+					<div class="sponser-item">
+						<img src="./assets/img/sponser-img-2.png" alt="NEWRON">
+					</div>
+					<div class="sponser-item">
+						<img src="./assets/img/sponser-img-3.png" alt="withB">
+					</div>
+					<div class="sponser-item">
+						<img src="./assets/img/sponser-img-4.png" alt="FinTech journal">
+					</div>
+					<div class="sponser-item">
+						<img src="./assets/img/sponser-img-5.png" alt="STIR">
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="about">
+			<div class="about-inner fuwa">
+				<div class="about-left">
+					<h2 class="section-title">
+						NEMTUS<br>
+						とは？
+					</h2>
+				</div>
+				<div class="about-right">
+					<p class="about-text">
+						特定非営利活動法人 NEM技術普及推進会 NEMTUSは、<br>
+						日本においてNEM/Symbol技術の普及や発展を促進する<br>
+						NPO法人です。
+					</p>
+
+					<a href="/" class="button button-white">エントリーする</a>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<footer>
+		<div class="footer-inner">
+			<div class="footer-left">
+				<div class="footer-sns-icons">
+					<a href="https://twitter.com/NemtusOfficial" class="footer-sns-icon-1">
+						<object data="./assets/img/icon_twitter.svg" type="image/svg+xml"></object>
+					</a>
+					<a href="https://www.youtube.com/channel/UCfJ9GvY4ZoSi_RHYQjbsEZA" class="footer-sns-icon-2">
+						<object data="./assets/img/icon_youtube.svg" type="image/svg+xml"></object>
+					</a>
+					<a href="https://nemtus.com/" class="footer-sns-icon-3">
+						<object data="./assets/img/icon_nemuts.svg" type="image/svg+xml"></object>
+					</a>
+					<a href="https://zenn.dev/nemtus" class="footer-sns-icon-4">
+						<object data="./assets/img/icon_zenn.svg" type="image/svg+xml"></object>
+					</a>
+					<a href="https://github.com/nemtus" class="footer-sns-icon-5">
+						<object data="./assets/img/icon_github.svg" type="image/svg+xml"></object>
+					</a>
+				</div>
+			</div>
+			<div class="footer-right">
+				<p class="copyright">© NEMTUS All Rights Reserved 2021</p>
+			</div>
+		</div>
+		<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+		<script src="./assets/js/style.js"></script>
+	</footer>
+</body>
+
 </html>
