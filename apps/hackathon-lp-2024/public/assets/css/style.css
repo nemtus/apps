@@ -403,6 +403,30 @@ header {
 	justify-content: space-between;
 }
 
+.new {
+	background: url(../img/new-bg.png) no-repeat center center/cover;
+	background-attachment: fixed;
+	height: 100vh;
+	min-height: 850px;
+	position: relative;
+}
+
+.new-inner {
+	align-items: center;
+	left: 50%;
+	max-width: 1240px;
+	position: absolute;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 90%;
+}
+
+.new-inner-flex {
+	align-items: center;
+	display: flex;
+	justify-content: space-between;
+}
+
 .section-title {
 	color: #FFFFFF;
 	font-size: 73px;
@@ -441,6 +465,16 @@ header {
 }
 
 .welcome-right {
+	margin-right: 10%;
+	transform: translateY(-8%);
+	width: 250px;
+}
+
+.new-message {
+	margin: 40px 0 56px;
+}
+
+.new-right {
 	margin-right: 10%;
 	transform: translateY(-8%);
 	width: 250px;
@@ -510,6 +544,12 @@ header {
 }
 
 .welcome-buttons {
+	align-items: center;
+	display: flex;
+	justify-content: space-between;
+}
+
+.new-buttons {
 	align-items: center;
 	display: flex;
 	justify-content: space-between;
@@ -849,6 +889,10 @@ footer::before {
 	min-height: 900px;
 }
 
+.new {
+	min-height: 900px;
+}
+
 .section-title {
 	font-size: 50px;
 	line-height: 80px;
@@ -865,6 +909,10 @@ footer::before {
 }
 
 .welcome-message {
+	margin: 30px 0 40px;
+}
+
+.new-message {
 	margin: 30px 0 40px;
 }
 
@@ -906,7 +954,15 @@ footer::before {
 	display: block;
 }
 
+.new-buttons {
+	display: block;
+}
+
 .welcome-buttons .button:not(:first-child) {
+	margin-top: 16px;
+}
+
+.new-buttons .button:not(:first-child) {
 	margin-top: 16px;
 }
 
@@ -1018,6 +1074,15 @@ footer::before {
 	display: block;
 }
 
+.new {
+	background-attachment: scroll;
+	min-height: 650px;
+}
+
+.new-inner-flex {
+	display: block;
+}
+
 .section-title span {
 	font-size: 24px;
 }
@@ -1046,6 +1111,14 @@ footer::before {
 }
 
 .welcome-right {
+	display: none;
+}
+
+.new-message {
+	margin: 30px 0 40px;
+}
+
+.new-right {
 	display: none;
 }
 
