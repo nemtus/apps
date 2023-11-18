@@ -416,6 +416,19 @@ header {
 	line-height: 88px;
 }
 
+.section-sub-title {
+	color: #FFFFFF;
+	font-size: 48px;
+	font-weight: 600;
+	line-height: 88px;
+}
+
+.section-sub-title span {
+	font-size: 36px;
+	font-weight: 600;
+	line-height: 48px;
+}
+
 .section-message {
 	color: #FFFFFF;
 	font-size: 16px;
@@ -841,6 +854,11 @@ footer::before {
 	line-height: 80px;
 }
 
+.section-sub-title {
+	font-size: 24px;
+	line-height: 48px;
+}
+
 .section-message {
 	font-size: 14px;
 	line-height: 34px;
@@ -877,6 +895,10 @@ footer::before {
 @media (max-width: 950px) {
 
 .section-title span {
+	font-size: 40px;
+}
+
+.section-sub-title span {
 	font-size: 40px;
 }
 
@@ -1003,6 +1025,15 @@ footer::before {
 .section-title {
 	font-size: 35px;
 	line-height: 45px;
+}
+
+.section-sub-title span {
+	font-size: 20px;
+}
+
+.section-sub-title {
+	font-size: 20px;
+	line-height: 46px;
 }
 
 .section-message {
