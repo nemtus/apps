@@ -1,89 +1,249 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+<html lang="ja">
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/10.5.2/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/10.5.2/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/10.5.2/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/10.5.2/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/10.5.2/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/10.5.2/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/10.5.2/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/10.5.2/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/10.5.2/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/10.5.2/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- <meta property="og:url" content="ページのURL"> -->
+	<meta property="og:title" content="NEMTUS Hackathon 2024">
+	<meta property="og:description" content="特定非営利活動法人 NEM技術普及推進会 NEMTUSは、
+    日本においてNEM/Symbol技術の普及や発展を促進するNPO法人です。">
+	<meta property="og:type" content="website">
+	<meta property="og:image" content="./assets/img/ogp.png">
+	<meta name="description" content="特定非営利活動法人 NEM技術普及推進会 NEMTUSは、
+    日本においてNEM/Symbol技術の普及や発展を促進するNPO法人です。">
+	<title>NEMTUS まとめサイト</title>
+	<link rel="stylesheet" href="./assets/css/reset.css">
+	<link rel="stylesheet" href="./assets/css/style.css">
+</head>
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
+<body>
+	<header>
+		<div class="header-content-area">
+			<div class="header-content-area-inner">
+				<ul class="header-list">
+					<li><a href="/">NEMTUS</a></li>
+					<li><a href="/">Hackathon</a></li>
+					<li><a href="/">HACK+</a></li>
+				</ul>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+				<div class="header-logo">
+					<img src="./assets/img/header-logo.png" alt="HACK+ NEMTUS Hackathon 2024">
+				</div>
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
-      });
-    </script>
-  </body>
+				<div class="scroll">SCROLL</div>
+			</div>
+		</div>
+	</header>
+
+	<div class="header-sp">
+		<div class="drawer-icon">
+			<div class="drawer-icon-bars">
+				<div class="drawer-icon-bar1"></div>
+				<div class="drawer-icon-bar2"></div>
+				<div class="drawer-icon-bar3"></div>
+			</div>
+		</div>
+
+		<div class="drawer-content">
+			<ul class="drawer-content-items">
+				<li class="drawer-content-item"><a href="/">NEMTUS</a></li>
+				<li class="drawer-content-item"><a href="/">Hackathon</a></li>
+				<li class="drawer-content-item"><a href="/">HACK+</a></li>
+			</ul>
+		</div>
+
+		<div class="drawer-background"></div>
+	</div>
+
+	<main>
+		<section class="usual">
+			<div class="usual__inner">
+				<h2 class="usual__title">各年のハッカソン</h2>
+				<div class="usual__items fuwa">
+					<a href="/" target="_blank" class="usual__item">
+						<div class="usual__item-img"><img src="./assets/img/hack-2022.png" alt="HACK+2022"></div>
+						<p class="usual__item-title">HACK+2022</p>
+						<p class="usual__item-text">
+							全てが自由。<br>
+							テーマは、ゲームです。
+						</p>
+					</a>
+					<a href="/" target="_blank" class="usual__item">
+						<div class="usual__item-img"><img src="./assets/img/hack-2023.png" alt="HACK+2023"></div>
+						<p class="usual__item-title">HACK+2023</p>
+						<p class="usual__item-text">
+							Connection<br>
+							～つなげる世界～
+						</p>
+					</a>
+					<a href="/" target="_blank" class="usual__item">
+						<div class="usual__item-img"><img src="./assets/img/hack-2024.png" alt="HACK+2024"></div>
+						<p class="usual__item-title">HACK+2024</p>
+						<p class="usual__item-text">
+							Real Impact<br>
+							～実社会における課題解決～
+						</p>
+					</a>
+				</div>
+			</div>
+		</section>
+
+		<section class="hack-2024">
+			<div class="hack__inner">
+				<div class="hack__left fuwa">
+					<div class="hack__logo">
+						<img src="./assets/img/logo-2024.png" alt="HACK+ NEMTUS Hackathon 2024">
+					</div>
+					<p class="hack__title">
+						Real Impact<br>
+						<span>～実社会における課題解決～</span>
+					</p>
+					<p class="hack__text">
+						ブロックチェーン技術はその革新性やポテンシャルを謳うものの、<br>
+						具体的な社会的価値の実現までが見えにくい現状があります。<br>
+						NEMTUS主催の第3回目ハッカソンとなる“Real Impact”では、<br>
+						単なる技術的な実験ではなく、実際の社会問題を解決し、<br>
+						人々の生活にポジティブな影響をもたらす<br>
+						ブロックチェーンアプリケーションやシステムの開発を重視します。<br>
+						参加規約内で、クリエイティビティを発揮してください。
+					</p>
+				</div>
+				<div class="hack__right fuwa">
+					<p class="hack__text-2">
+						現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜<br>
+						現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜
+					</p>
+					<div class="hack__button-container">
+						<a href="/" target="_blank" class="button">エントリーする</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="hack-2023">
+			<div class="hack__inner flex-reverse">
+				<div class="hack__left fuwa">
+					<div class="hack__logo">
+						<img src="./assets/img/logo-2023.png" alt="HACK+ NEMTUS Hackathon 2024">
+					</div>
+					<p class="hack__title">
+						Connection<br>
+						<span>～つなげる世界～</span>
+					</p>
+					<p class="hack__text">
+						募集作品のテーマとして、<br>
+						NIS1/Symbol/mijinのいずれかを組み込んだ<br>
+						便利ツール、他チェーンとの連携<br>
+						実社会・既存サービスとの接続 / 連携作品を募集します。<br>
+						参加規約の制約内で、クリエイティビティーを<br>
+						発揮してください。
+					</p>
+				</div>
+				<div class="hack__right hack__right-2 fuwa">
+					<div class="hack__right-img">
+						<img src="./assets/img/img-2023.png" alt="Cycle ブロックチェーン技術で、献血をつないでいく。">
+					</div>
+					<p class="hack__right-title">
+						<&nbsp;概要&nbsp;>
+					</p>
+					<p class="hack__text-2">
+						現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜<br>
+						現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜
+					</p>
+					<p class="hack__right-title hack__right-title-2">
+						<&nbsp;評価理由&nbsp;>
+					</p>
+					<p class="hack__text-2">
+						当該年の最優秀作品の概要テキスト当該年の最優秀作品の概要テキスト当該年の最優秀作品の概要テキスト当該年の最優秀作品の概要テキスト当該年の最優秀作品の概要テキスト
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="hack-2022">
+			<div class="hack__inner">
+				<div class="hack__left fuwa">
+					<div class="hack__logo">
+						<img src="./assets/img/logo-2022.png" alt="HACK+ NEMTUS Hackathon 2024">
+					</div>
+					<p class="hack__title">
+						全てが自由。<br>
+						テーマは、ゲームです。
+					</p>
+					<p class="hack__text">
+						募集作品のテーマとして、<br>
+						NIS1/Symbol/mijinのいずれかを組み込んだゲームを<br>
+						募集します。推奨は、WEBアプリです。<br>
+						参加規約の制約内で、クリエイティビティーを<br>
+						発揮してください。
+					</p>
+				</div>
+				<div class="hack__right hack__right-2 fuwa">
+					<div class="hack__right-img">
+						<img src="./assets/img/img-2022.png" alt="Cycle ブロックチェーン技術で、献血をつないでいく。">
+					</div>
+					<p class="hack__right-title">
+						<&nbsp;概要&nbsp;>
+					</p>
+					<p class="hack__text-2">
+						現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜<br>
+						現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜現在開催中〜〜
+					</p>
+					<p class="hack__right-title hack__right-title-2">
+						<&nbsp;評価理由&nbsp;>
+					</p>
+					<p class="hack__text-2">
+						当該年の最優秀作品の概要テキスト当該年の最優秀作品の概要テキスト当該年の最優秀作品の概要テキスト当該年の最優秀作品の概要テキスト当該年の最優秀作品の概要テキスト
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="about">
+			<div class="about__inner">
+				<h2 class="about__title">NEMTUSとは？</h2>
+				<p class="about__text">
+					特定非営利活動法人 NEM技術普及推進会 NEMTUSは、<br>
+					日本においてNEM/Symbol技術の普及や発展を促進するNPO法人です。
+				</p>
+				<div class="about__button-container">
+					<a href="/" target="_blank" class="button">エントリーする</a>
+				</div>
+			</div>
+		</section>
+
+	</main>
+
+	<footer>
+		<div class="footer-inner">
+			<div class="footer-left">
+				<div class="footer-sns-icons">
+					<a href="https://twitter.com/NemtusOfficial" class="footer-sns-icon-1">
+						<object data="./assets/img/icon_twitter.svg" type="image/svg+xml"></object>
+					</a>
+					<a href="https://www.youtube.com/channel/UCfJ9GvY4ZoSi_RHYQjbsEZA" class="footer-sns-icon-2">
+						<object data="./assets/img/icon_youtube.svg" type="image/svg+xml"></object>
+					</a>
+					<a href="https://nemtus.com/" class="footer-sns-icon-3">
+						<object data="./assets/img/icon_nemuts.svg" type="image/svg+xml"></object>
+					</a>
+					<a href="https://zenn.dev/nemtus" class="footer-sns-icon-4">
+						<object data="./assets/img/icon_zenn.svg" type="image/svg+xml"></object>
+					</a>
+					<a href="https://github.com/nemtus" class="footer-sns-icon-5">
+						<object data="./assets/img/icon_github.svg" type="image/svg+xml"></object>
+					</a>
+				</div>
+			</div>
+			<div class="footer-right">
+				<p class="copyright">© NEMTUS All Rights Reserved 2021</p>
+			</div>
+		</div>
+		<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+		<script src="./assets/js/style.js"></script>
+	</footer>
+</body>
+
 </html>
