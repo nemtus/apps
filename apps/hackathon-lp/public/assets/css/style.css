@@ -352,7 +352,7 @@ header {
 	font-size: min(1.1111111111vw, 16px);
 	font-weight: 600;
 	line-height: 2;
-	white-space: nowrap;
+	white-space: normal;
 }
 
 .hack__text-2 {
