@@ -22,7 +22,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             items={[
               { title: "Programs", href: "#programs" },
               { title: "Terms", href: "/terms" },
-              false ? { title: "Account", href: "/user/mypage" } : { title: "Login", href: "/auth" },
             ]}
           />
         </header>

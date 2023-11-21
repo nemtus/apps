@@ -1,7 +1,12 @@
+import GimreIcon from "@/assets/images/gimre.png";
+import HatchetIcon from "@/assets/images/hatchet.png";
+import JaguarIcon from "@/assets/images/jaguar.png";
+import NemtusIcon from "@/assets/images/nemtus.png";
 import SymbolBanner from "@/assets/symbol-banner.png";
 import SymbolLogo from "@/assets/symbol-logo.png";
 import TokyoEditionToranomon from "@/assets/tokyo-edition-toranomon.jpeg";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Footer } from "@/components/ui/footer";
 import { Link } from "@/components/ui/link";
@@ -57,28 +62,48 @@ export default async function IndexPage() {
         </div>
         <div className="mx-auto grid justify-center gap-4 grid-cols-1 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
           <Card className="flex flex-col justify-between p-2">
-            <CardHeader>icon</CardHeader>
+            <CardHeader>
+              <Avatar>
+                <AvatarImage src={HatchetIcon.src} />
+                <AvatarFallback>H</AvatarFallback>
+              </Avatar>
+            </CardHeader>
             <CardContent className="flex flex-col gap-3">
               <CardTitle className="text-base">ハチェット</CardTitle>
               <CardDescription>Symbol/NEM コア開発者</CardDescription>
             </CardContent>
           </Card>
           <Card className="flex flex-col justify-between p-2">
-            <CardHeader>icon</CardHeader>
+            <CardHeader>
+              <Avatar>
+                <AvatarImage src={JaguarIcon.src} />
+                <AvatarFallback>J</AvatarFallback>
+              </Avatar>
+            </CardHeader>
             <CardContent className="flex flex-col gap-3">
               <CardTitle className="text-base">ジャガー</CardTitle>
               <CardDescription>Symbol/NEM コア開発者</CardDescription>
             </CardContent>
           </Card>
           <Card className="flex flex-col justify-between p-2">
-            <CardHeader>icon</CardHeader>
+            <CardHeader>
+              <Avatar>
+                <AvatarImage src={GimreIcon.src} />
+                <AvatarFallback>G</AvatarFallback>
+              </Avatar>
+            </CardHeader>
             <CardContent className="flex flex-col gap-3">
               <CardTitle className="text-base">ギムレ</CardTitle>
               <CardDescription>Symbol/NEM コア開発者</CardDescription>
             </CardContent>
           </Card>
           <Card className="flex flex-col justify-between p-2">
-            <CardHeader>icon</CardHeader>
+            <CardHeader>
+              <Avatar>
+                <AvatarImage src={NemtusIcon.src} />
+                <AvatarFallback>N</AvatarFallback>
+              </Avatar>
+            </CardHeader>
             <CardContent className="flex flex-col gap-3">
               <CardTitle className="text-base">NEMTUS</CardTitle>
               <CardDescription>何か説明</CardDescription>
@@ -126,7 +151,10 @@ export default async function IndexPage() {
             </div>
             <div>
               <Paragraph className="font-bold">参加費</Paragraph>
-              <Paragraph>n,000 円</Paragraph>
+              <Paragraph>無料</Paragraph>
+              <Paragraph className="text-sm">
+                受付にて 100xym 以上の残高を持つ WALLET の アドレス QR コードの提示を必須とします
+              </Paragraph>
             </div>
           </div>
         </div>
