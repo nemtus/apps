@@ -1,8 +1,6 @@
 import SymbolLogoDark from "@/assets/symbol-logo-with-text-dark.png";
 import SymbolLogoLight from "@/assets/symbol-logo-with-text-light.png";
-import { SignInForm } from "@/components/atom/moleculs/signin-form";
 import { SignUpForm } from "@/components/atom/moleculs/signup-form";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Paragraph } from "@/components/ui/typography";
 import { navigations } from "@/lib/navigations";
 import { Metadata } from "next";
@@ -41,18 +39,7 @@ export default function AuthenticationPage() {
           </Link>
         </div>
 
-        <Tabs defaultValue="signup" className="min-w-[280px]">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="signup">Sign up</TabsTrigger>
-            <TabsTrigger value="signin">Sign in</TabsTrigger>
-          </TabsList>
-          <TabsContent value="signup">
-            <SignUpForm />
-          </TabsContent>
-          <TabsContent value="signin">
-            <SignInForm />
-          </TabsContent>
-        </Tabs>
+        <SignUpForm />
 
         <Paragraph className="px-8 text-center text-sm text-muted-foreground">
           By clicking continue, you agree to our{" "}

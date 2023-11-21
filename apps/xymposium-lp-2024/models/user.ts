@@ -3,8 +3,5 @@ export interface IUser {
   lastName: string;
   firstName: string;
   phone: string;
-}
-
-export interface ISignUpUser extends IUser {
-  password: string;
+  address: string;
 }

@@ -10,8 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { H1, Paragraph } from "@/components/ui/typography";
 import { navigations } from "@/lib/navigations";
-import { TextValidation, cn } from "@/lib/utils";
-import { ISignUpUser } from "@/models/user";
+import { cn } from "@/lib/utils";
+import { IUser } from "@/models/user";
 import { useRouter } from "next/navigation";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -24,40 +24,29 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
     event.preventDefault();
     setIsLoading(true);
     const form: any = event.currentTarget;
-    const body: ISignUpUser = {
-      email: form.email.value,
-      password: form.password.value,
-      phone: form.phoneNumber.value,
-      firstName: form.firstName.value,
-      lastName: form.lastName.value,
+    const body: IUser = {
+      email: form.email.value?.trim(),
+      address: form.address.value?.replace(/-/g, "")?.trim(),
+      phone: form.phoneNumber.value?.replace(/-/g, "")?.trim(),
+      firstName: form.firstName.value?.trim(),
+      lastName: form.lastName.value?.trim(),
     };
 
-    if (body.email && !TextValidation.isEmail(body.email)) {
-      return alert("Invalid email address");
-    }
-    if (body.phone && !TextValidation.isSymbol(body.phone)) {
-      return alert("Invalid phone number");
-    }
-    if (!body.firstName && !TextValidation.isSymbol(body.firstName)) {
-      return alert("You must enter your first name to continue");
-    }
-    if (!body.lastName && !TextValidation.isSymbol(body.lastName)) {
-      return alert("You must enter your last name to continue");
-    }
-    if (!body.password) {
-      return alert("You must enter your password to continue");
-    }
     if (!form.terms.value) {
+      setIsLoading(false);
       return alert("You must agree to the terms of service to continue");
     }
 
-    fetch("/api/auth/sign-up", {
+    fetch("/api/sign_up", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     })
-      .then(() => {
-        alert("メールを送信しました。メール本文に記載のURLより本登録を進めて下さい");
+      .then((e) => {
+        if (e.status !== 200) {
+          throw new Error();
+        }
+        alert("受付を完了しました。メールを確認下さい");
         router.push(navigations.index);
       })
       .catch(() => {
@@ -143,24 +132,21 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
                 />
               </div>
               <div>
-                <Label className="sr-only" htmlFor="password">
-                  Password
+                <Label className="sr-only" htmlFor="text">
+                  symbol address
                 </Label>
                 <Input
-                  id="password"
+                  id="address"
                   required={true}
-                  placeholder="password"
-                  type="password"
+                  placeholder="symbol address"
+                  type="text"
                   autoCapitalize="none"
-                  autoComplete="new-password"
                   autoCorrect="off"
                   disabled={isLoading}
-                  pattern="(?=.*\d)(?=.*[a-z]).{8,}"
+                  pattern="N[A-Z0-9]{38}"
                   onInput={(e) => {
                     if (e.currentTarget.validity.patternMismatch) {
-                      e.currentTarget.setCustomValidity(
-                        "Passwords must be at least 8 characters long and contain at least one lowercase letter, and one number."
-                      );
+                      e.currentTarget.setCustomValidity("Please enter 39-digit symbol address without hyphens.");
                     } else {
                       e.currentTarget.setCustomValidity("");
                     }
