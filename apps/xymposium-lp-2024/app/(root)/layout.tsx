@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           <MainNav
             items={[
-              { title: "Programs", href: "#programs" },
+              { title: "Programs", href: "/#programs" },
               { title: "Terms", href: "/terms" },
             ]}
           />
