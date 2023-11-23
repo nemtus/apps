@@ -329,6 +329,14 @@ export default async function IndexPage() {
           </Accordion>
         ))}
       </section>
+      <section className="container pb-32 flex flex-col items-center justify-center">
+        <h3 className="background-animate font-extrabold text-6xl bg-clip-text bg-gradient-to-r from-[#7C3AED] via-emerald-500 to-sky-500 text-transparent text-center p-5 mb-4 leading-none text-gray-900">
+          Symbol/NEM Community Xymposium
+        </h3>
+        <Link variant="button" size="button" href={navigations.auth.index}>
+          参加登録はこちら
+        </Link>
+      </section>
       <section>
         <Footer />
       </section>
