@@ -32,7 +32,8 @@ export function Footer(): JSX.Element {
           </div>
         </div>
         <div className="border-t border-gray-800 py-8 text-center text-sm text-gray-400">
-          © 2023 - Symbol Community WEB DAO. All rights reserved.
+          Symbol/NEM Community Xymposium 主催 NPO法人NEM技術普及推進会NEMTUS <br />© 2023 - Symbol Community WEB DAO.
+          All rights reserved.
         </div>
       </footer>
     </div>

@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Symbol/NEM Xymposium",
-  description: "Symbol Community Event",
+  title: "Symbol/NEM Community Xymposium",
+  description: "Symbol/NEM コミュニティによる Xymposium のサイドイベント",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

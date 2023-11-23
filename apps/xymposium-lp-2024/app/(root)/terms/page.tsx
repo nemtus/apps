@@ -2,6 +2,12 @@ import { Footer } from "@/components/ui/footer";
 import { Link } from "@/components/ui/link";
 import { Paragraph } from "@/components/ui/typography";
 import { navigations } from "@/lib/navigations";
+import { Metadata } from "next/types";
+
+export const metadata: Metadata = {
+  title: "Terms: Symbol/NEM Community Xymposium",
+  description: "Community Xymposium の利用規約",
+};
 
 export default async function IndexPage() {
   return (
@@ -12,7 +18,9 @@ export default async function IndexPage() {
       >
         <div className="h-[30]" />
         <div className="h-12" />
-        <Paragraph className="text-3xl font-bold text-center">参加規約</Paragraph>
+        <Paragraph id="term" className="text-3xl font-bold text-center">
+          参加規約
+        </Paragraph>
         <Paragraph className="font-bold">第1条（適用範囲）</Paragraph>
         <Paragraph>
           本規約は、OSS
@@ -20,7 +28,7 @@ export default async function IndexPage() {
         </Paragraph>
         <Paragraph className="font-bold">第2条（個人情報の取り扱い）</Paragraph>
         <Paragraph>
-          参加者は、本イベントへの参加にあたり、自己の名前および電子メールアドレス（以下、「個人情報」とします）を主催者に提供することに同意します。主催者は、これらの情報を本イベントの運営および当日の受付のためにのみ使用し、それ以外の目的で使用することはありません。
+          参加者は、本イベントへの参加にあたり、自己の名前および電子メールアドレス、ブロックチェーンアドレス（以下、「個人情報」とします）を主催者に提供することに同意します。主催者は、これらの情報を本イベントの運営および当日の受付のためにのみ使用し、それ以外の目的で使用することはありません。
           また、提供された個人情報に虚偽が確認された場合は本イベントへの参加を承認しないことがあります。
         </Paragraph>
         <Paragraph className="font-bold">第3条（撮影・投稿の禁止） </Paragraph>
@@ -53,14 +61,26 @@ export default async function IndexPage() {
         </ol>
         <Paragraph className="font-bold">第6条（建物の利用ルール）</Paragraph>
         <Paragraph>
-          参加者は、本イベントが行われる建物の利用ルールについて、GOX 側のルール、規約に従うことに同意します。
+          参加者は、本イベントが行われる建物の利用ルールについて、Crypto Lounge GOX が定めるルール、
+          <Link
+            href="https://docs.google.com/document/d/1bgQDBhTig1OIHOo4stSsszFdEp8qiEEpNNfpDvv1iHg/preview"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            規約
+          </Link>
+          に従うことに同意します。
         </Paragraph>
         <Paragraph className="font-bold">第7条（規約の改定）</Paragraph>
         <Paragraph>
           主催者は、必要に応じて、本規約を改定することができます。改定された規約は、主催者が別途定める日から効力を生じるものとします。
         </Paragraph>
+        <Paragraph className="font-bold">利用規約制定日</Paragraph>
+        <Paragraph>2023年 12月 1日</Paragraph>
         <div className="h-32" />
-        <Paragraph className="text-3xl font-bold text-center">プライバシーポリシー</Paragraph>
+        <Paragraph id="privacy" className="text-3xl font-bold text-center">
+          プライバシーポリシー
+        </Paragraph>
         <Paragraph className="font-bold">第1条（個人情報の収集と利用目的）</Paragraph>
         <Paragraph>
           本イベントでは、参加者の名前および電子メールアドレスを収集します。これらの個人情報は、本イベントの運営、当日の受付、および参加者への情報提供のためにのみ使用されます。
@@ -85,6 +105,8 @@ export default async function IndexPage() {
         <Paragraph>
           主催者は、必要に応じて、本プライバシーポリシーを改定することができます。改定されたプライバシーポリシーは、主催者が別途定める日から効力を生じるものとします。
         </Paragraph>
+        <Paragraph className="font-bold">プライバシーポリシー制定日</Paragraph>
+        <Paragraph>2023年 12月 1日</Paragraph>
         <div className="h-10" />
         <div className="flex flex-row justify-center">
           <Link variant="button" size="button" href={navigations.index}>
