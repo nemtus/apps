@@ -10,7 +10,7 @@ export function Footer(): JSX.Element {
         <div className="py-10 grid grid-cols-2 gap-12 md:grid-cols-4 lg:grid-cols-6 lg:gap-8 lg:pt-12">
           <div className="col-span-full lg:col-span-2">
             <div className="mb-4 lg:-mt-2">
-              <Link variant="ghost" rel="noopener">
+              <Link variant="default" rel="noopener">
                 <Image loading="lazy" src={SymbolLogoDark} alt="Symbol" height={40} />
               </Link>
             </div>
