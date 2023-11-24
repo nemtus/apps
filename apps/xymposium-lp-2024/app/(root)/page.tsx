@@ -23,7 +23,7 @@ export default async function IndexPage() {
             コミュニティ向けのイベント &quot;Community Xymposium&quot; を日本の NEM/Symbol
             コミュニティ有志により開催いたします。
           </Paragraph>
-          <Link variant="button" size="button" href={navigations.auth.index}>
+          <Link variant="button" size="button" href={navigations.registration.index}>
             参加登録はこちら
           </Link>
         </div>
@@ -154,18 +154,17 @@ export default async function IndexPage() {
         </InViewFadeIn>
       </section>
       <hr />
-      <section id="programs" className="container py-20 min-h-[60vh] items-center md:max-w-[64rem]">
-        <InViewFadeIn className="space-y-6 space-x-4">
+      <section id="programs" className="sm:container py-20 min-h-[60vh] items-center md:max-w-[64rem]">
+        <InViewFadeIn className="space-y-6">
           <Paragraph className="font-semibold text-indigo-500 text-center">濃密な時間を過ごしましょう</Paragraph>
           <H2 className="text-center">プログラム</H2>
           <div className="pt-5">
-            <Table>
+            <Table className="min-w-[300px]">
               <TableCaption>一部前後、延長する場合がございます</TableCaption>
               <TableHeader>
                 <TableRow>
                   <TableHead>time</TableHead>
-                  <TableHead>content</TableHead>
-                  <TableHead>speaker</TableHead>
+                  <TableHead>content/speaker</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -198,8 +197,13 @@ export default async function IndexPage() {
                 ].map((item, index) => (
                   <TableRow key={index}>
                     <TableCell className="font-medium">{item.time}</TableCell>
-                    <TableCell>{item.description}</TableCell>
-                    <TableCell>{item.speaker}</TableCell>
+                    <TableCell>
+                      <>
+                        <b>{item.description}</b>
+                        <br />
+                        {item.speaker}
+                      </>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -289,11 +293,11 @@ export default async function IndexPage() {
           ))}
         </div>
       </section>
-      <section className="container py-36 max-w-6xl flex flex-col items-center justify-center">
-        <h3 className="background-animate font-extrabold text-6xl bg-clip-text bg-gradient-to-r from-[#7C3AED] via-emerald-500 to-sky-500 text-transparent text-center p-5 mb-4 leading-none text-gray-900">
+      <section className="container py-12 md:py-24 max-w-6xl flex flex-col items-center justify-center">
+        <h3 className="background-animate font-extrabold text-4xl md:text-6xl bg-clip-text bg-gradient-to-r from-[#7C3AED] via-emerald-500 to-sky-500 text-transparent text-center p-5 mb-4 leading-none text-gray-900">
           Symbol/NEM Community Xymposium
         </h3>
-        <Link variant="button" size="button" href={navigations.auth.index}>
+        <Link variant="button" size="button" href={navigations.registration.index}>
           参加登録はこちら
         </Link>
       </section>
@@ -305,44 +309,44 @@ export default async function IndexPage() {
         <Paragraph className="text-muted-foreground text-center">
           ご不明点がありましたら、support@nemtus.com まで、ご連絡下さい
         </Paragraph>
-        {[
-          {
-            question: "参加にあたって注意事項はありますか？",
-            answer:
-              "利用規約をご確認下さい。特に、今回のイベントはSymbo/NEMブロックチェーンに関する情報提供がテーマであり、投資・仮想通貨等の売買に関する知見の共有や、税務相談を目的としたものではありません。また、金融商品セールス、ネットワークビジネス、宗教、政治活動等の勧誘を目的としたご来場はご遠慮ください。会場内にてそのような行為を発見した場合は、ご退場いただく場合があります。",
-          },
-          {
-            question: "参加に条件はありますか？",
-            answer:
-              "Xymposium はSymbol/NEMホルダー、ファンのためのシンポジウムであることから、SymbolウォレットとNEMウォレットをお持ちの方とさせていただきます。また、当日参加された方へご登録いただいたSymbolウォレットに入場券となる『チケットNFT』を送信させていただきます。",
-          },
-          {
-            question: "東京エディション虎ノ門会場での Xymposium に参加できますか？",
-            answer:
-              "Xymposium はSymbol/NEMホルダー、ファンのためのシンポジウムであることから、SymbolウォレットとNEMウォレットをお持ちの方とさせていただきます。また、当日参加された方へご登録いただいたSymbolウォレットに入場券となる『チケットNFT』を送信させていただきます。",
-          },
-          {
-            question: "参加条件である 100xym の保有は取引所アカウントでの保有でも良いですか？",
-            answer:
-              "受付の際に 100xym を保有するアカウントを登録した WALLET でアドレスの QR コードを提示頂く必要があります。 QR コードの提示が出来ない場合、参加頂く事が出来ません。",
-          },
-          {
-            question: "Metamaskは使えますか？",
-            answer: "Symbol ブロックチェーンは Metamask に対応しておらず、利用頂けません。",
-          },
-          {
-            question: "コアチームメンバーの話を聞きたいのですが英語はわかりません。",
-            answer:
-              "登壇中の資料や説明は英語での説明となってしまいますが、英語を理解出来る日本語メンバーもおりますので、必要に応じて補足説明等を実施致しますので安心してご参加下さい。また、伝えたいメッセージや相談事項がある場合は通訳にて対応致します。",
-          },
-        ].map((item, index) => (
-          <Accordion type="single" collapsible key={index}>
-            <AccordionItem value={index.toString()}>
-              <AccordionTrigger>{item.question}</AccordionTrigger>
+        <Accordion type="single" collapsible>
+          {[
+            {
+              question: "参加にあたって注意事項はありますか？",
+              answer:
+                "利用規約をご確認下さい。特に、今回のイベントはSymbo/NEMブロックチェーンに関する情報提供がテーマであり、投資・仮想通貨等の売買に関する知見の共有や、税務相談を目的としたものではありません。また、金融商品セールス、ネットワークビジネス、宗教、政治活動等の勧誘を目的としたご来場はご遠慮ください。会場内にてそのような行為を発見した場合は、ご退場いただく場合があります。",
+            },
+            {
+              question: "参加に条件はありますか？",
+              answer:
+                "Xymposium はSymbol/NEMホルダー、ファンのためのシンポジウムであることから、SymbolウォレットとNEMウォレットをお持ちの方とさせていただきます。また、当日参加された方へご登録いただいたSymbolウォレットに入場券となる『チケットNFT』を送信させていただきます。",
+            },
+            {
+              question: "東京エディション虎ノ門会場での Xymposium に参加できますか？",
+              answer:
+                "Xymposium はSymbol/NEMホルダー、ファンのためのシンポジウムであることから、SymbolウォレットとNEMウォレットをお持ちの方とさせていただきます。また、当日参加された方へご登録いただいたSymbolウォレットに入場券となる『チケットNFT』を送信させていただきます。",
+            },
+            {
+              question: "参加条件である 100xym の保有は取引所アカウントでも良いですか？",
+              answer:
+                "受付の際に 100xym を保有するアカウントを登録した WALLET でアドレスの QR コードを提示頂く必要があります。 QR コードの提示が出来ない場合、参加頂く事が出来ません。",
+            },
+            {
+              question: "Metamaskは使えますか？",
+              answer: "Symbol ブロックチェーンは Metamask に対応しておらず、利用頂けません。",
+            },
+            {
+              question: "コアチームメンバーの話を聞きたいのですが英語はわかりません。",
+              answer:
+                "登壇中の資料や説明は英語での説明となってしまいますが、英語を理解出来る日本語メンバーもおりますので、必要に応じて補足説明等を実施致しますので安心してご参加下さい。また、伝えたいメッセージや相談事項がある場合は通訳にて対応致します。",
+            },
+          ].map((item, index) => (
+            <AccordionItem key={index} value={index.toString()}>
+              <AccordionTrigger className="text-left">{item.question}</AccordionTrigger>
               <AccordionContent>{item.answer}</AccordionContent>
             </AccordionItem>
-          </Accordion>
-        ))}
+          ))}
+        </Accordion>
       </section>
       <section className="mt-20">
         <Footer />

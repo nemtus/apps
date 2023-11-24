@@ -14,10 +14,9 @@ import Image from "next/image";
 
 interface MainNavProps {
   items?: MainNavItem[];
-  children?: React.ReactNode;
 }
 
-export function MainNav({ items, children }: MainNavProps) {
+export function MainNav({ items }: MainNavProps) {
   const segment = useSelectedLayoutSegment();
   const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false);
 
@@ -50,12 +49,12 @@ export function MainNav({ items, children }: MainNavProps) {
         ) : null}
       </div>
       <div>
-        <Button variant={"ghost"} className="flex items-center space-x-2 md:hidden " onClick={handleToggleMenu}>
+        <Button variant={"ghost"} className="flex items-center space-x-2 md:hidden" onClick={handleToggleMenu}>
           {showMobileMenu ?? <Icons.close />}
           <Icons.menu className="h-6 w-6" />
         </Button>
       </div>
-      {showMobileMenu && items && <MobileNav items={items}>{children}</MobileNav>}
+      {showMobileMenu && items && <MobileNav items={items} onClose={handleToggleMenu} />}
     </div>
   );
 }

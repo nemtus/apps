@@ -1,8 +1,8 @@
 export const navigations = {
   index: "/",
   terms: "/terms",
-  auth: {
-    index: "/auth",
+  registration: {
+    index: "/registration",
   },
   user: {
     index: "/user",
