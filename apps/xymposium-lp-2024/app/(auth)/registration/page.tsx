@@ -1,11 +1,11 @@
 import SymbolLogoDark from "@/assets/symbol-logo-with-text-dark.png";
 import SymbolLogoLight from "@/assets/symbol-logo-with-text-light.png";
 import { SignUpForm } from "@/components/atom/moleculs/signup-form";
+import { Link } from "@/components/ui/link";
 import { Paragraph } from "@/components/ui/typography";
 import { navigations } from "@/lib/navigations";
 import { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Registration: Symbol/NEM Community Xymposium",
@@ -38,9 +38,7 @@ export default function AuthenticationPage() {
             <Image alt="symbol logo" src={SymbolLogoLight} height={40} />
           </Link>
         </div>
-
         <SignUpForm />
-
         <Paragraph className="px-8 text-center text-sm text-muted-foreground">
           By clicking continue, you agree to our{" "}
           <Link href="/terms#terms" className="underline underline-offset-4 hover:text-primary">
