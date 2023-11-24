@@ -26,7 +26,7 @@ export function MainNav({ items, children }: MainNavProps) {
   };
 
   return (
-    <div className="flex grow items-center">
+    <div className="flex grow items-center container">
       <div className="flex grow gap-6 md:gap-10">
         <Link href="/" className="items-center space-x-2 md:flex">
           <Image loading="eager" alt="symbol-logo-wide" src={SymbolLogoLight} height={30} />

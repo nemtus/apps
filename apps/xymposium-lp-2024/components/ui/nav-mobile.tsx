@@ -1,11 +1,9 @@
 import Link from "next/link";
 import * as React from "react";
 
-import SymbolLogoLight from "@/assets/symbol-logo-with-text-light.png";
 import { useLockBody } from "@/hooks/use-lock-body";
 import { cn } from "@/lib/utils";
 import { MainNavItem } from "@/types";
-import Image from "next/image";
 
 interface MobileNavProps {
   items: MainNavItem[];
@@ -22,9 +20,6 @@ export function MobileNav({ items, children }: MobileNavProps) {
       )}
     >
       <div className="relative z-20 grid gap-6 rounded-md bg-popover p-4 text-popover-foreground shadow-md">
-        <Link href="/" className="flex items-center space-x-2">
-          <Image loading="eager" alt="symbol-logo-wide" src={SymbolLogoLight} height={30} />
-        </Link>
         <nav className="grid grid-flow-row auto-rows-max text-sm">
           {items.map((item, index) => (
             <Link
