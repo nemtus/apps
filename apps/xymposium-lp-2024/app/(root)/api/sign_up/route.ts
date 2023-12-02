@@ -20,6 +20,9 @@ export async function POST(request: Request) {
   if (!body.address) {
     return NextResponse.json({ message: "Incorrect symbol address." }, { status: 404 });
   }
+  if (!body.twitter) {
+    return NextResponse.json({ message: "Incorrect twitter id." }, { status: 404 });
+  }
 
   const url = new URL("https://symbolnode.blockchain-authn.app:3001");
   url.pathname = `/accounts/${body.address.trim()}`;
@@ -31,7 +34,7 @@ export async function POST(request: Request) {
   }
 
   const res = await fetch(
-    "https://script.google.com/macros/s/AKfycbxw4ij86vTfahnTBLVz4v1Cq9gI3MABCVUqlSKCqsgCiztKfv8Ovfi0sPLpg9FEJoqzJw/exec",
+    "https://script.google.com/macros/s/AKfycbxnhHvBXRCR2_M3AF_BLHP5EYR1_9pRxhdrZFM9KYTZpjDGH_fDGeZCunar_9JqePRXDw/exec",
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },

@@ -30,6 +30,7 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
       phone: form.phoneNumber.value?.replace(/-/g, "")?.trim(),
       firstName: form.firstName.value?.trim(),
       lastName: form.lastName.value?.trim(),
+      twitter: form.twitter.value?.trim(),
     };
 
     if (!form.terms.value) {
@@ -62,10 +63,8 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
       <Card className="py-4">
         <CardContent className="flex flex-col space-y-6">
           <div className="flex flex-col space-y-2 text-center">
-            <H1 className="pb-0 text-2xl sm:text-2xl md:text-2xl font-semibold tracking-tight">Create an account</H1>
-            <Paragraph className="text-sm text-muted-foreground">
-              Enter your email below to create your account
-            </Paragraph>
+            <H1 className="pb-0 text-2xl sm:text-2xl md:text-2xl font-semibold tracking-tight">Apply for an event</H1>
+            <Paragraph className="text-sm text-muted-foreground">Please enter the required information</Paragraph>
           </div>
           <form onSubmit={onSubmit}>
             <div className="grid gap-2">
@@ -147,6 +146,28 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
                   onInput={(e) => {
                     if (e.currentTarget.validity.patternMismatch) {
                       e.currentTarget.setCustomValidity("Please enter 39-digit symbol address without hyphens.");
+                    } else {
+                      e.currentTarget.setCustomValidity("");
+                    }
+                  }}
+                />
+              </div>
+              <div>
+                <Label className="sr-only" htmlFor="text">
+                  twitter account id
+                </Label>
+                <Input
+                  id="twitter"
+                  required={true}
+                  placeholder="@twitter-id"
+                  type="text"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  disabled={isLoading}
+                  pattern="^@.*"
+                  onInput={(e) => {
+                    if (e.currentTarget.validity.patternMismatch) {
+                      e.currentTarget.setCustomValidity("Please enter twitter account id.");
                     } else {
                       e.currentTarget.setCustomValidity("");
                     }

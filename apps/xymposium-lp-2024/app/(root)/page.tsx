@@ -227,27 +227,12 @@ export default async function IndexPage() {
             {
               title: "NEMTUS",
               href: "https://nemtus.com",
-              description: "Filler text is dummy text which has no meaning however looks very similar to real text.",
-            },
-            {
-              title: "HertLog",
-              href: "https://nftdrive.net",
-              description: "Filler text is dummy text which has no meaning however looks very similar to real text.",
+              description: "日本において「NEM」と「Symbol」技術の普及や発展を促進するNPO法人",
             },
             {
               title: "FOOD NFT",
               href: "https://food-nft.io",
-              description: "Filler text is dummy text which has no meaning however looks very similar to real text.",
-            },
-            {
-              title: "合同会社パレットリンク沖縄",
-              href: "https://plo.llc",
-              description: "NFT 次世代写真館 UMUI を提供",
-            },
-            {
-              title: "株式会社NFT Drive",
-              href: "https://nftdrive.net",
-              description: "-",
+              description: "味覚データをNFT化することで、味のデジタル資産運用を実現します",
             },
             {
               title: "株式会社Opening Line",
@@ -258,27 +243,6 @@ export default async function IndexPage() {
               title: "株式会社Health Care Gate",
               href: "https://healthcaregate.co.jp",
               description: "ブロックチェーンを使った服薬管理アプリ DrugN を提供",
-            },
-            {
-              title: "ぶどう株式会社",
-              href: "https://grape.ne.jp/jpn/",
-              description:
-                "ブロックチェーンを使った名刺の ブロックチェーンビジネスカードや バーチャルカードトークンつくーるを提供",
-            },
-            {
-              title: "SandwichFactory",
-              href: "http://www.sandwich-f.com",
-              description: "-",
-            },
-            {
-              title: "22Cafe",
-              href: "https://www.22-cafe.com",
-              description: "-",
-            },
-            {
-              title: "CANADE",
-              href: "https://www.canade.shop",
-              description: "-",
             },
           ].map((item, index) => (
             <InViewFadeIn className="flex flex-col gap-4 md:gap-6" key={index}>

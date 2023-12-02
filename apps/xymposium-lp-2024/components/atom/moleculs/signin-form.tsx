@@ -35,7 +35,7 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
         router.push(navigations.user.index);
       })
       .catch(() => {
-        alert("ログインに失敗しました。再度やり直して下さい");
+        alert("登録に失敗しました。再度やり直して下さい");
       })
       .finally(() => {
         setIsLoading(false);
@@ -47,8 +47,8 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
       <Card className="py-4">
         <CardContent className="flex flex-col space-y-6">
           <div className="flex flex-col space-y-2 text-center">
-            <H1 className="pb-0 text-2xl sm:text-2xl md:text-2xl font-semibold tracking-tight">Create an account</H1>
-            <Paragraph className="text-sm text-muted-foreground">Enter your email and password</Paragraph>
+            <H1 className="pb-0 text-2xl sm:text-2xl md:text-2xl font-semibold tracking-tight">Apply for an event</H1>
+            <Paragraph className="text-sm text-muted-foreground">Enter your name, email and symbol address</Paragraph>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4">
