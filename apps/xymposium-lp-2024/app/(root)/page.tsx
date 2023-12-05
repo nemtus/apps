@@ -287,8 +287,7 @@ export default async function IndexPage() {
             },
             {
               question: "東京エディション虎ノ門会場での Xymposium に参加できますか？",
-              answer:
-                "イベントの主催者が異なる為、お答えできません。お手数ですが X の Symbol アカウント等からの発表をお待ち下さい。",
+              answer: "イベントの主催者が異なるため、お手数ですがXのSymbolアカウント等からの発表をお待ち下さい。",
             },
             {
               question: "参加条件である 100xym の保有は取引所アカウントでも良いですか？",
