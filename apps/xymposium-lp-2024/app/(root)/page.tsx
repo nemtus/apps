@@ -283,12 +283,12 @@ export default async function IndexPage() {
             {
               question: "参加に条件はありますか？",
               answer:
-                "Xymposium はSymbol/NEMホルダー、ファンのためのシンポジウムであることから、SymbolウォレットとNEMウォレットをお持ちの方とさせていただきます。また、当日参加された方へご登録いただいたSymbolウォレットに入場券となる『チケットNFT』を送信させていただきます。",
+                "XymposiumはSymbol/NEMホルダー、ファンのためのシンポジウムであることから、Symbolウォレットで100xym以上保有の方のみと致します。",
             },
             {
               question: "東京エディション虎ノ門会場での Xymposium に参加できますか？",
               answer:
-                "Xymposium はSymbol/NEMホルダー、ファンのためのシンポジウムであることから、SymbolウォレットとNEMウォレットをお持ちの方とさせていただきます。また、当日参加された方へご登録いただいたSymbolウォレットに入場券となる『チケットNFT』を送信させていただきます。",
+                "イベントの主催者が異なる為、お答えできません。お手数ですが X の Symbol アカウント等からの発表をお待ち下さい。",
             },
             {
               question: "参加条件である 100xym の保有は取引所アカウントでも良いですか？",
