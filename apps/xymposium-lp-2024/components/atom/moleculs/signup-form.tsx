@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Link } from "@/components/ui/link";
 import { H1, Paragraph } from "@/components/ui/typography";
 import { navigations } from "@/lib/navigations";
 import { cn } from "@/lib/utils";
@@ -60,7 +61,7 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
 
   return (
     <div className={cn("grid gap-6", className)} {...props}>
-      <Card className="py-4">
+      <Card className="py-4 bg-background backdrop-blur-sm" style={{ background: "hsla(0,0%,100%,.7)" }}>
         <CardContent className="flex flex-col space-y-6">
           <div className="flex flex-col space-y-2 text-center">
             <H1 className="pb-0 text-2xl sm:text-2xl md:text-2xl font-semibold tracking-tight">Apply for an event</H1>
@@ -187,6 +188,16 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
                 {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
                 Sign In with Email
               </Button>
+              <Paragraph className="text-center text-sm text-muted-foreground pt-2">
+                by clicking continue, you agree to our{" "}
+                <Link href="/terms#terms" className="underline text-sm underline-offset-4 hover:text-primary">
+                  Terms of Service
+                </Link>{" "}
+                and{" "}
+                <Link href="/terms#privacy" className="underline text-sm underline-offset-4 hover:text-primary">
+                  Privacy Policy
+                </Link>
+              </Paragraph>
             </div>
           </form>
         </CardContent>

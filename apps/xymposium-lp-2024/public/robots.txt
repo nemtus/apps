@@ -3,8 +3,8 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://symbol-community.com
+Host: https://community-xymposium.nemtus.com/
 
 # Sitemaps
-Sitemap: https://symbol-community.com/sitemap.xml
-Sitemap: https://symbol-community.com/server-sitemap.xml
+Sitemap: https://community-xymposium.nemtus.com/sitemap.xml
+Sitemap: https://community-xymposium.nemtus.com/server-sitemap.xml
