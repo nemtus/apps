@@ -187,7 +187,7 @@ export default async function IndexPage() {
                   {
                     time: "20:30",
                     speaker: "コア開発者メンバー",
-                    description: "Q&A",
+                    description: "Q&A や他参加者との交流",
                   },
                   {
                     time: "21:30",
@@ -258,7 +258,7 @@ export default async function IndexPage() {
         </div>
       </section>
       <section className="container py-12 md:py-24 max-w-6xl flex flex-col items-center justify-center">
-        <h3 className="background-animate font-extrabold text-4xl md:text-6xl bg-clip-text bg-gradient-to-r from-[#7C3AED] via-emerald-500 to-sky-500 text-transparent text-center p-5 mb-4 leading-none text-gray-900">
+        <h3 className="background-animate font-extrabold text-4xl md:text-6xl text-center p-5 mb-4 leading-none text-gray-900">
           Symbol/NEM Community Xymposium
         </h3>
         <Link variant="button" size="button" href={navigations.registration.index}>
