@@ -177,12 +177,12 @@ export default async function IndexPage() {
                   {
                     time: "19:00",
                     speaker: "NEMTUS理事長 後藤博之",
-                    description: "開場",
+                    description: "挨拶",
                   },
                   {
                     time: "19:10",
                     speaker: "コア開発者 Hatchet",
-                    description: "Xymposium session",
+                    description: "Xymposium Session",
                   },
                   {
                     time: "20:00",
