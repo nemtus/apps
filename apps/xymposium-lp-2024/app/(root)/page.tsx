@@ -170,27 +170,32 @@ export default async function IndexPage() {
               <TableBody>
                 {[
                   {
-                    time: "19:30",
+                    time: "18:30",
                     speaker: "-",
                     description: "開場",
                   },
                   {
-                    time: "19:50",
+                    time: "19:00",
                     speaker: "NEMTUS理事長 後藤博之",
                     description: "開場",
                   },
                   {
-                    time: "20:00",
+                    time: "19:10",
                     speaker: "コア開発者 Hatchet",
                     description: "Xymposium session",
                   },
                   {
-                    time: "20:30",
+                    time: "20:00",
                     speaker: "コア開発者メンバー",
                     description: "Q&A や他参加者との交流",
                   },
                   {
-                    time: "21:30",
+                    time: "20:30",
+                    speaker: "-",
+                    description: "歓談",
+                  },
+                  {
+                    time: "22:00",
                     speaker: "-",
                     description: "終了",
                   },
