@@ -119,7 +119,7 @@ export default async function IndexPage() {
               </div>
               <div>
                 <Paragraph className="font-bold">時間</Paragraph>
-                <Paragraph>19時 30分 〜 21時 30分</Paragraph>
+                <Paragraph>19時 00分 〜 22時 00分</Paragraph>
               </div>
               <div>
                 <Paragraph className="font-bold">会場</Paragraph>
