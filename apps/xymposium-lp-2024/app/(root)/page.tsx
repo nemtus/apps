@@ -23,8 +23,8 @@ export default async function IndexPage() {
             コミュニティ向けのイベント &quot;Community Xymposium&quot; を日本の NEM/Symbol
             コミュニティ有志により開催いたします。
           </Paragraph>
-          <Link variant="button" size="button" href={navigations.registration.index}>
-            参加登録はこちら
+          <Link variant="secondary" size="button" href={"/"} aria-disabled>
+            本イベントは終了しました
           </Link>
         </div>
       </section>
@@ -266,8 +266,8 @@ export default async function IndexPage() {
         <h3 className="background-animate font-extrabold text-4xl md:text-6xl text-center p-5 mb-4 leading-none text-gray-900">
           Symbol/NEM Community Xymposium
         </h3>
-        <Link variant="button" size="button" href={navigations.registration.index}>
-          参加登録はこちら
+        <Link variant="secondary" size="button" href={"/"} aria-disabled>
+          本イベントは終了しました
         </Link>
       </section>
       <section
