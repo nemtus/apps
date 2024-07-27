@@ -4,6 +4,8 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Symbol/NEM Community Xymposium",
   description: "Symbol/NEM コミュニティによる Xymposium のサイドイベントを開催致します",

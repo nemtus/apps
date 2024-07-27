@@ -12,7 +12,7 @@ import { Link } from "@/components/ui/link";
 import { H1, Paragraph } from "@/components/ui/typography";
 import { navigations } from "@/lib/navigations";
 import { cn } from "@/lib/utils";
-import { IUser } from "@/models/user";
+import { IUser } from "@/types/user";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -208,9 +208,9 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
 
             <div className="h-72 flex flex-col justify-center items-center space-y-4">
               <Paragraph className="text-center">
-                Xymposium 2023 への
+                Community Xymposium 2024 への
                 <br />
-                参加申し込みは終了しました
+                参加申し込みは間もなく開始致します
               </Paragraph>
               <Link href={navigations.index} variant={"button"} size={"button"}>
                 ホームへ戻る

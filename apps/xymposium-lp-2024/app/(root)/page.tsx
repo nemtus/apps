@@ -1,121 +1,104 @@
 import HatchetIcon from "@/assets/images/hatchet.png";
 import NemtusIcon from "@/assets/images/nemtus.png";
+import JaguarIcon from "@/assets/images/hatchet.png";
 import OpeningLineIcon from "@/assets/images/openingline.jpg";
-import TokyoEditionToranomon from "@/assets/tokyo-edition-toranomon.jpeg";
-import InViewFadeIn from "@/components/atom/moleculs/inview-fadein";
+import TokyoNodeBanner from "@/assets/tokyo-node-banner.webp";
+import AnimatedInViewFadeIn from "@/components/ui/animated-inview-fadein";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import AnimatedBorderTrail from "@/components/ui/animated-border-trail";
 import { Footer } from "@/components/ui/footer";
 import { Link } from "@/components/ui/link";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { H1, H2, H3, Paragraph } from "@/components/ui/typography";
-import { navigations } from "@/lib/navigations";
 import Image from "next/image";
+import AnimatedScrollingTestimonials from "@/components/ui/animated-scrolling-testimonials";
 
 export default async function IndexPage() {
   return (
     <>
       <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
-        <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center justify-center min-h-[60vh] md:min-h-[50vh] lg:min-h-[40vh]">
-          <H1>Symbol/NEM Xymposium 2023 東京</H1>
+        <div className="container flex max-w-[64rem] flex-col items-center gap-8 text-center justify-center min-h-[80vh] md:min-h-[70vh] lg:min-h-[60vh]">
+          <H1 className="text-4xl">
+            <span className="text-xl">Symbol/NEM</span>
+            <br /> Community Xymposium 2024
+          </H1>
           <Paragraph className="max-w-[42rem] text-muted-foreground leading-8">
-            コミュニティ向けのイベント &quot;Community Xymposium&quot; を日本の NEM/Symbol
-            コミュニティ有志により開催いたします。
+            Xymposiym 2024のサイドイベントをコミュニティにより開催
           </Paragraph>
-          <Link variant="secondary" size="button" href={"/"} aria-disabled>
-            本イベントは終了しました
-          </Link>
+          <AnimatedBorderTrail duration="5s" trailSize="lg" className="mt-4">
+            <Link variant="ghost" size="buttonLg" href={"/"} aria-disabled className="px-20">
+              参加申込み
+            </Link>
+          </AnimatedBorderTrail>
         </div>
       </section>
       <section
         id="features"
         className="flex flex-col justify-between gap-6 sm:gap-5 md:gap-10 lg:flex-row container space-y-6 bg-slate-50 py-8 dark:bg-transparent md:py-12"
       >
-        <div className="flex flex-col justify-center text-center md:text-left gap-10 lg:py-12 lg:text-left w-full lg:w-5/12 xl:py-24">
-          <H2>What&lsquo;s in Xymposium?</H2>
-          <p>
-            2023年12月19日（火）に東京エディション虎ノ門において、Symbol/XYM のシンポジウム &quot;Xymposium&quot;
-            を開催することが発表がされました。 こちらのコミュニティ向けのサイドイベントとして &quot;Community
-            Xymposium&quot; を開催し、Symbol/NEM の今とこれからをお届け致します。
-          </p>
+        <div className="flex flex-col justify-center gap-10 lg:py-12 lg:text-left w-full lg:w-5/12 xl:py-24">
+          <AnimatedInViewFadeIn>
+            <H2 className="text-center lg:text-left">What&lsquo;s in Xymposium?</H2>
+            <p className="text-left">
+              2024年9月27日に東京ノードにて、Symbol/XYM のイベント &quot;Xymposium 2.0&quot;
+              を開催することが発表がされました。 &quot;Xymposium&quot; は
+              2023年にも開催され、コアデベロッパーやコミュニティによる多くの取組事例が公表されました。
+            </p>
+          </AnimatedInViewFadeIn>
         </div>
-        <div className="overflow-hidden lg:h-auto w-full lg:w-7/12 flex justify-center items-center">
-          <Image
-            loading="eager"
-            className="rounded-lg shadow-lg animate-in"
-            src={TokyoEditionToranomon}
-            alt="Xymposium 虎ノ門 2023 バナー"
-            width={1024}
-          />
+        <div className="lg:h-auto w-full lg:w-7/12 flex justify-center items-center">
+          <AnimatedInViewFadeIn>
+            <Image
+              loading="eager"
+              className="rounded-lg drop-shadow-md"
+              src={TokyoNodeBanner}
+              alt="Xymposium 2.0 東京ノードバナー"
+              width={1024}
+            />
+          </AnimatedInViewFadeIn>
         </div>
       </section>
       <section id="participant" className="container bg-slate-50 py-8 dark:bg-transparent md:py-12 lg:py-24">
-        <InViewFadeIn className="space-y-6">
+        <AnimatedInViewFadeIn className="space-y-6">
           <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
             <H2>参加者</H2>
             <Paragraph className="max-w-[85%] text-muted-foreground">
-              このイベントでは &quot; Xymposium &quot; にあわせて来日する NEM/Symbol
+              このイベントでは &quot; Xymposium 2.0 &quot; にあわせて来日する NEM/Symbol
               コア開発者の1人である、ハチェット氏と、来日の意向を表明している数人のコアチームメンバーを招待する他、日々活動しているコミュニティメンバーの来場、企業ブースの出店も予定されています。
             </Paragraph>
           </div>
-          <div className="mx-auto grid justify-center gap-4 grid-cols-1 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
-            {[
-              {
-                image: HatchetIcon.src,
-                imageFallback: "H",
-                name: "ハチェット",
-                description: "Symbol/NEM コア開発者",
-              },
-              // {
-              //   image: JaguarIcon.src,
-              //   imageFallback: "J",
-              //   name: "ジャガー",
-              //   description: "Symbol/NEM コア開発者",
-              // },
-              // {
-              //   image: GimreIcon.src,
-              //   imageFallback: "G",
-              //   name: "ギムレ",
-              //   description: "Symbol/NEM コア開発者",
-              // },
-              {
-                image: NemtusIcon.src,
-                imageFallback: "N",
-                name: "NEMTUS",
-                description: "NPO法人 NEM技術普及推進会",
-              },
-              {
-                image: OpeningLineIcon.src,
-                imageFallback: "O",
-                name: "Opening Line",
-                description: "ブロックチェーンに注力するソフトウェア会社",
-              },
-            ].map((item, index) => (
-              <Card className="flex flex-col justify-between p-2" key={index}>
-                <CardHeader>
-                  <Avatar>
-                    <AvatarImage src={item.image} />
-                    <AvatarFallback>{item.imageFallback}</AvatarFallback>
-                  </Avatar>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-3">
-                  <CardTitle className="text-base">{item.name}</CardTitle>
-                  <CardDescription>{item.description}</CardDescription>
-                </CardContent>
-              </Card>
-            ))}
+          <div>
+            <AnimatedScrollingTestimonials
+              data={[
+                {
+                  image: HatchetIcon.src,
+                  name: "ハチェット",
+                  description: "Symbol/NEM コア開発者",
+                },
+                {
+                  image: JaguarIcon.src,
+                  name: "ジャガー",
+                  description: "Symbol/NEM コア開発者",
+                },
+                { image: NemtusIcon.src, name: "NEMTUS", description: "NPO法人 NEM技術普及推進会" },
+                {
+                  image: OpeningLineIcon.src,
+                  name: "Opening Line",
+                  description: "ブロックチェーンに注力するソフトウェア会社",
+                },
+              ]}
+            />
           </div>
-        </InViewFadeIn>
+        </AnimatedInViewFadeIn>
       </section>
       <section id="event" className="container py-8 md:py-12 lg:py-24 min-h-[60vh] md:max-w-[64rem]">
-        <InViewFadeIn className="space-y-10">
+        <AnimatedInViewFadeIn className="space-y-10">
           <div>
             <H3 className="py-10">開催概要</H3>
             <div className="mx-auto grid justify-center gap-8 grid-cols-1 sm:grid-cols-2">
               <div>
                 <Paragraph className="font-bold">日程</Paragraph>
-                <Paragraph>2023年 12月 19日（火）</Paragraph>
+                <Paragraph>2024年 09月 27日（火）</Paragraph>
               </div>
               <div>
                 <Paragraph className="font-bold">時間</Paragraph>
@@ -136,9 +119,6 @@ export default async function IndexPage() {
               <div>
                 <Paragraph className="font-bold">参加費</Paragraph>
                 <Paragraph>無料</Paragraph>
-                <Paragraph className="text-sm">
-                  受付にて 100xym 以上の残高を持つ WALLET の アドレス QR コードの提示を必須とします
-                </Paragraph>
               </div>
             </div>
           </div>
@@ -151,14 +131,17 @@ export default async function IndexPage() {
               referrerPolicy="no-referrer-when-downgrade"
             ></iframe>
           </div>
-        </InViewFadeIn>
+        </AnimatedInViewFadeIn>
       </section>
       <hr />
       <section id="programs" className="sm:container py-20 min-h-[60vh] items-center md:max-w-[64rem]">
-        <InViewFadeIn className="space-y-6">
+        <AnimatedInViewFadeIn className="space-y-6">
           <Paragraph className="font-semibold text-indigo-500 text-center">濃密な時間を過ごしましょう</Paragraph>
           <H2 className="text-center">プログラム</H2>
-          <div className="pt-5">
+          <div className="min-h-[50svh] flex justify-center items-center">
+            <p className="text-2xl font-semibold text-muted-foreground">Comming Soone</p>
+          </div>
+          {/* <div className="pt-5">
             <Table className="min-w-[300px]">
               <TableCaption>一部前後、延長する場合がございます</TableCaption>
               <TableHeader>
@@ -213,21 +196,21 @@ export default async function IndexPage() {
                 ))}
               </TableBody>
             </Table>
-          </div>
-        </InViewFadeIn>
+          </div> */}
+        </AnimatedInViewFadeIn>
       </section>
       <hr />
       <section
         id="booth"
         className="container space-y-6 py-20 min-h-[60vh]  md:max-w-[64rem] flex flex-col items-stretch"
       >
-        <InViewFadeIn className="space-y-6">
+        <AnimatedInViewFadeIn className="space-y-6">
           <Paragraph className="font-semibold text-indigo-500 text-center">
             気になる企業、チームと交流しましょう
           </Paragraph>
           <H2 className="text-center ml-0 pb-10">出店ブース</H2>
-        </InViewFadeIn>
-        <div className="grid gap-8 sm:grid-cols-2 md:gap-12 xl:grid-cols-3 xl:gap-16">
+        </AnimatedInViewFadeIn>
+        {/* <div className="grid gap-8 sm:grid-cols-2 md:gap-12 xl:grid-cols-3 xl:gap-16">
           {[
             {
               title: "NEMTUS",
@@ -250,7 +233,7 @@ export default async function IndexPage() {
               description: "ブロックチェーンを使った服薬管理アプリ DrugN を提供",
             },
           ].map((item, index) => (
-            <InViewFadeIn className="flex flex-col gap-4 md:gap-6" key={index}>
+            <AnimatedInViewFadeIn className="flex flex-col gap-4 md:gap-6" key={index}>
               <Paragraph className="text-2xl font-bold pb-1">{item.title}</Paragraph>
               <Paragraph className="text-muted-foreground pb-3">{item.description}</Paragraph>
               <div className="mt-auto">
@@ -258,17 +241,25 @@ export default async function IndexPage() {
                   More
                 </Link>
               </div>
-            </InViewFadeIn>
+            </AnimatedInViewFadeIn>
           ))}
+        </div> */}
+        <div className="min-h-[50svh] flex justify-center items-center">
+          <p className="text-2xl font-semibold text-muted-foreground">Comming Soone</p>
         </div>
       </section>
       <section className="container py-12 md:py-24 max-w-6xl flex flex-col items-center justify-center">
-        <h3 className="background-animate font-extrabold text-4xl md:text-6xl text-center p-5 mb-4 leading-none text-gray-900">
-          Symbol/NEM Community Xymposium
-        </h3>
-        <Link variant="secondary" size="button" href={"/"} aria-disabled>
-          本イベントは終了しました
-        </Link>
+        <div className="container flex max-w-[64rem] flex-col items-center gap-8 text-center justify-center min-h-[80vh] md:min-h-[70vh] lg:min-h-[60vh]">
+          <H2 className="text-4xl">
+            <span className="text-xl">Symbol/NEM</span>
+            <br /> Community Xymposium 2024
+          </H2>
+          <AnimatedBorderTrail duration="5s" trailSize="lg" className="mt-4">
+            <Link variant="ghost" size="buttonLg" href={"/"} aria-disabled className="px-20">
+              参加申込み
+            </Link>
+          </AnimatedBorderTrail>
+        </div>
       </section>
       <section
         id="questions"
@@ -286,22 +277,8 @@ export default async function IndexPage() {
                 "利用規約をご確認下さい。特に、今回のイベントはSymbo/NEMブロックチェーンに関する情報提供がテーマであり、投資・仮想通貨等の売買に関する知見の共有や、税務相談を目的としたものではありません。また、金融商品セールス、ネットワークビジネス、宗教、政治活動等の勧誘を目的としたご来場はご遠慮ください。会場内にてそのような行為を発見した場合は、ご退場いただく場合があります。",
             },
             {
-              question: "参加に条件はありますか？",
-              answer:
-                "XymposiumはSymbol/NEMホルダー、ファンのためのシンポジウムであることから、Symbolウォレットで100xym以上保有の方のみと致します。",
-            },
-            {
-              question: "東京エディション虎ノ門会場での Xymposium に参加できますか？",
-              answer: "イベントの主催者が異なるため、お手数ですがXのSymbolアカウント等からの発表をお待ち下さい。",
-            },
-            {
-              question: "参加条件である 100xym の保有は取引所アカウントでも良いですか？",
-              answer:
-                "受付の際に 100xym を保有するアカウントを登録した WALLET でアドレスの QR コードを提示頂く必要があります。 QR コードの提示が出来ない場合、参加頂く事が出来ません。",
-            },
-            {
-              question: "Metamaskは使えますか？",
-              answer: "Symbol ブロックチェーンは Metamask に対応しておらず、利用頂けません。",
+              question: "東京ノード会場での Xymposium に参加できますか？",
+              answer: "イベントの主催者が異なるため、お手数ですが X の Symbol アカウント等からの発表をお待ち下さい。",
             },
             {
               question: "コアチームメンバーの話を聞きたいのですが英語はわかりません。",
