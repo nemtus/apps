@@ -1,9 +1,9 @@
 import Marquee from "@/components/ui/animated-marquee";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 
 interface Testimonial {
   name: string;
-  image: string;
+  image: StaticImageData;
   description: string;
 }
 
@@ -15,14 +15,7 @@ function TestimonialCard({ testimonial: { image, name, description } }: { testim
   return (
     <div className="flex h-44 w-96 overflow-hidden rounded-xl border bg-background dark:border-zinc-700" key={name}>
       <div className="relative h-full w-32 flex-shrink-0 overflow-hidden">
-        <Image
-          loading="lazy"
-          src={image}
-          alt={name}
-          width={100}
-          height={100}
-          className="h-full w-full object-contain"
-        />
+        <Image loading="lazy" src={image} alt={name} width={100} className="h-full w-full object-contain" />
       </div>
       <div className="px-4 py-2 flex flex-col space-y-4">
         <span className="block text-lg font-bold text-foreground">{name}</span>
