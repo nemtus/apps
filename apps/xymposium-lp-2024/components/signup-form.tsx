@@ -37,25 +37,29 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
       return alert("You must agree to the terms of service to continue");
     }
 
-    fetch("/api/sign_up", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    })
-      .then((e) => {
-        if (e.status !== 200) {
-          throw new Error();
-        }
-
-        alert("受付を完了しました。メールを確認下さい");
-        setIsFinished(true);
-      })
-      .catch(() => {
-        alert("登録に失敗しました。再度やり直して下さい");
-      })
-      .finally(() => {
-        setIsLoading(false);
+    try {
+      const result = await fetch("/api/sign_up", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
       });
+
+      if (result.ok) {
+        alert("受付を完了しました。メールを確認下さい");
+      } else {
+        const errorObj = await result.json();
+        throw new Error(errorObj.message);
+      }
+    } catch (e) {
+      if (e instanceof Error) {
+        console.log(e.message);
+        alert(e.message);
+      } else {
+        alert("登録に失敗しました。再度やり直して下さい");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (

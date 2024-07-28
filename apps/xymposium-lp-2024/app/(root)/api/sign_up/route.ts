@@ -22,7 +22,7 @@ export async function POST(request: Request) {
   }
 
   const res = await fetch(
-    "https://script.google.com/macros/s/AKfycbyv2SuZoiN2SQ-uQGqZ51GehdcPjmrjTf0ygbQff1YPgUBe2VQy7VzombbA8ss8gidB/exec",
+    "https://script.google.com/macros/s/AKfycbxE75ZHjx_hJD0rVdYnU_RxXZB7aVm385CEVqo1HcSCl4HTAlcUAki7FM7l65V5KUwf/exec",
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
