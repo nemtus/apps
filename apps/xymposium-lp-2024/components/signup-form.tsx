@@ -2,12 +2,12 @@
 
 import * as React from "react";
 
-// import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-// import { Checkbox } from "@/components/ui/checkbox";
-// import { Icons } from "@/components/ui/icons";
-// import { Input } from "@/components/ui/input";
-// import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Icons } from "@/components/ui/icons";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Link } from "@/components/ui/link";
 import { H1, Paragraph } from "@/components/ui/typography";
 import { navigations } from "@/lib/navigations";
@@ -30,7 +30,6 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
       phone: form.phoneNumber.value?.replace(/-/g, "")?.trim(),
       firstName: form.firstName.value?.trim(),
       lastName: form.lastName.value?.trim(),
-      twitter: form.twitter.value?.trim(),
     };
 
     if (!form.terms.value) {
@@ -72,7 +71,7 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
               <H1 className="pb-0 text-2xl sm:text-2xl md:text-2xl font-semibold tracking-tight">Apply for an event</H1>
               <Paragraph className="text-sm text-muted-foreground">Please enter the required information</Paragraph>
             </div>
-            {/* <form onSubmit={onSubmit}>
+            <form onSubmit={onSubmit}>
               <div className="grid gap-2">
                 <div className="grid gap-2 grid-cols-2">
                   <div>
@@ -142,8 +141,8 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
                   </Label>
                   <Input
                     id="address"
-                    required={true}
-                    placeholder="symbol address"
+                    required={false}
+                    placeholder="(optional) symbol address"
                     type="text"
                     autoCapitalize="none"
                     autoCorrect="off"
@@ -152,28 +151,6 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
                     onInput={(e) => {
                       if (e.currentTarget.validity.patternMismatch) {
                         e.currentTarget.setCustomValidity("Please enter 39-digit symbol address without hyphens.");
-                      } else {
-                        e.currentTarget.setCustomValidity("");
-                      }
-                    }}
-                  />
-                </div>
-                <div>
-                  <Label className="sr-only" htmlFor="text">
-                    twitter account id
-                  </Label>
-                  <Input
-                    id="twitter"
-                    required={true}
-                    placeholder="@twitter-id"
-                    type="text"
-                    autoCapitalize="none"
-                    autoCorrect="off"
-                    disabled={isLoading}
-                    pattern="^@.*"
-                    onInput={(e) => {
-                      if (e.currentTarget.validity.patternMismatch) {
-                        e.currentTarget.setCustomValidity("Please enter twitter account id.");
                       } else {
                         e.currentTarget.setCustomValidity("");
                       }
@@ -191,7 +168,7 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
                 </div>
                 <Button disabled={isLoading}>
                   {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-                  Sign In with Email
+                  Register
                 </Button>
                 <Paragraph className="text-center text-sm text-muted-foreground pt-2">
                   by clicking continue, you agree to our{" "}
@@ -204,18 +181,7 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
                   </Link>
                 </Paragraph>
               </div>
-            </form> */}
-
-            <div className="h-72 flex flex-col justify-center items-center space-y-4">
-              <Paragraph className="text-center">
-                Community Xymposium 2024 への
-                <br />
-                参加申し込みは間もなく開始致します
-              </Paragraph>
-              <Link href={navigations.index} variant={"button"} size={"button"}>
-                ホームへ戻る
-              </Link>
-            </div>
+            </form>
           </CardContent>
         </Card>
       )}

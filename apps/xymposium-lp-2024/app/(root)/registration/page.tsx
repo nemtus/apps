@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function AuthenticationPage() {
   return (
     <div className="container min-h-screen flex items-center justify-center">
-      <div className="max-w-md flex flex-col items-center space-y-8">
+      <div className="max-w-md flex flex-col items-center space-y-8 mt-20">
         <Link href={navigations.index}>
           <Image loading="eager" alt="symbol logo" src={SymbolLogoLight} height={40} />
         </Link>
