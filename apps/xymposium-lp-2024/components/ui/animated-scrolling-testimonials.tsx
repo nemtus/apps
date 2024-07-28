@@ -28,19 +28,19 @@ function TestimonialCard({ testimonial: { image, name, description } }: { testim
 export default function AnimatedScrollingTestimonials({ data }: TestimonialProps) {
   return (
     <div className="w-full">
-      <Marquee className="[--duration:25s]" pauseOnHover applyMask={false}>
+      <Marquee className="[--duration:25s]" pauseOnHover={false} applyMask={false}>
         {data.map((testimonial) => (
           <TestimonialCard key={testimonial.name} testimonial={testimonial} />
         ))}
       </Marquee>
 
-      <Marquee reverse className="[--duration:25s]" pauseOnHover applyMask={false}>
+      <Marquee reverse className="[--duration:25s]" pauseOnHover={false} applyMask={false}>
         {data.map((testimonial) => (
           <TestimonialCard key={testimonial.name} testimonial={testimonial} />
         ))}
       </Marquee>
 
-      <Marquee className="[--duration:25s]" pauseOnHover applyMask={false}>
+      <Marquee className="[--duration:25s]" pauseOnHover={false} applyMask={false}>
         {data.map((testimonial) => (
           <TestimonialCard key={testimonial.name} testimonial={testimonial} />
         ))}
