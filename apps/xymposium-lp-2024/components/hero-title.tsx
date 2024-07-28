@@ -19,7 +19,7 @@ export default function HeroTitle(): JSX.Element {
         <TextSpan>コミュニティにより開催</TextSpan>
       </Paragraph>
       <AnimatedBorderTrail duration="5s" trailSize="lg" className="mt-4">
-        <Link variant="ghost" size="buttonLg" href={"/"} aria-disabled className="px-20">
+        <Link variant="ghost" size="buttonLg" href={"/registration"} aria-disabled className="px-20">
           参加申込み
         </Link>
       </AnimatedBorderTrail>
