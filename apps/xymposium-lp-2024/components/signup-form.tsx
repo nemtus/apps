@@ -46,6 +46,7 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
 
       if (result.ok) {
         alert("受付を完了しました。メールを確認下さい");
+        setIsFinished(true);
       } else {
         const errorObj = await result.json();
         throw new Error(errorObj.message);
@@ -150,6 +151,7 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
                     type="text"
                     autoCapitalize="none"
                     autoCorrect="off"
+                    autoComplete="new-password"
                     disabled={isLoading}
                     pattern="N[A-Z0-9]{38}"
                     onInput={(e) => {
