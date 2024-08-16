@@ -1,7 +1,7 @@
 import HatchetIcon from "@/assets/images/hatchet.png";
 import NemtusIcon from "@/assets/images/nemtus.png";
 import JaguarIcon from "@/assets/images/jaguar.png";
-import OpeningLineIcon from "@/assets/images/openingline.jpg";
+import NineLivesIcon from "@/assets/images/ninelives.png";
 import AnimatedInViewFadeIn from "@/components/ui/animated-inview-fadein";
 import AnimatedBorderTrail from "@/components/ui/animated-border-trail";
 import { Footer } from "@/components/ui/footer";
@@ -39,20 +39,20 @@ export default async function IndexPage() {
           data={[
             {
               image: HatchetIcon,
-              name: "ハチェット",
+              name: "Hatchet",
               description: "Symbol/NEM コア開発者",
             },
             {
               image: JaguarIcon,
-              name: "ジャガー",
+              name: "Jaguar0625",
+              description: "Symbol/NEM コア開発者",
+            },
+            {
+              image: NineLivesIcon,
+              name: "NineLives",
               description: "Symbol/NEM コア開発者",
             },
             { image: NemtusIcon, name: "NEMTUS", description: "NPO法人 NEM技術普及推進会" },
-            {
-              image: OpeningLineIcon,
-              name: "Opening Line",
-              description: "ブロックチェーンに注力するソフトウェア会社",
-            },
           ]}
         />
       </section>
@@ -133,7 +133,7 @@ export default async function IndexPage() {
         </AnimatedInViewFadeIn>
       </section>
       <hr />
-      <section id="booth" className="container space-y-6 py-8 md:py-12 max-w-6xl flex flex-col items-stretch">
+      {/* <section id="booth" className="container space-y-6 py-8 md:py-12 max-w-6xl flex flex-col items-stretch">
         <AnimatedInViewFadeIn className="space-y-6">
           <Paragraph className="font-semibold text-indigo-500 text-center">
             気になる企業、チームと交流しましょう
@@ -164,7 +164,7 @@ export default async function IndexPage() {
             ]}
           />
         </AnimatedInViewFadeIn>
-      </section>
+      </section> */}
       <section className="container py-12 md:py-24 max-w-6xl flex flex-col items-center justify-center">
         <div className="container flex max-w-[64rem] flex-col items-center gap-8 text-center justify-center min-h-[80vh] md:min-h-[70vh] lg:min-h-[60vh]">
           <H2 className="text-4xl">
