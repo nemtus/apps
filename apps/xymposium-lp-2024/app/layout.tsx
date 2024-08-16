@@ -9,7 +9,7 @@ export const dynamic = "force-static";
 export const metadata: Metadata = {
   title: "Symbol/NEM Community Xymposium",
   description: "Symbol/NEM コミュニティによる Xymposium のサイドイベントを開催致します",
-  metadataBase: new URL("https://community-xymposium.nemtus.com/"),
+  metadataBase: new URL("https://community-xymposium-2024.nemtus.com/"),
   twitter: {
     card: "summary_large_image",
     title: "Symbol/NEM Community Xymposium",

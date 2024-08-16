@@ -27,7 +27,7 @@ export default function HeroWithScrollingTestimonials(props: Props): JSX.Element
       <AnimatedInViewFadeIn className="flex flex-col gap-6 space-y-6">
         <div className="mx-auto flex flex-col items-center space-y-4 text-center">
           <H2 className="text-center pb-14">{props.title}</H2>
-          {props.description && <Paragraph className="max-w-3xl text-muted-foreground">{props.description}</Paragraph>}
+          {props.description && <Paragraph className="max-w-3xl text-muted-foreground px-4">{props.description}</Paragraph>}
         </div>
         <div>
           <AnimatedScrollingTestimonials data={props.data} />

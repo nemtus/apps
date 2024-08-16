@@ -9,6 +9,10 @@ export default function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  if (process.env.NODE_ENV === "production" || !process.env.BASIC_AUTH_USER) {
+    return NextResponse.next();
+  }
+
   if (basicAuth) {
     const authValue = basicAuth.split(" ")[1];
     const [user, password] = atob(authValue).split(":");

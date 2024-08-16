@@ -3,8 +3,8 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://community-xymposium.nemtus.com/
+Host: https://community-xymposium-2024.nemtus.com/
 
 # Sitemaps
-Sitemap: https://community-xymposium.nemtus.com/sitemap.xml
-Sitemap: https://community-xymposium.nemtus.com/server-sitemap.xml
+Sitemap: https://community-xymposium-2024.nemtus.com/sitemap.xml
+Sitemap: https://community-xymposium-2024.nemtus.com/server-sitemap.xml

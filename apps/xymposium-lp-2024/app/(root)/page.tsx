@@ -35,7 +35,7 @@ export default async function IndexPage() {
       <section id="participant" className="bg-slate-50 py-4 md:py-6">
         <HeroWithScrollingTestimonials
           title="参加者"
-          description='このイベントでは " Xymposium 2.0 " にあわせて来日する NEM/Symbol コア開発者の1人である、ハチェット氏と、来日の意向を表明している数人のコアチームメンバーを招待する他、日々活動しているコミュニティメンバーの来場、企業ブースの出店も予定されています。'
+          description='このイベントでは " Xymposium 2.0 " にあわせて来日する NEM/Symbol コア開発者の1人である、ハチェット氏と、来日の意向を表明している数人のコアチームメンバーを招待する他、日々活動しているコミュニティメンバーの来場も予定されています。'
           data={[
             {
               image: HatchetIcon,
@@ -50,7 +50,7 @@ export default async function IndexPage() {
             {
               image: NineLivesIcon,
               name: "NineLives",
-              description: "Symbol/NEM コア開発者",
+              description: "Symbol/NEM コアチームメンバー",
             },
             { image: NemtusIcon, name: "NEMTUS", description: "NPO法人 NEM技術普及推進会" },
           ]}
