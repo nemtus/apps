@@ -169,7 +169,7 @@ export default async function IndexPage() {
         <div className="container flex max-w-[64rem] flex-col items-center gap-8 text-center justify-center min-h-[80vh] md:min-h-[70vh] lg:min-h-[60vh]">
           <H2 className="text-4xl">
             <span className="text-xl">Symbol/NEM</span>
-            <br /> Community Xymposium 2024
+            <br /> Community Xymposium 2.0
           </H2>
           <AnimatedBorderTrail duration="5s" trailSize="lg" className="mt-4">
             <Link variant="ghost" size="buttonLg" href={"/registration"} aria-disabled className="px-20">

@@ -11,10 +11,10 @@ export default function HeroTitle(): JSX.Element {
     <div className="container flex max-w-[64rem] flex-col items-center gap-8 text-center justify-center min-h-[80vh] md:min-h-[70vh] lg:min-h-[60vh]">
       <H1 className="text-4xl">
         <span className="text-xl">Symbol/NEM</span>
-        <br /> Community Xymposium 2024
+        <br /> Community Xymposium 2.0
       </H1>
       <Paragraph className="max-w-3xl text-muted-foreground leading-8">
-        <TextSpan>Xymposiym 2024の</TextSpan>
+        <TextSpan>Xymposiym 2.0の</TextSpan>
         <TextSpan>サイドイベントを</TextSpan>
         <TextSpan>コミュニティにより開催</TextSpan>
       </Paragraph>
