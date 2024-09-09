@@ -14,7 +14,7 @@ export default function HeroTitle(): JSX.Element {
         <br /> Community Xymposium 2.0
       </H1>
       <Paragraph className="max-w-3xl text-muted-foreground leading-8">
-        <TextSpan>Xymposiym 2.0の</TextSpan>
+        <TextSpan>Xymposium 2.0の</TextSpan>
         <TextSpan>サイドイベントを</TextSpan>
         <TextSpan>コミュニティにより開催</TextSpan>
       </Paragraph>
