@@ -1,21 +1,20 @@
 import HatchetIcon from "@/assets/images/hatchet.png";
-import NemtusIcon from "@/assets/images/nemtus.png";
 import JaguarIcon from "@/assets/images/jaguar.png";
+import NemtusIcon from "@/assets/images/nemtus.png";
 import NineLivesIcon from "@/assets/images/ninelives.png";
-import AnimatedInViewFadeIn from "@/components/ui/animated-inview-fadein";
-import AnimatedBorderTrail from "@/components/ui/animated-border-trail";
-import { Footer } from "@/components/ui/footer";
-import { Link } from "@/components/ui/link";
-import { H2, Paragraph } from "@/components/ui/typography";
+import TokyoNodeBanner from "@/assets/tokyo-node-banner.webp";
+import AddressInfo from "@/components/address-info";
 import HeroTitle from "@/components/hero-title";
 import HeroWithImage from "@/components/hero-with-image";
-import TokyoNodeBanner from "@/assets/tokyo-node-banner.webp";
 import HeroWithScrollingTestimonials from "@/components/hero-with-scrolling-testimonials";
-import AddressInfo from "@/components/address-info";
-import TextSpan from "@/components/ui/text-span";
-import TimeTable from "@/components/time-table";
-import ProductItemLinks from "@/components/product-items";
 import QuestionList from "@/components/question-list";
+import TimeTable from "@/components/time-table";
+import AnimatedBorderTrail from "@/components/ui/animated-border-trail";
+import AnimatedInViewFadeIn from "@/components/ui/animated-inview-fadein";
+import { Footer } from "@/components/ui/footer";
+import { Link } from "@/components/ui/link";
+import TextSpan from "@/components/ui/text-span";
+import { H2, Paragraph } from "@/components/ui/typography";
 
 export default async function IndexPage() {
   return (
@@ -172,8 +171,11 @@ export default async function IndexPage() {
             <br /> Community Xymposium 2.0
           </H2>
           <AnimatedBorderTrail duration="5s" trailSize="lg" className="mt-4">
-            <Link variant="ghost" size="buttonLg" href={"/registration"} aria-disabled className="px-20">
+            {/* <Link variant="ghost" size="buttonLg" href={"/registration"} aria-disabled className="px-20">
               参加申込み
+            </Link> */}
+            <Link variant="ghost" size="buttonLg" href={"#"} aria-disabled className="px-20">
+              受付を終了しました
             </Link>
           </AnimatedBorderTrail>
         </div>

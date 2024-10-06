@@ -2,12 +2,7 @@
 
 import * as React from "react";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Icons } from "@/components/ui/icons";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Link } from "@/components/ui/link";
 import { H1, Paragraph } from "@/components/ui/typography";
 import { navigations } from "@/lib/navigations";
@@ -76,7 +71,10 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
               <H1 className="pb-0 text-2xl sm:text-2xl md:text-2xl font-semibold tracking-tight">Apply for an event</H1>
               <Paragraph className="text-sm text-muted-foreground">Please enter the required information</Paragraph>
             </div>
-            <form onSubmit={onSubmit}>
+            <div>
+              <p className="text-center py-4 px-16">受付を終了しました</p>
+            </div>
+            {/* <form onSubmit={onSubmit}>
               <div className="grid gap-2">
                 <div className="grid gap-2 grid-cols-2">
                   <div>
@@ -187,7 +185,7 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
                   </Link>
                 </Paragraph>
               </div>
-            </form>
+            </form> */}
           </CardContent>
         </Card>
       )}
