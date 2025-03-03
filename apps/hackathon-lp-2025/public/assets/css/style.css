@@ -40,6 +40,16 @@ img {
 	color: #6B6B6B;
 }
 
+.welcome-buttons.entry-buttons {
+	justify-content: center;
+	gap: 65px;
+}
+
+.button-entry {
+	background: linear-gradient(90deg, #7474BF 0%, #348AC7 100%);
+	color: #FFFFFF;
+}
+
 .button-blue {
 	background: linear-gradient(90deg, #7474BF 0%, #348AC7 100%);
 	color: #FFFFFF;
@@ -328,12 +338,16 @@ header {
 	text-align: center;
 }
 
+.info-border {
+	border-bottom: 1px solid #fff;
+}
+
 .info-container-item {
 	align-items: center;
 	color: #FFFFFF;
 	display: flex;
 	font-size: 14px;
-	gap: 35px;
+	gap: 65px;
 	justify-content: center;
 	letter-spacing: 3.92px;
 	line-height: 30px;
@@ -349,7 +363,20 @@ header {
 }
 
 .info-container-item-right {
-	width: 520px;
+	width: 578px;
+}
+
+.info-text-indent {
+	margin-left: 1rem;
+	display: inline-block;
+	color: rgba(255, 255, 255, 0.5);
+}
+
+.info-container-item-right-span-glay.info-container-white {
+	color: #FFFFFF;
+}
+.info-container-item-right-span-glay.info-container05 {
+	color: rgba(255, 255, 255, 0.4);
 }
 
 .info-container-item-right-span-blue {
@@ -429,16 +456,16 @@ header {
 
 .section-title {
 	color: #FFFFFF;
-	font-size: 73px;
+	font-size: 72px;
 	font-weight: 600;
 	line-height: 88px;
 }
 
-.section-title span {
-	font-size: 56px;
+/* .section-title span {
+	font-size: 72px;
 	font-weight: 600;
 	line-height: 88px;
-}
+} */
 
 .section-sub-title {
 	color: #FFFFFF;
@@ -560,18 +587,55 @@ header {
 }
 
 .connection {
-	background: url(../img/connection-bg.png) no-repeat center center/cover;
 	background-attachment: fixed;
 	height: 100vh;
 	min-height: 800px;
 	position: relative;
 }
+.connection01 {
+	position: relative;
+	background: url(../img/connection-bg01.png) no-repeat center center/cover;
+}
+.connection01::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(
+	rgba(0, 0, 0, 0.144),
+	rgba(0, 0, 0, 0.6)
+	);
+	pointer-events: none; /* クリックイベントを通す */
+}
+
+
+.connection02 {
+	position: relative;
+	background: url(../img/connection-bg02.png) no-repeat center center/cover;
+}
+.connection02::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(
+	rgba(0, 0, 0, 0.1512),
+	rgba(0, 0, 0, 0.63)
+	);
+	pointer-events: none; /* クリックイベントを通す */
+}
+
 
 .connection-inner {
 	left: 50%;
 	max-width: 1247px;
 	position: absolute;
 	text-align: right;
+	/* margin-left: min(11vw, 160px); */
 	top: 50%;
 	transform: translate(-50%, -50%);
 	width: 90%;
@@ -580,6 +644,10 @@ header {
 .connection-content {
 	display: inline-block;
 	margin-left: auto;
+	text-align: left;
+}
+
+.connection-inner.connection-inner02 {
 	text-align: left;
 }
 
@@ -610,6 +678,7 @@ header {
 
 .entry-message {
 	color: #454D5C;
+	font-weight: 600;
 	display: inline-block;
 	margin: 40px 0 88px;
 	text-align: left;
@@ -756,7 +825,7 @@ header {
 	font-size: 16px;
 	font-weight: 400;
 	line-height: 38px;
-	margin-bottom: 85px;
+	margin-bottom: 65px;
 }
 
 footer {
@@ -916,8 +985,13 @@ footer::before {
 	margin: 30px 0 40px;
 }
 
-.connection {
-	background: url(../img/connection-bg.png) no-repeat 25% center/cover;
+.connection01 {
+	background: url(../img/connection-bg01.png) no-repeat 25% center/cover;
+	min-height: 720px;
+}
+
+.connection02 {
+	background: url(../img/connection-bg02.png) no-repeat 25% center/cover;
 	min-height: 720px;
 }
 
@@ -1140,9 +1214,15 @@ footer::before {
 }
 
 .connection {
-	background: url(../img/connection-bg.png) no-repeat 30% center/cover;
 	background-attachment: scroll;
 	min-height: 750px;
+}
+
+.connection01 {
+	background: url(../img/connection-bg01.png) no-repeat 30% center/cover;
+}
+.connection02 {
+	background: url(../img/connection-bg02.png) no-repeat 30% center/cover;
 }
 
 .connection-inner {
