@@ -23,11 +23,7 @@ https://xymposium.io/2025/
 ### 1. ローカル環境での確認
 
 ```bash
-# HTTPサーバーを起動
-python3 -m http.server 8000
-
-# ブラウザで確認
-open http://localhost:8000
+python3 -m http.server 8000 --directory public --bind 127.0.0.1
 ```
 
 ### 2. デプロイ
