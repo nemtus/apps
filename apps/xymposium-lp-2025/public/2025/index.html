@@ -364,6 +364,53 @@
                 padding: 1.5rem;
             }
         }
+        /* Schedule session enhancements */
+        .session-card {
+            position: relative;
+            padding-top: 1.5rem;
+        }
+        .session-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .4rem .9rem;
+            border-radius: 9999px;
+            font-size: .75rem;
+            font-weight: 600;
+            letter-spacing: .5px;
+            background: linear-gradient(135deg, rgba(8,145,178,.15), rgba(139,92,246,.15));
+            border: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(6px);
+        }
+        .timeline {
+            position: relative;
+            margin-top: 1rem;
+            padding-left: 1rem;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, rgba(8,145,178,.6), rgba(139,92,246,.4));
+        }
+        .timeline-item { position: relative; padding: .75rem 0 .75rem 1.25rem; }
+        .timeline-item:not(:last-child){ border-bottom:1px dashed rgba(255,255,255,0.06); }
+        .timeline-time { font-weight:600; font-size:.85rem; letter-spacing:.5px; display:inline-block; min-width:6.5rem; color:#06b6d4; }
+        .timeline-time.break { color:#c084fc; }
+        .timeline-title { font-weight:600; }
+        .break-label { display:inline-block; font-size:.7rem; font-weight:600; padding:.15rem .5rem; margin-left:.5rem; border-radius:6px; background:rgba(139,92,246,0.15); color:#c084fc; letter-spacing:.5px; }
+        .agenda { font-size:.75rem; color:#94a3b8; margin-top:.25rem; line-height:1.4; }
+        .session-footer { margin-top:1.25rem; font-size:.7rem; color:#94a3b8; display:grid; gap:.35rem; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); }
+        .session-footer strong { font-weight:600; color:#e2e8f0; }
+        @media (max-width:640px){
+            .timeline { padding-left: .75rem; }
+            .timeline::before { left: 0; }
+            .timeline-item { padding-left: .75rem; }
+            .timeline-time { display:block; margin-bottom:.15rem; min-width:0; }
+        }
     </style>
 </head>
 <body class="bg-slate-900 text-white">
@@ -404,7 +451,7 @@
                 <a href="#about" class="block text-gray-300 hover:text-symbol-cyan font-medium py-2">Symbol について</a>
                 <a href="#schedule" class="block text-gray-300 hover:text-symbol-cyan font-medium py-2">スケジュール</a>
                 <a href="#access" class="block text-gray-300 hover:text-symbol-cyan font-medium py-2">アクセス</a>
-                <a href="#register" class="block text-gray-300 hover:text-symbol-cyan font-medium py-2">参加申し込み</a>
+                <a href="#register" class="block text-gray-300 hover:text-symbol-cyan font-medium py-2">参加申し込み（無料）</a>
             </div>
         </div>
     </nav>
@@ -472,7 +519,7 @@
                                 </p>
                                 <p class="text-lg">
                                     <span class="font-semibold text-purple-400">夜の部</span><br>
-                                    Crypto Lounge GOX（六本木）<br>
+                                    Crypto Lounge GOX（東新宿）<br>
                                     <span class="text-gray-400">18:30開場</span>
                                 </p>
                             </div>
@@ -482,7 +529,7 @@
                 <!-- CTA Button -->
                 <div class="mb-8 flex flex-col items-center justify-center relative">
                     <a href="#register" class="btn-primary text-lg font-semibold px-8 py-4 mx-auto">
-                        参加申し込み
+                        参加申し込み（無料）
                     </a>
                     <!-- Scroll indicator (centered under button) -->
                     <div class="mt-4 animate-bounce flex justify-center w-full">
@@ -594,39 +641,82 @@
                 </div>
                 <div class="grid lg:grid-cols-2 gap-12">
                     <!-- 昼の部 -->
-                    <div class="feature-card">
-                        <h3 class="text-3xl font-bold font-space text-blue-400 mb-4">昼の部（11:00〜16:00）</h3>
-                        <ul class="text-left text-gray-300 space-y-4">
-                            <li>
-                                <span class="font-semibold text-cyan-400">11:00〜16:00</span> イベント本編
-                            </li>
-                        </ul>
-                        <div class="mt-6 text-sm text-gray-400">
-                            <strong>準備：</strong>9:00〜10:30<br>
-                            <strong>開場：</strong>10:30<br>
-                            <strong>イベント本編：</strong>11:00〜16:00<br>
-                            <strong>片付け：</strong>16:00〜16:30<br>
-                            <strong>完全撤収：</strong>17:00
+                    <div class="feature-card session-card">
+                        <div class="flex items-start justify-between flex-wrap gap-3">
+                            <h3 class="text-3xl font-bold font-space text-blue-400">昼の部（TOKYO CULTURE CULTURE）</h3>
+                            <span class="session-badge">DAY SESSION</span>
+                        </div>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="agenda">第1部</div>
+                                <span class="timeline-time">11:00〜11:40</span>
+                                <span class="timeline-title">TSS からのアナウンス <span class="text-xs font-normal text-cyan-300">(Q&A 10分含む)</span></span>
+                                <div class="agenda">Symbolの現在地点 / ゼロ知識証明(ZKP)の最新動向と所感 / Web3や各領域での今後の見通し</div>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-time break">11:40〜12:00</span>
+                                <span class="timeline-title">休憩 ① <span class="break-label">BREAK</span></span>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="agenda">第2部</div>
+                                <span class="timeline-time">12:00〜13:40</span>
+                                <span class="timeline-title">Symbol 関連企業による発表</span>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-time break">13:40〜13:50</span>
+                                <span class="timeline-title">休憩 ② <span class="break-label">BREAK</span></span>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="agenda">第3部</div>
+                                <span class="timeline-time">13:50〜14:50</span>
+                                <span class="timeline-title">外部メンバーとのディスカッション</span>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-time break">14:50〜15:00</span>
+                                <span class="timeline-title">休憩 ③ <span class="break-label">BREAK</span></span>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="agenda">第4部</div>
+                                <span class="timeline-time">15:00〜16:00</span>
+                                <span class="timeline-title">コミュニティ内部のディスカッション</span>
+                                <div class="agenda">Symbol活用理由 / 事例の深掘り / 今後に求める機能や発展への提案</div>
+                            </div>
+                        </div>
+                        <div class="session-footer">
+                            <div><strong>開場：</strong>10:30</div>
+                            <div><strong>本編：</strong>11:00〜16:00</div>
+                            <div><strong>片付け：</strong>16:00〜16:30</div>
+                            <div><strong>撤収：</strong>17:00</div>
                         </div>
                     </div>
                     <!-- 夜の部 -->
-                    <div class="feature-card">
-                        <h3 class="text-3xl font-bold font-space text-purple-400 mb-4">夜の部（Crypto Lounge GOX）</h3>
-                        <ul class="text-left text-gray-300 space-y-4">
-                            <li>
-                                <span class="font-semibold text-purple-400">18:00〜18:30</span> 準備
-                            </li>
-                            <li>
-                                <span class="font-semibold text-purple-400">18:30</span> 開場
-                            </li>
-                            <li>
-                                <span class="font-semibold text-cyan-400">夜の部概要</span><br>
-                                NEMTUSの活動紹介／ピッチ／次回NEMTUSハッカソンのアナウンス／フリートーク／物販（開場から終了まで並行実施）
-                            </li>
-                        </ul>
-                        <div class="mt-6 text-sm text-gray-400">
-                            <strong>片付け：</strong>21:00<br>
-                            <strong>完全撤収：</strong>22:00
+                    <div class="feature-card session-card">
+                        <div class="flex items-start justify-between flex-wrap gap-3">
+                            <h3 class="text-3xl font-bold font-space text-purple-400">夜の部（Crypto Lounge GOX）</h3>
+                            <span class="session-badge">NIGHT SESSION</span>
+                        </div>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <span class="timeline-time break">18:00〜18:30</span>
+                                <span class="timeline-title">準備 <span class="break-label">SETUP</span></span>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-time">18:30</span>
+                                <span class="timeline-title">開場</span>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-time">18:30〜</span>
+                                <span class="timeline-title">夜の部概要</span>
+                                <div class="agenda">NEMTUS活動紹介 / ピッチ / 次回ハッカソン告知 / フリートーク / 物販(並行実施)</div>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-time break">21:00</span>
+                                <span class="timeline-title">片付け開始</span>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-time break">22:00</span>
+                                <span class="timeline-title">完全撤収</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -714,7 +804,7 @@
                     </div>
                     <!-- Google Form Button -->
                     <div class="mb-10">
-                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeWed3M5BxFFTgjw-R2MjbhyWiVmZoWwinaoreLLHFAmmJjsg/viewform?fbzx=7923300270625516136" target="_blank" class="btn-primary">申し込みフォームへ</a>
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeWed3M5BxFFTgjw-R2MjbhyWiVmZoWwinaoreLLHFAmmJjsg/viewform?fbzx=7923300270625516136" target="_blank" class="btn-primary">申し込みフォームへ（無料）</a>
                     </div>
                     <div class="bg-slate-800/50 rounded-lg p-6 mb-8">
                         <h4 class="text-lg font-bold mb-4 text-cyan-400">FAQ</h4>
@@ -750,6 +840,17 @@
                                 </button>
                                 <div class="faq-answer text-gray-400 text-sm pl-2 mt-1" style="display: none;">
                                     A. 夜の部で物販を実施予定です。
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-question w-full text-left flex items-center justify-between focus:outline-none py-2">
+                                    <span class="text-gray-400 text-sm">Q. 参加費はかかりますか？</span>
+                                    <svg class="faq-arrow w-5 h-5 text-cyan-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </button>
+                                <div class="faq-answer text-gray-400 text-sm pl-2 mt-1" style="display: none;">
+                                    A. 昼の部・夜の部ともに「無料」でご参加いただけます。
                                 </div>
                             </div>
                         </div>
