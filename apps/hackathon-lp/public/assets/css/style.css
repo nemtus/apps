@@ -280,6 +280,14 @@ header {
 	text-align: center;
 }
 
+.hack-2026 {
+	background: url(../img/bg-2026.png) no-repeat center center/cover;
+	background-attachment: fixed;
+	height: 100vh;
+	min-height: 934px;
+	position: relative;
+}
+
 .hack-2025 {
 	background: url(../img/bg-2025.png) no-repeat center center/cover;
 	background-attachment: fixed;
@@ -618,6 +626,11 @@ footer {
 	font-size: 4.2666666667vw;
 	line-height: 6.4vw;
 	margin-top: 0vw;
+}
+
+.hack-2026 {
+	height: auto;
+	min-height: auto;
 }
 
 .hack-2025 {
