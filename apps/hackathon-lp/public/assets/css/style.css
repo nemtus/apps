@@ -284,7 +284,7 @@ header {
 	background: url(../img/bg-2026.png) no-repeat center center/cover;
 	background-attachment: fixed;
 	height: 100vh;
-	min-height: calc(100vh + 80px);
+	min-height: calc(100vh + 120px);
 	position: relative;
 }
 
