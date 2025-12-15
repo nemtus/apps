@@ -280,6 +280,14 @@ header {
 	text-align: center;
 }
 
+.hack-2026 {
+	background: url(../img/bg-2026.png) no-repeat center center/cover;
+	background-attachment: fixed;
+	height: 100vh;
+	min-height: 934px;
+	position: relative;
+}
+
 .hack-2025 {
 	background: url(../img/bg-2025.png) no-repeat center center/cover;
 	background-attachment: fixed;
@@ -313,17 +321,21 @@ header {
 }
 
 .hack__inner {
-	display: flex;
-	gap: min(8.3333333333vw, 120px);
-	justify-content: center;
-	left: 50%;
-	margin: 0 auto;
-	max-width: 1240px;
-	padding: min(8.3333333333vw, 120px) 0;
-	position: absolute;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	width: 90%;
+  display: flex;
+  gap: min(8.3333333333vw, 120px);
+  justify-content: center;
+
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
+
+  margin: 0 auto;
+  max-width: 1240px;
+  width: 90%;
+
+  padding-top: 140px;
+  padding-bottom: 120px;
 }
 
 .flex-reverse {
@@ -620,6 +632,11 @@ footer {
 	margin-top: 0vw;
 }
 
+.hack-2026 {
+	height: auto;
+	min-height: auto;
+}
+
 .hack-2025 {
 	height: auto;
 	min-height: auto;
@@ -821,4 +838,3 @@ footer {
 }
 
 }
-
