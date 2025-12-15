@@ -292,7 +292,7 @@ header {
 	background: url(../img/bg-2025.png) no-repeat center center/cover;
 	background-attachment: fixed;
 	height: 100vh;
-	min-height: 934px;
+	min-height: 1200px;
 	position: relative;
 }
 
@@ -300,7 +300,7 @@ header {
 	background: url(../img/bg-2024.png) no-repeat center center/cover;
 	background-attachment: fixed;
 	height: 100vh;
-	min-height: 934px;
+	min-height: 1200px;
 	position: relative;
 }
 
@@ -308,7 +308,7 @@ header {
 	background: url(../img/bg-2023.png) no-repeat center center/cover;
 	background-attachment: fixed;
 	height: 100vh;
-	min-height: 934px;
+	min-height: 1200px;
 	position: relative;
 }
 
@@ -316,7 +316,7 @@ header {
 	background: url(../img/bg-2022.png) no-repeat center center/cover;
 	background-attachment: fixed;
 	height: 100vh;
-	min-height: 934px;
+	min-height: 1200px;
 	position: relative;
 }
 
