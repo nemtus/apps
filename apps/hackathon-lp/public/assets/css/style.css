@@ -284,7 +284,7 @@ header {
 	background: url(../img/bg-2026.png) no-repeat center center/cover;
 	background-attachment: fixed;
 	height: 100vh;
-	min-height: 934px;
+	min-height: calc(100vh + 80px);
 	position: relative;
 }
 
@@ -326,16 +326,12 @@ header {
   justify-content: center;
 
   position: relative;
-  top: auto;
-  left: auto;
-  transform: none;
-
   margin: 0 auto;
   max-width: 1240px;
   width: 90%;
 
-  padding-top: 140px;
-  padding-bottom: 120px;
+  padding-top: min(12vw, 140px);
+  padding-bottom: min(10vw, 120px);
 }
 
 .flex-reverse {
