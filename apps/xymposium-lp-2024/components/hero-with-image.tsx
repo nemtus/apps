@@ -30,7 +30,7 @@ export default function HeroWithImage(props: Props): JSX.Element {
         <AnimatedInViewFadeIn>
           <div className="flex flex-col items-center justify-stretch">
             <H2 className="pb-14 text-center lg:text-left">{props.title}</H2>
-            <p className="text-muted-foreground text-left md:max-w-3xl md:text-center lg:max-w-none lg:text-left">
+            <p className="text-left text-muted-foreground md:max-w-3xl md:text-center lg:max-w-none lg:text-left">
               {props.description}
             </p>
           </div>

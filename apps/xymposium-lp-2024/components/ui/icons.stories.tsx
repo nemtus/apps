@@ -17,7 +17,7 @@ export const Catalog: Story = {
       {Object.entries(Icons).map(([name, Icon]) => (
         <div key={name} className="flex flex-col items-center gap-2">
           <Icon className="h-6 w-6" />
-          <span className="text-muted-foreground text-xs">{name}</span>
+          <span className="text-xs text-muted-foreground">{name}</span>
         </div>
       ))}
     </div>

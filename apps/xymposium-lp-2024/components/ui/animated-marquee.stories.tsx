@@ -7,7 +7,7 @@ const meta = {
   parameters: { layout: "fullscreen" },
   tags: ["autodocs"],
   args: {
-    children: <div className="bg-secondary mx-2 rounded-md px-6 py-3">Symbol</div>,
+    children: <div className="mx-2 rounded-md bg-secondary px-6 py-3">Symbol</div>,
   },
 } satisfies Meta<typeof AnimatedMarquee>;
 

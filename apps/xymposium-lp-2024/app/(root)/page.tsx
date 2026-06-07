@@ -185,7 +185,7 @@ export default async function IndexPage() {
         className="container flex min-h-[60vh] flex-col items-stretch space-y-6 py-20 md:max-w-5xl"
       >
         <H2 className="ml-0 text-center">よくある質問</H2>
-        <Paragraph className="text-muted-foreground text-center">
+        <Paragraph className="text-center text-muted-foreground">
           ご不明点がありましたら
           <Link className="px-1" href="mailto:support@nemtus.com">
             support@nemtus.com

@@ -4,7 +4,8 @@
   "private": true,
   "license": "MIT",
   "engines": {
-    "node": ">=20.9.0"
+    "node": ">=20.9.0",
+    "npm": ">=11.10.0"
   },
   "overrides": {
     "postcss": "^8.5.10"

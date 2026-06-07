@@ -16,10 +16,10 @@ export function MobileNav({ items, onClose }: MobileNavProps) {
     <div
       className={cn(
         "fixed inset-0 top-20 z-50 grid h-svh grid-flow-row auto-rows-max",
-        "animate-in slide-in-from-bottom overflow-auto p-6 shadow-md md:hidden",
+        "overflow-auto p-6 shadow-md animate-in slide-in-from-bottom md:hidden",
       )}
     >
-      <div className="bg-popover text-popover-foreground relative z-20 grid gap-6 rounded-md p-4 shadow-md">
+      <div className="relative z-20 grid gap-6 rounded-md bg-popover p-4 text-popover-foreground shadow-md">
         <nav className="grid grid-flow-row auto-rows-max text-sm">
           {items.map((item, index) => (
             <Link

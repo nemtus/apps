@@ -1,6 +1,5 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "ignoreExportsUsedInFile": true,
-  "entry": ["open-next.config.ts"],
-  "ignore": ["public/**"]
+  "entry": ["open-next.config.ts"]
 }

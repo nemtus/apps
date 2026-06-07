@@ -73,7 +73,7 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
           <CardContent className="flex flex-col space-y-6">
             <div className="flex flex-col space-y-2 text-center">
               <H1 className="pb-0 text-2xl font-semibold tracking-tight sm:text-2xl md:text-2xl">Apply for an event</H1>
-              <Paragraph className="text-muted-foreground text-sm">Please enter the required information</Paragraph>
+              <Paragraph className="text-sm text-muted-foreground">Please enter the required information</Paragraph>
             </div>
             <div>
               <p className="px-16 py-4 text-center">受付を終了しました</p>

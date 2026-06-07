@@ -14,7 +14,7 @@ export default function HeroTitle(): JSX.Element {
         <span className="text-xl">Symbol/NEM</span>
         <br /> Community Xymposium 2.0
       </H1>
-      <Paragraph className="text-muted-foreground max-w-3xl leading-8">
+      <Paragraph className="max-w-3xl leading-8 text-muted-foreground">
         <TextSpan>Xymposium 2.0の</TextSpan>
         <TextSpan>サイドイベントを</TextSpan>
         <TextSpan>コミュニティにより開催</TextSpan>

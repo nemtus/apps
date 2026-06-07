@@ -3,6 +3,9 @@
 # これにより format:check が常にクリーンな状態を保つ。
 set -uo pipefail
 
+# 相対パス (Codex 等) でも解決できるようリポジトリルートへ移動する
+cd "${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null)}" 2>/dev/null || true
+
 input=$(cat)
 # Claude / Codex などツールにより JSON のフィールド名が異なるため複数候補を探索する
 file=$(printf '%s' "$input" | jq -r '

@@ -25,7 +25,7 @@ export default function HeroWithScrollingTestimonials(props: Props): JSX.Element
         <div className="mx-auto flex flex-col items-center space-y-4 text-center">
           <H2 className="pb-14 text-center">{props.title}</H2>
           {props.description && (
-            <Paragraph className="text-muted-foreground max-w-3xl px-4">{props.description}</Paragraph>
+            <Paragraph className="max-w-3xl px-4 text-muted-foreground">{props.description}</Paragraph>
           )}
         </div>
         <div>
