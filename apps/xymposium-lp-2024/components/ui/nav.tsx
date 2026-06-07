@@ -25,7 +25,7 @@ export function MainNav({ items }: MainNavProps) {
   };
 
   return (
-    <div className="flex grow items-center container">
+    <div className="container flex grow items-center">
       <div className="flex grow gap-6 md:gap-10">
         <Link href="/" className="items-center space-x-2 md:flex">
           <Image loading="eager" alt="symbol-logo-wide" src={SymbolLogoLight} height={30} />
@@ -39,7 +39,7 @@ export function MainNav({ items }: MainNavProps) {
                 className={cn(
                   "flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm",
                   item.href.startsWith(`/${segment}`) ? "text-foreground" : "text-foreground/60",
-                  item.disabled && "cursor-not-allowed opacity-80"
+                  item.disabled && "cursor-not-allowed opacity-80",
                 )}
               >
                 {item.title}

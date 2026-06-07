@@ -47,12 +47,12 @@ export default function AnimatedMarquee({
       <div
         {...props}
         className={cn(
-          "group relative flex h-full w-full overflow-hidden p-2 [--duration:10s] [--gap:12px] [gap:var(--gap)]",
+          "group relative flex h-full w-full overflow-hidden p-2 [gap:var(--gap)] [--duration:10s] [--gap:12px]",
           {
             "flex-col": vertical,
             "flex-row": !vertical,
           },
-          className
+          className,
         )}
       >
         {Array.from({ length: repeat }).map((_, index) => (

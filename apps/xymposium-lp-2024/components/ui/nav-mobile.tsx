@@ -16,7 +16,7 @@ export function MobileNav({ items, onClose }: MobileNavProps) {
     <div
       className={cn(
         "fixed inset-0 top-20 z-50 grid h-[100svh] grid-flow-row auto-rows-max",
-        "overflow-auto p-6 shadow-md animate-in slide-in-from-bottom md:hidden"
+        "overflow-auto p-6 shadow-md animate-in slide-in-from-bottom md:hidden",
       )}
     >
       <div className="relative z-20 grid gap-6 rounded-md bg-popover p-4 text-popover-foreground shadow-md">
@@ -28,7 +28,7 @@ export function MobileNav({ items, onClose }: MobileNavProps) {
               onClick={onClose}
               className={cn(
                 "flex w-full items-center rounded-md p-2 text-sm font-medium hover:underline",
-                item.disabled && "cursor-not-allowed opacity-60"
+                item.disabled && "cursor-not-allowed opacity-60",
               )}
             >
               {item.title}

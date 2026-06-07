@@ -65,14 +65,14 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
           ホームへ戻る
         </Link>
       ) : (
-        <Card className={"py-4 bg-background backdrop-blur-sm"} style={{ background: "hsla(0,0%,100%,.7)" }}>
+        <Card className={"bg-background py-4 backdrop-blur-sm"} style={{ background: "hsla(0,0%,100%,.7)" }}>
           <CardContent className="flex flex-col space-y-6">
             <div className="flex flex-col space-y-2 text-center">
-              <H1 className="pb-0 text-2xl sm:text-2xl md:text-2xl font-semibold tracking-tight">Apply for an event</H1>
+              <H1 className="pb-0 text-2xl font-semibold tracking-tight sm:text-2xl md:text-2xl">Apply for an event</H1>
               <Paragraph className="text-sm text-muted-foreground">Please enter the required information</Paragraph>
             </div>
             <div>
-              <p className="text-center py-4 px-16">受付を終了しました</p>
+              <p className="px-16 py-4 text-center">受付を終了しました</p>
             </div>
             {/* <form onSubmit={onSubmit}>
               <div className="grid gap-2">

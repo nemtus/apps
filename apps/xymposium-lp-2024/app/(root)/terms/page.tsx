@@ -14,11 +14,11 @@ export default async function IndexPage() {
     <>
       <section
         id="features"
-        className="flex flex-col justify-between gap-6 sm:gap-5 md:gap-10 container max-w-5xl py-8 md:py-12"
+        className="container flex max-w-5xl flex-col justify-between gap-6 py-8 sm:gap-5 md:gap-10 md:py-12"
       >
         <div className="h-[30]" />
         <div className="h-12" />
-        <Paragraph id="term" className="text-3xl font-bold text-center">
+        <Paragraph id="term" className="text-center text-3xl font-bold">
           参加規約
         </Paragraph>
         <Paragraph className="font-bold">第1条（適用範囲）</Paragraph>
@@ -43,7 +43,7 @@ export default async function IndexPage() {
         <Paragraph>
           参加者は、以下の行為を禁止します。禁止事項に抵触した場合、主催者は参加者に対して退場を命じることができます。
         </Paragraph>
-        <ol className="list-decimal list-inside pl-3">
+        <ol className="list-inside list-decimal pl-3">
           {[
             "法令または公序良俗に違反する行為 犯罪行為に関連する行為",
             "本サービスの内容等，本サービスに含まれる著作権，商標権ほか知的財産権を侵害する行為",
@@ -78,7 +78,7 @@ export default async function IndexPage() {
         <Paragraph className="font-bold">利用規約制定日</Paragraph>
         <Paragraph>2023年 12月 1日</Paragraph>
         <div className="h-32" />
-        <Paragraph id="privacy" className="text-3xl font-bold text-center">
+        <Paragraph id="privacy" className="text-center text-3xl font-bold">
           プライバシーポリシー
         </Paragraph>
         <Paragraph className="font-bold">第1条（個人情報の収集と利用目的）</Paragraph>

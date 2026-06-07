@@ -17,7 +17,7 @@ function TestimonialCard({ testimonial: { image, name, description } }: { testim
       <div className="relative h-full w-32 flex-shrink-0 overflow-hidden">
         <Image loading="lazy" src={image} alt={name} width={100} className="h-full w-full object-contain" />
       </div>
-      <div className="px-4 py-2 flex flex-col space-y-4">
+      <div className="flex flex-col space-y-4 px-4 py-2">
         <span className="block text-lg font-bold text-foreground">{name}</span>
         <span className="block text-sm text-foreground">{description} </span>
       </div>
