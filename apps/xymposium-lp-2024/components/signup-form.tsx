@@ -9,7 +9,7 @@ import { navigations } from "@/lib/navigations";
 import { cn } from "@/lib/utils";
 import { IUser } from "@/types/user";
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function SignUpForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -18,7 +18,7 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
-    const form: any = event.currentTarget;
+    const form = event.currentTarget as HTMLFormElement & Record<string, HTMLInputElement>;
     const body: IUser = {
       email: form.email.value?.trim(),
       address: form.address.value?.replace(/-/g, "")?.trim(),

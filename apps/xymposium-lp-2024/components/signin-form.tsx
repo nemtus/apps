@@ -12,7 +12,7 @@ import { navigations } from "@/lib/navigations";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function SignInForm({ className, ...props }: UserAuthFormProps) {
   const [email, setEmail] = React.useState("");
