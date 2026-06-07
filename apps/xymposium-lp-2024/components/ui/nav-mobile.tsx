@@ -36,7 +36,10 @@ export function MobileNav({ items, onClose }: MobileNavProps) {
           ))}
         </nav>
       </div>
-      <div className="bg-opacity-80 fixed left-0 z-10 h-screen w-screen bg-black" onClick={onClose} />
+      {/* クリックでメニューを閉じる半透明バックドロップ。
+          元は bg-black + bg-opacity-80 (80% 黒) だが、Tailwind v4 で bg-opacity-* が
+          無効化され bg-black が不透明黒になっていた。v4 の bg-black/80 で元の意図を再現する。 */}
+      <div className="fixed left-0 z-10 h-screen w-screen bg-black/80" onClick={onClose} />
     </div>
   );
 }
