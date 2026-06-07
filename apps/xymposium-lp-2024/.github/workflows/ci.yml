@@ -15,6 +15,12 @@ concurrency:
 permissions:
   contents: read
 
+# テレメトリ送信を無効化し、harden-runner の egress 許可リストを最小化する。
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+  STORYBOOK_DISABLE_TELEMETRY: "true"
+  DO_NOT_TRACK: "1"
+
 jobs:
   # GitHub Actions が全て full commit SHA に固定されていることを強制する。
   # 未固定 (タグ/ブランチ参照) があれば pinact が非ゼロ終了して CI を失敗させる。
@@ -24,7 +30,16 @@ jobs:
     steps:
       - uses: step-security/harden-runner@ab7a9404c0f3da075243ca237b5fac12c98deaa5 # v2.19.3
         with:
-          egress-policy: audit
+          egress-policy: block
+          # GitHub Actions 基盤は harden-runner が自動許可する。以下は追加の外部宛て。
+          # go install (pinact) 用の Go module proxy / checksum DB。
+          allowed-endpoints: >
+            github.com:443
+            api.github.com:443
+            objects.githubusercontent.com:443
+            proxy.golang.org:443
+            sum.golang.org:443
+            storage.googleapis.com:443
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
         with:
@@ -42,15 +57,26 @@ jobs:
     steps:
       - uses: step-security/harden-runner@ab7a9404c0f3da075243ca237b5fac12c98deaa5 # v2.19.3
         with:
-          egress-policy: audit
+          egress-policy: block
+          # npm registry (install/audit, sharp/workerd の prebuilt も registry 経由) +
+          # next/font/google (Inter) のビルド時フォント取得。
+          allowed-endpoints: >
+            github.com:443
+            objects.githubusercontent.com:443
+            registry.npmjs.org:443
+            nodejs.org:443
+            fonts.googleapis.com:443
+            fonts.gstatic.com:443
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: .nvmrc
           cache: npm
+      # install の前に lockfile を監査し、既知の脆弱/悪意パッケージのインストール
+      # (= postinstall スクリプト実行) を未然に止める。深刻度を問わず失敗させる。
+      - name: Audit before install (info 以上で失敗)
+        run: npm audit --package-lock-only --audit-level=info
       - run: npm ci
-      - name: Audit (info 以上の脆弱性があれば失敗 / level 問わず)
-        run: npm audit --audit-level=info
       - name: Format check
         run: npm run format:check
       - name: Lint
@@ -79,7 +105,20 @@ jobs:
     steps:
       - uses: step-security/harden-runner@ab7a9404c0f3da075243ca237b5fac12c98deaa5 # v2.19.3
         with:
-          egress-policy: audit
+          egress-policy: block
+          # npm registry + next/font/google + Playwright ブラウザ DL + --with-deps の apt。
+          allowed-endpoints: >
+            github.com:443
+            objects.githubusercontent.com:443
+            registry.npmjs.org:443
+            nodejs.org:443
+            fonts.googleapis.com:443
+            fonts.gstatic.com:443
+            playwright.download.prss.microsoft.com:443
+            cdn.playwright.dev:443
+            archive.ubuntu.com:80
+            security.ubuntu.com:80
+            azure.archive.ubuntu.com:80
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
@@ -110,7 +149,20 @@ jobs:
     steps:
       - uses: step-security/harden-runner@ab7a9404c0f3da075243ca237b5fac12c98deaa5 # v2.19.3
         with:
-          egress-policy: audit
+          egress-policy: block
+          # npm registry + next/font/google + Playwright ブラウザ DL + --with-deps の apt。
+          allowed-endpoints: >
+            github.com:443
+            objects.githubusercontent.com:443
+            registry.npmjs.org:443
+            nodejs.org:443
+            fonts.googleapis.com:443
+            fonts.gstatic.com:443
+            playwright.download.prss.microsoft.com:443
+            cdn.playwright.dev:443
+            archive.ubuntu.com:80
+            security.ubuntu.com:80
+            azure.archive.ubuntu.com:80
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
