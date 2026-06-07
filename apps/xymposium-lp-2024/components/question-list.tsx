@@ -1,4 +1,4 @@
-import { JSX } from "react";
+import type { JSX } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export interface Props {

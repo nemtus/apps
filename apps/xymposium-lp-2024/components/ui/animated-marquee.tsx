@@ -68,17 +68,18 @@ export default function AnimatedMarquee({
             {children}
           </div>
         ))}
+        {/* マスクは relative なコンテナの内側に置き、inset-0 でマーキー全体に重ねる */}
+        {applyMask && (
+          <div
+            className={cn("pointer-events-none absolute inset-0 z-10", {
+              "bg-linear-to-b from-white/50 from-5% via-transparent via-50% to-white/50 to-95% dark:from-black/50 dark:to-black/50":
+                vertical,
+              "bg-linear-to-r from-white/50 from-5% via-transparent via-50% to-white/50 to-95% dark:from-black/50 dark:to-black/50":
+                !vertical,
+            })}
+          />
+        )}
       </div>
-      {applyMask && (
-        <div
-          className={cn("pointer-events-none absolute z-10 h-full w-full", {
-            "bg-linear-to-b from-white/50 from-5% via-transparent via-50% to-white/50 to-95% dark:from-black/50 dark:to-black/50":
-              vertical,
-            "bg-linear-to-r from-white/50 from-5% via-transparent via-50% to-white/50 to-95% dark:from-black/50 dark:to-black/50":
-              !vertical,
-          })}
-        />
-      )}
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { JSX } from "react";
+import type { JSX } from "react";
 import AnimatedBorderTrail from "@/components/ui/animated-border-trail";
 import { Link } from "@/components/ui/link";
 import TextSpan from "@/components/ui/text-span";

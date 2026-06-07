@@ -1,4 +1,4 @@
-import { JSX } from "react";
+import type { JSX } from "react";
 import AnimatedInViewFadeIn from "@/components/ui/animated-inview-fadein";
 import { Link } from "@/components/ui/link";
 import { Paragraph } from "@/components/ui/typography";

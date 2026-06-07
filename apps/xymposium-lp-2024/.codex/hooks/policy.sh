@@ -19,7 +19,7 @@ deny() {
 
 # 破壊的・危険なパターン
 case "$cmd" in
-  *"sudo "* | *"sudo"$) deny "sudo による特権昇格はブロックされています" ;;
+  *"sudo "* | *"sudo") deny "sudo による特権昇格はブロックされています" ;;
   *"rm -rf /"* | *"rm -fr /"*) deny "ルート/絶対パスの再帰削除はブロックされています" ;;
   *"rm -rf ~"* | *"rm -rf \$HOME"*) deny "ホームディレクトリの削除はブロックされています" ;;
   *"git push --force"* | *"git push -f"*) deny "force push はブロックされています" ;;

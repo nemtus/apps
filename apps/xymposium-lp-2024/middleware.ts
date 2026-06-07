@@ -21,12 +21,14 @@ export default function middleware(req: NextRequest) {
   }
 
   const basicAuth = req.headers.get("authorization");
-  if (basicAuth) {
-    const authValue = basicAuth.split(" ")[1];
-    const [reqUser, reqPass] = atob(authValue).split(":");
-
-    if (reqUser === user && reqPass === pass) {
-      return NextResponse.next();
+  if (basicAuth?.startsWith("Basic ")) {
+    try {
+      const [reqUser, reqPass] = atob(basicAuth.slice("Basic ".length)).split(":");
+      if (reqUser === user && reqPass === pass) {
+        return NextResponse.next();
+      }
+    } catch {
+      // 不正な base64 等は握りつぶして 401 にフォールバックする
     }
   }
 

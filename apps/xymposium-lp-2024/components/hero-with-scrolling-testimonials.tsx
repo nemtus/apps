@@ -1,4 +1,4 @@
-import { JSX } from "react";
+import type { JSX } from "react";
 import AnimatedInViewFadeIn from "@/components/ui/animated-inview-fadein";
 import { H2, Paragraph } from "@/components/ui/typography";
 import AnimatedScrollingTestimonials from "@/components/ui/animated-scrolling-testimonials";
