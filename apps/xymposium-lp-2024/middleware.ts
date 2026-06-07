@@ -10,21 +10,22 @@ import { NextRequest, NextResponse } from "next/server";
 export const config = {};
 
 export default function middleware(req: NextRequest) {
+  const user = process.env.BASIC_AUTH_USER;
+  const pass = process.env.BASIC_AUTH_PASS;
+
+  // BASIC_AUTH_USER / BASIC_AUTH_PASS が両方設定されている場合のみ Basic 認証を要求する。
+  // 未設定なら公開 (= 認証なし)。NODE_ENV には依存しない。
+  // 例: ステージングだけ secret を設定して限定公開し、本番では未設定で公開する。
+  if (!user || !pass) {
+    return NextResponse.next();
+  }
+
   const basicAuth = req.headers.get("authorization");
-
-  if (process.env.NODE_ENV === "development") {
-    return NextResponse.next();
-  }
-
-  if (process.env.NODE_ENV === "production" || !process.env.BASIC_AUTH_USER) {
-    return NextResponse.next();
-  }
-
   if (basicAuth) {
     const authValue = basicAuth.split(" ")[1];
-    const [user, password] = atob(authValue).split(":");
+    const [reqUser, reqPass] = atob(authValue).split(":");
 
-    if (user === process.env.BASIC_AUTH_USER && password === process.env.BASIC_AUTH_PASS) {
+    if (reqUser === user && reqPass === pass) {
       return NextResponse.next();
     }
   }

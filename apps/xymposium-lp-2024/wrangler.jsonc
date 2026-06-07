@@ -11,7 +11,9 @@
   "observability": {
     "enabled": true,
   },
-  // Basic 認証の資格情報は wrangler secret で供給する:
+  // Basic 認証で限定公開したい場合のみ、両方の secret を設定する (両方揃って初めて有効)。
+  // 未設定なら公開。本番を公開運用するなら設定不要。
   //   npx wrangler secret put BASIC_AUTH_USER
   //   npx wrangler secret put BASIC_AUTH_PASS
+  // 受付を再開する場合は REGISTRATION_ENABLED=true も設定する。
 }

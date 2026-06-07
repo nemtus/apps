@@ -13,7 +13,7 @@ Symbol/NEM Community Xymposium のイベント告知・登録サイト。Next.js
 | テスト         | Vitest (ユニット) / Storybook 10 (カタログ + インタラクション) / Playwright (E2E) |
 | CI/CD          | GitHub Actions / Dependabot                                                       |
 
-Node.js のバージョンは `.nvmrc` (Node 22) に固定しています。
+Node.js のバージョンは `.nvmrc` (Node 24) に固定しています (同梱 npm 11.x。`.npmrc` の `min-release-age` は npm 11.10 以降が必要)。
 
 ## セットアップ
 
@@ -25,12 +25,17 @@ npm run dev    # http://localhost:3000
 
 ### 環境変数
 
-| 変数              | 用途                                            |
-| ----------------- | ----------------------------------------------- |
-| `BASIC_AUTH_USER` | Basic 認証ユーザー名 (本番では未設定時バイパス) |
-| `BASIC_AUTH_PASS` | Basic 認証パスワード                            |
+| 変数                   | 用途                                                           |
+| ---------------------- | -------------------------------------------------------------- |
+| `BASIC_AUTH_USER`      | Basic 認証ユーザー名                                           |
+| `BASIC_AUTH_PASS`      | Basic 認証パスワード                                           |
+| `REGISTRATION_ENABLED` | `true` のとき `/api/sign_up` の受付を有効化 (既定: 無効 = 403) |
+
+Basic 認証は **`BASIC_AUTH_USER` と `BASIC_AUTH_PASS` が両方設定されている場合のみ**有効になり、
+未設定なら公開されます (`NODE_ENV` には依存しない)。ステージングだけ限定公開したい場合に設定します。
 
 ローカルは `.env` / `.dev.vars`、Cloudflare では `wrangler secret` で供給します。
+`.env` は git 管理対象外です (`.env.example` を参照)。
 
 ## スクリプト
 

@@ -23,5 +23,11 @@ export default defineConfig({
     url: baseURL,
     reuseExistingServer: !isCI,
     timeout: 180_000,
+    // E2E は公開状態 (Basic 認証なし) でテストする。
+    // ローカル .env に BASIC_AUTH_USER/PASS があっても空で上書きし 401 を防ぐ。
+    env: {
+      BASIC_AUTH_USER: "",
+      BASIC_AUTH_PASS: "",
+    },
   },
 });
