@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import AnimatedInViewFadeIn from "@/components/ui/animated-inview-fadein";
 import { H2 } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
@@ -21,27 +22,27 @@ export default function HeroWithImage(props: Props): JSX.Element {
   return (
     <div
       className={cn(
-        "flex flex-col justify-between gap-6 sm:gap-5 md:gap-10 lg:flex-row container space-y-6 py-8 dark:bg-transparent md:py-12",
-        props.className
+        "container flex flex-col justify-between gap-6 space-y-6 py-8 sm:gap-5 md:gap-10 md:py-12 lg:flex-row dark:bg-transparent",
+        props.className,
       )}
     >
-      <div className="w-full lg:py-12 lg:w-5/12 xl:py-24">
+      <div className="w-full lg:w-5/12 lg:py-12 xl:py-24">
         <AnimatedInViewFadeIn>
-          <div className="flex flex-col justify-stretch items-center">
-            <H2 className="text-center pb-14 lg:text-left">{props.title}</H2>
+          <div className="flex flex-col items-center justify-stretch">
+            <H2 className="pb-14 text-center lg:text-left">{props.title}</H2>
             <p className="text-left text-muted-foreground md:max-w-3xl md:text-center lg:max-w-none lg:text-left">
               {props.description}
             </p>
           </div>
         </AnimatedInViewFadeIn>
       </div>
-      <div className="lg:h-auto w-full lg:w-7/12 flex justify-center items-center">
+      <div className="flex w-full items-center justify-center lg:h-auto lg:w-7/12">
         <AnimatedInViewFadeIn>
           {props.imageHref ? (
             <Link href={props.imageHref} target="_blank" rel="noopener noreferrer">
               <Image
                 loading="lazy"
-                className="rounded-lg drop-shadow-md hover:scale-105 transition-transform duration-500 cursor-pointer"
+                className="cursor-pointer rounded-lg drop-shadow-md transition-transform duration-500 hover:scale-105"
                 src={props.image}
                 alt={props.imageAlt ?? "hero image"}
                 width={props.imageWidth ?? 1024}

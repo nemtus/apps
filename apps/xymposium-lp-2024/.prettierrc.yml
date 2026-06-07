@@ -1,1 +1,5 @@
 printWidth: 120
+plugins:
+  - prettier-plugin-tailwindcss
+# Tailwind v4 は CSS ファースト設定のため、クラス整列にスタイルシートの場所を明示する
+tailwindStylesheet: ./app/globals.css

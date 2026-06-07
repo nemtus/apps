@@ -47,20 +47,20 @@ export default function AnimatedMarquee({
       <div
         {...props}
         className={cn(
-          "group relative flex h-full w-full overflow-hidden p-2 [--duration:10s] [--gap:12px] [gap:var(--gap)]",
+          "group relative flex h-full w-full gap-(--gap) overflow-hidden p-2 [--duration:10s] [--gap:12px]",
           {
             "flex-col": vertical,
             "flex-row": !vertical,
           },
-          className
+          className,
         )}
       >
         {Array.from({ length: repeat }).map((_, index) => (
           <div
             key={`item-${index}`}
-            className={cn("flex shrink-0 [gap:var(--gap)]", {
-              "group-hover:[animation-play-state:paused]": pauseOnHover,
-              "[animation-direction:reverse]": reverse,
+            className={cn("flex shrink-0 gap-(--gap)", {
+              "group-hover:paused": pauseOnHover,
+              "direction-reverse": reverse,
               "animate-marquee-horizontal flex-row": !vertical,
               "animate-marquee-vertical flex-col": vertical,
             })}
@@ -68,17 +68,18 @@ export default function AnimatedMarquee({
             {children}
           </div>
         ))}
+        {/* マスクは relative なコンテナの内側に置き、inset-0 でマーキー全体に重ねる */}
+        {applyMask && (
+          <div
+            className={cn("pointer-events-none absolute inset-0 z-10", {
+              "bg-linear-to-b from-white/50 from-5% via-transparent via-50% to-white/50 to-95% dark:from-black/50 dark:to-black/50":
+                vertical,
+              "bg-linear-to-r from-white/50 from-5% via-transparent via-50% to-white/50 to-95% dark:from-black/50 dark:to-black/50":
+                !vertical,
+            })}
+          />
+        )}
       </div>
-      {applyMask && (
-        <div
-          className={cn("pointer-events-none absolute z-10 h-full w-full", {
-            "bg-gradient-to-b from-white/50 from-5% via-transparent via-50% to-white/50 to-95% dark:from-black/50 dark:to-black/50":
-              vertical,
-            "bg-gradient-to-r from-white/50 from-5% via-transparent via-50% to-white/50 to-95% dark:from-black/50 dark:to-black/50":
-              !vertical,
-          })}
-        />
-      )}
     </>
   );
 }

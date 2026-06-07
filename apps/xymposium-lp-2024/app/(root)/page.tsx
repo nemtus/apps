@@ -22,7 +22,7 @@ export default async function IndexPage() {
       <section className="py-8 md:py-12 lg:py-32">
         <HeroTitle />
       </section>
-      <section id="features" className="py-4 md:py-6 bg-slate-50">
+      <section id="features" className="bg-slate-50 py-4 md:py-6">
         <HeroWithImage
           title="What’s in Xymposium?"
           image={TokyoNodeBanner}
@@ -90,9 +90,9 @@ export default async function IndexPage() {
         />
       </section>
       <hr />
-      <section id="programs" className="sm:container py-8 md:py-12 items-center md:max-w-6xl">
+      <section id="programs" className="items-center py-8 sm:container md:max-w-6xl md:py-12">
         <AnimatedInViewFadeIn className="space-y-6">
-          <Paragraph className="font-semibold text-indigo-500 text-center">濃密な時間を過ごしましょう</Paragraph>
+          <Paragraph className="text-center font-semibold text-indigo-500">濃密な時間を過ごしましょう</Paragraph>
           <H2 className="text-center">プログラム</H2>
           <TimeTable
             caption="一部前後、延長する場合がございます"
@@ -164,8 +164,8 @@ export default async function IndexPage() {
           />
         </AnimatedInViewFadeIn>
       </section> */}
-      <section className="container py-12 md:py-24 max-w-6xl flex flex-col items-center justify-center">
-        <div className="container flex max-w-[64rem] flex-col items-center gap-8 text-center justify-center min-h-[80vh] md:min-h-[70vh] lg:min-h-[60vh]">
+      <section className="container flex max-w-6xl flex-col items-center justify-center py-12 md:py-24">
+        <div className="container flex min-h-[80vh] max-w-5xl flex-col items-center justify-center gap-8 text-center md:min-h-[70vh] lg:min-h-[60vh]">
           <H2 className="text-4xl">
             <span className="text-xl">Symbol/NEM</span>
             <br /> Community Xymposium 2.0
@@ -182,10 +182,10 @@ export default async function IndexPage() {
       </section>
       <section
         id="questions"
-        className="container space-y-6 py-20 min-h-[60vh]  md:max-w-[64rem] flex flex-col items-stretch"
+        className="container flex min-h-[60vh] flex-col items-stretch space-y-6 py-20 md:max-w-5xl"
       >
-        <H2 className="text-center ml-0">よくある質問</H2>
-        <Paragraph className="text-muted-foreground text-center">
+        <H2 className="ml-0 text-center">よくある質問</H2>
+        <Paragraph className="text-center text-muted-foreground">
           ご不明点がありましたら
           <Link className="px-1" href="mailto:support@nemtus.com">
             support@nemtus.com

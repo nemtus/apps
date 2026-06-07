@@ -9,7 +9,7 @@ interface Props extends HTMLMotionProps<"div"> {
 /**
  * 画面に表示された際にフェードインするアニメーション
  */
-export default function AnimatedInViewFadeIn(props: Props): JSX.Element {
+export default function AnimatedInViewFadeIn(props: Props): React.JSX.Element {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "0px 100px -100px 0px" });
 

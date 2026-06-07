@@ -1,0 +1,13 @@
+{
+  "contextFileName": "GEMINI.md",
+  "excludeTools": [
+    "run_shell_command(sudo)",
+    "run_shell_command(rm -rf /)",
+    "run_shell_command(rm -rf ~)",
+    "run_shell_command(git push --force)",
+    "run_shell_command(git push -f)",
+    "run_shell_command(git clean -fdx)",
+    "run_shell_command(chmod -R 777)",
+    "run_shell_command(npm publish)"
+  ]
+}

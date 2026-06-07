@@ -12,7 +12,7 @@ import { navigations } from "@/lib/navigations";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function SignInForm({ className, ...props }: UserAuthFormProps) {
   const [email, setEmail] = React.useState("");
@@ -47,7 +47,7 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
       <Card className="py-4">
         <CardContent className="flex flex-col space-y-6">
           <div className="flex flex-col space-y-2 text-center">
-            <H1 className="pb-0 text-2xl sm:text-2xl md:text-2xl font-semibold tracking-tight">Apply for an event</H1>
+            <H1 className="pb-0 text-2xl font-semibold tracking-tight sm:text-2xl md:text-2xl">Apply for an event</H1>
             <Paragraph className="text-sm text-muted-foreground">Enter your name, email and symbol address</Paragraph>
           </div>
           <form onSubmit={handleSubmit}>

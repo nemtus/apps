@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import AnimatedBorderTrail from "@/components/ui/animated-border-trail";
 import { Link } from "@/components/ui/link";
 import TextSpan from "@/components/ui/text-span";
@@ -8,12 +9,12 @@ import { H1, Paragraph } from "@/components/ui/typography";
  */
 export default function HeroTitle(): JSX.Element {
   return (
-    <div className="container flex max-w-[64rem] flex-col items-center gap-8 text-center justify-center min-h-[80vh] md:min-h-[70vh] lg:min-h-[60vh]">
+    <div className="container flex min-h-[80vh] max-w-5xl flex-col items-center justify-center gap-8 text-center md:min-h-[70vh] lg:min-h-[60vh]">
       <H1 className="text-4xl">
         <span className="text-xl">Symbol/NEM</span>
         <br /> Community Xymposium 2.0
       </H1>
-      <Paragraph className="max-w-3xl text-muted-foreground leading-8">
+      <Paragraph className="max-w-3xl leading-8 text-muted-foreground">
         <TextSpan>Xymposium 2.0の</TextSpan>
         <TextSpan>サイドイベントを</TextSpan>
         <TextSpan>コミュニティにより開催</TextSpan>

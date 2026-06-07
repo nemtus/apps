@@ -24,12 +24,40 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
-.env*.local
+# local env files (.env.example のみ追跡する)
+.env
+.env.*
+!.env.example
 
 # vercel
 .vercel
 
+# cloudflare / opennext
+.open-next/
+.wrangler/
+.dev.vars
+cloudflare-env.d.ts
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# playwright mcp screenshots
+.playwright-mcp/
+
+# claude code: 共有設定 (settings.json / hooks) は追跡し、個人設定とランタイムのみ無視
+.claude/settings.local.json
+.claude/*.lock
+.claude/.session*
+.claude/projects/
+.claude/todos/
+.claude/shell-snapshots/
+
+*storybook.log
+storybook-static
+
+# playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

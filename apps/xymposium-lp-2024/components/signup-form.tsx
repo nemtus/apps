@@ -9,16 +9,20 @@ import { navigations } from "@/lib/navigations";
 import { cn } from "@/lib/utils";
 import { IUser } from "@/types/user";
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function SignUpForm({ className, ...props }: UserAuthFormProps) {
+  // isLoading / onSubmit は受付再開時に有効化する申込フォーム (下部の JSX を
+  // コメントアウト中) から参照されるため、現状は未使用だが意図的に保持している。
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [isFinished, setIsFinished] = React.useState<boolean>(false);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
-    const form: any = event.currentTarget;
+    const form = event.currentTarget as HTMLFormElement & Record<string, HTMLInputElement>;
     const body: IUser = {
       email: form.email.value?.trim(),
       address: form.address.value?.replace(/-/g, "")?.trim(),
@@ -65,14 +69,14 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
           ホームへ戻る
         </Link>
       ) : (
-        <Card className={"py-4 bg-background backdrop-blur-sm"} style={{ background: "hsla(0,0%,100%,.7)" }}>
+        <Card className={"bg-background py-4 backdrop-blur-xs"} style={{ background: "hsla(0,0%,100%,.7)" }}>
           <CardContent className="flex flex-col space-y-6">
             <div className="flex flex-col space-y-2 text-center">
-              <H1 className="pb-0 text-2xl sm:text-2xl md:text-2xl font-semibold tracking-tight">Apply for an event</H1>
+              <H1 className="pb-0 text-2xl font-semibold tracking-tight sm:text-2xl md:text-2xl">Apply for an event</H1>
               <Paragraph className="text-sm text-muted-foreground">Please enter the required information</Paragraph>
             </div>
             <div>
-              <p className="text-center py-4 px-16">受付を終了しました</p>
+              <p className="px-16 py-4 text-center">受付を終了しました</p>
             </div>
             {/* <form onSubmit={onSubmit}>
               <div className="grid gap-2">

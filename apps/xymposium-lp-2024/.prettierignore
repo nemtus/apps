@@ -1,0 +1,17 @@
+# build / generated output
+.next/
+.open-next/
+.wrangler/
+out/
+build/
+storybook-static/
+coverage/
+node_modules/
+
+# lockfiles & generated types
+package-lock.json
+next-env.d.ts
+
+# assets
+public/
+assets/lottie/

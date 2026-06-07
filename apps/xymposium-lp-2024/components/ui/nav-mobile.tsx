@@ -15,8 +15,8 @@ export function MobileNav({ items, onClose }: MobileNavProps) {
   return (
     <div
       className={cn(
-        "fixed inset-0 top-20 z-50 grid h-[100svh] grid-flow-row auto-rows-max",
-        "overflow-auto p-6 shadow-md animate-in slide-in-from-bottom md:hidden"
+        "fixed inset-0 top-20 z-50 grid h-svh grid-flow-row auto-rows-max",
+        "overflow-auto p-6 shadow-md animate-in slide-in-from-bottom md:hidden",
       )}
     >
       <div className="relative z-20 grid gap-6 rounded-md bg-popover p-4 text-popover-foreground shadow-md">
@@ -28,7 +28,7 @@ export function MobileNav({ items, onClose }: MobileNavProps) {
               onClick={onClose}
               className={cn(
                 "flex w-full items-center rounded-md p-2 text-sm font-medium hover:underline",
-                item.disabled && "cursor-not-allowed opacity-60"
+                item.disabled && "cursor-not-allowed opacity-60",
               )}
             >
               {item.title}
@@ -36,7 +36,10 @@ export function MobileNav({ items, onClose }: MobileNavProps) {
           ))}
         </nav>
       </div>
-      <div className="fixed left-0 z-10 h-screen w-screen bg-black bg-opacity-80" onClick={onClose} />
+      {/* クリックでメニューを閉じる半透明バックドロップ。
+          元は bg-black + bg-opacity-80 (80% 黒) だが、Tailwind v4 で bg-opacity-* が
+          無効化され bg-black が不透明黒になっていた。v4 の bg-black/80 で元の意図を再現する。 */}
+      <div className="fixed left-0 z-10 h-screen w-screen bg-black/80" onClick={onClose} />
     </div>
   );
 }

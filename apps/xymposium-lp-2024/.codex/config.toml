@@ -1,0 +1,37 @@
+# OpenAI Codex CLI プロジェクト設定
+# 指示書は AGENTS.md (CLAUDE.md へのシンボリックリンク) を参照。
+# プロジェクト .codex/ 層は「信頼済み(trusted)」プロジェクトでのみ読み込まれる。
+
+# 危険な操作は都度承認を求める (Claude の ask 相当)
+approval_policy = "on-request"
+
+# --- ライフサイクルフック (Claude Code の hooks 相当) ---
+
+# 編集/作成したファイルを Prettier で整形する
+[[hooks.PostToolUse]]
+matcher = "*"
+
+[[hooks.PostToolUse.hooks]]
+type = "command"
+command = 'bash "$(git rev-parse --show-toplevel)/.claude/hooks/format-file.sh"'
+timeout = 60
+statusMessage = "Prettier で整形中"
+
+# 応答終了時に CI 相当の静的ゲートを実行 (失敗時はブロックして修正を促す)
+[[hooks.Stop]]
+
+[[hooks.Stop.hooks]]
+type = "command"
+command = 'bash "$(git rev-parse --show-toplevel)/.claude/hooks/precheck.sh"'
+timeout = 240
+statusMessage = "lint/typecheck/knip/depcruise/build/test を検証中"
+
+# Bash 実行前に危険なコマンドを拒否 (Claude の permissions.deny 相当)
+[[hooks.PreToolUse]]
+matcher = "Bash|Shell|shell|run_shell_command"
+
+[[hooks.PreToolUse.hooks]]
+type = "command"
+command = 'bash "$(git rev-parse --show-toplevel)/.codex/hooks/policy.sh"'
+timeout = 15
+statusMessage = "危険コマンドを検査中"

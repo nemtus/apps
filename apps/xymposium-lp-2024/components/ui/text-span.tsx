@@ -8,7 +8,7 @@ interface Props extends React.BaseHTMLAttributes<HTMLSpanElement> {
 /**
  * レスポンシブ等で文字の折り返し範囲を指定する為のテキストブロック
  */
-export default function TextSpan(props: Props): JSX.Element {
+export default function TextSpan(props: Props): React.JSX.Element {
   return (
     <span {...props} className={cn("inline-block", props.className)}>
       {props.children}
