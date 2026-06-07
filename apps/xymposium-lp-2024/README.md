@@ -114,3 +114,7 @@ pinact run --verify # SHA とバージョンコメントの対応が正しいか
 - `save-exact=true` — 依存追加時に厳密バージョンで固定。
 
 CI の `npm audit --audit-level=info` で、深刻度を問わず脆弱性が 1 件でもあれば失敗します。
+
+## ライセンス
+
+[MIT License](./LICENSE) — Copyright (c) 2024 NPO法人NEMTUS
