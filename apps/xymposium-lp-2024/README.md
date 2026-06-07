@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Symbol/NEM Community Xymposium 2024
 
-## Getting Started
+Symbol/NEM Community Xymposium のイベント告知・登録サイト。Next.js (App Router) 製で、**Cloudflare Workers** 上で公開します。
 
-First, run the development server:
+## 技術スタック
+
+| 領域           | 採用技術                                                                          |
+| -------------- | --------------------------------------------------------------------------------- |
+| フレームワーク | Next.js 16 (App Router) / React 19                                                |
+| スタイリング   | Tailwind CSS v4 / shadcn/ui (Radix UI) / framer-motion                            |
+| デプロイ       | Cloudflare Workers (`@opennextjs/cloudflare`)                                     |
+| Lint / Format  | ESLint 9 (flat config) / Prettier                                                 |
+| テスト         | Vitest (ユニット) / Storybook 10 (カタログ + インタラクション) / Playwright (E2E) |
+| CI/CD          | GitHub Actions / Dependabot                                                       |
+
+Node.js のバージョンは `.nvmrc` (Node 22) に固定しています。
+
+## セットアップ
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+nvm use        # .nvmrc の Node を使用
+npm ci
+npm run dev    # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 環境変数
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| 変数              | 用途                                            |
+| ----------------- | ----------------------------------------------- |
+| `BASIC_AUTH_USER` | Basic 認証ユーザー名 (本番では未設定時バイパス) |
+| `BASIC_AUTH_PASS` | Basic 認証パスワード                            |
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+ローカルは `.env` / `.dev.vars`、Cloudflare では `wrangler secret` で供給します。
 
-## Learn More
+## スクリプト
 
-To learn more about Next.js, take a look at the following resources:
+| コマンド                  | 内容                                               |
+| ------------------------- | -------------------------------------------------- |
+| `npm run dev`             | 開発サーバ                                         |
+| `npm run build`           | 本番ビルド (Next.js)                               |
+| `npm run lint`            | ESLint                                             |
+| `npm run typecheck`       | `tsc --noEmit`                                     |
+| `npm run format`          | Prettier で整形                                    |
+| `npm run format:check`    | 整形チェック (CI 用)                               |
+| `npm run test`            | Vitest (ユニット + Storybook コンポーネントテスト) |
+| `npm run test:coverage`   | カバレッジ付きテスト                               |
+| `npm run test:e2e`        | Playwright E2E                                     |
+| `npm run storybook`       | Storybook 起動 (http://localhost:6006)             |
+| `npm run build-storybook` | Storybook 静的ビルド                               |
+| `npm run preview`         | Cloudflare Workers ローカルランタイムで確認        |
+| `npm run deploy`          | Cloudflare Workers へデプロイ                      |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Cloudflare Workers へのデプロイ
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+ローカル確認:
 
-## Deploy on Vercel
+```bash
+npm run preview
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+デプロイ (要 Cloudflare 認証情報):
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```bash
+npx wrangler login                        # 初回のみ
+npx wrangler secret put BASIC_AUTH_USER   # 必要に応じて
+npx wrangler secret put BASIC_AUTH_PASS
+npm run deploy
+```
+
+### GitHub Actions による自動デプロイ
+
+`main` への push で `.github/workflows/deploy.yml` が実行されます。以下のリポジトリ Secret が必要です。
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+## CI
+
+`.github/workflows/ci.yml` が PR / push で以下を実行します。
+
+1. `quality`: audit (high 以上で失敗) → format:check → lint → typecheck → build → build-storybook
+2. `test`: Vitest (ユニット + Storybook ブラウザモード)
+3. `e2e`: Playwright
+
+依存更新は `.github/dependabot.yml` (npm / github-actions, 毎週) で自動 PR 化します。
