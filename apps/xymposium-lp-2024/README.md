@@ -80,8 +80,17 @@ npm run deploy
 
 `.github/workflows/ci.yml` が PR / push で以下を実行します。
 
-1. `quality`: audit (high 以上で失敗) → format:check → lint → typecheck → knip (デッドコード) → dependency-cruiser (循環参照/境界) → build → build-storybook
+1. `quality`: audit (info 以上=level 問わず失敗) → format:check → lint → typecheck → knip (デッドコード) → dependency-cruiser (循環参照/境界) → build → build-storybook
 2. `test`: Vitest (ユニット + Storybook ブラウザモード)
 3. `e2e`: Playwright
 
 依存更新は `.github/dependabot.yml` (npm / github-actions, 毎週) で自動 PR 化します。
+
+### サプライチェーン対策
+
+`.npmrc` で以下を設定しています。
+
+- `min-release-age=7` — 公開から 7 日未満の新しいバージョンはインストールしない (dependency cooldown / npm 11.10.0+)。直近に公開された悪意あるバージョンの取り込みを防ぐ。
+- `save-exact=true` — 依存追加時に厳密バージョンで固定。
+
+CI の `npm audit --audit-level=info` で、深刻度を問わず脆弱性が 1 件でもあれば失敗します。

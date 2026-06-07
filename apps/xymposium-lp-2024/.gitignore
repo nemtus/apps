@@ -43,8 +43,13 @@ next-env.d.ts
 # playwright mcp screenshots
 .playwright-mcp/
 
-# claude code harness state
-.claude/
+# claude code: 共有設定 (settings.json / hooks) は追跡し、個人設定とランタイムのみ無視
+.claude/settings.local.json
+.claude/*.lock
+.claude/.session*
+.claude/projects/
+.claude/todos/
+.claude/shell-snapshots/
 
 *storybook.log
 storybook-static

@@ -1,8 +1,6 @@
 import { JSX } from "react";
 import AnimatedInViewFadeIn from "@/components/ui/animated-inview-fadein";
-import { Link } from "@/components/ui/link";
-import TextSpan from "@/components/ui/text-span";
-import { H3, Paragraph } from "@/components/ui/typography";
+import { H3 } from "@/components/ui/typography";
 
 export interface Props {
   title: string;

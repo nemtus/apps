@@ -15,6 +15,7 @@ const config = [
       "build/**",
       "node_modules/**",
       "next-env.d.ts",
+      "cloudflare-env.d.ts",
       "public/**",
       "storybook-static/**",
       "coverage/**",
@@ -23,6 +24,20 @@ const config = [
   ...nextCoreWebVitals,
   ...nextTypescript,
   ...storybook.configs["flat/recommended"],
+  // 未使用変数: `_` 始まりは意図的な未使用として許容する
+  {
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+          ignoreRestSiblings: true,
+        },
+      ],
+    },
+  },
   // CommonJS な設定ファイルは require() を許可する
   {
     files: ["*.config.js", "*.config.cjs"],

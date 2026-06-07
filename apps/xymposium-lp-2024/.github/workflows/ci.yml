@@ -22,8 +22,8 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - name: Audit (high/critical で失敗)
-        run: npm audit --audit-level=high
+      - name: Audit (info 以上の脆弱性があれば失敗 / level 問わず)
+        run: npm audit --audit-level=info
       - name: Format check
         run: npm run format:check
       - name: Lint

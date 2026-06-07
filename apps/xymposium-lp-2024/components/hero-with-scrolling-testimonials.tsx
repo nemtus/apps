@@ -1,8 +1,4 @@
 import { JSX } from "react";
-import HatchetIcon from "@/assets/images/hatchet.png";
-import NemtusIcon from "@/assets/images/nemtus.png";
-import JaguarIcon from "@/assets/images/hatchet.png";
-import OpeningLineIcon from "@/assets/images/openingline.jpg";
 import AnimatedInViewFadeIn from "@/components/ui/animated-inview-fadein";
 import { H2, Paragraph } from "@/components/ui/typography";
 import AnimatedScrollingTestimonials from "@/components/ui/animated-scrolling-testimonials";

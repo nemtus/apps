@@ -12,9 +12,13 @@ import { IUser } from "@/types/user";
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function SignUpForm({ className, ...props }: UserAuthFormProps) {
+  // isLoading / onSubmit は受付再開時に有効化する申込フォーム (下部の JSX を
+  // コメントアウト中) から参照されるため、現状は未使用だが意図的に保持している。
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [isFinished, setIsFinished] = React.useState<boolean>(false);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
