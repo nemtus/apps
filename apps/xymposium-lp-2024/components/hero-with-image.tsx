@@ -22,7 +22,7 @@ export default function HeroWithImage(props: Props): JSX.Element {
   return (
     <div
       className={cn(
-        "container flex flex-col justify-between gap-6 space-y-6 py-8 dark:bg-transparent sm:gap-5 md:gap-10 md:py-12 lg:flex-row",
+        "container flex flex-col justify-between gap-6 space-y-6 py-8 sm:gap-5 md:gap-10 md:py-12 lg:flex-row dark:bg-transparent",
         props.className,
       )}
     >
@@ -30,7 +30,7 @@ export default function HeroWithImage(props: Props): JSX.Element {
         <AnimatedInViewFadeIn>
           <div className="flex flex-col items-center justify-stretch">
             <H2 className="pb-14 text-center lg:text-left">{props.title}</H2>
-            <p className="text-left text-muted-foreground md:max-w-3xl md:text-center lg:max-w-none lg:text-left">
+            <p className="text-muted-foreground text-left md:max-w-3xl md:text-center lg:max-w-none lg:text-left">
               {props.description}
             </p>
           </div>

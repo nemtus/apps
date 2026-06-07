@@ -9,12 +9,12 @@ import { H1, Paragraph } from "@/components/ui/typography";
  */
 export default function HeroTitle(): JSX.Element {
   return (
-    <div className="container flex min-h-[80vh] max-w-[64rem] flex-col items-center justify-center gap-8 text-center md:min-h-[70vh] lg:min-h-[60vh]">
+    <div className="container flex min-h-[80vh] max-w-5xl flex-col items-center justify-center gap-8 text-center md:min-h-[70vh] lg:min-h-[60vh]">
       <H1 className="text-4xl">
         <span className="text-xl">Symbol/NEM</span>
         <br /> Community Xymposium 2.0
       </H1>
-      <Paragraph className="max-w-3xl leading-8 text-muted-foreground">
+      <Paragraph className="text-muted-foreground max-w-3xl leading-8">
         <TextSpan>Xymposium 2.0の</TextSpan>
         <TextSpan>サイドイベントを</TextSpan>
         <TextSpan>コミュニティにより開催</TextSpan>

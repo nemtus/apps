@@ -165,7 +165,7 @@ export default async function IndexPage() {
         </AnimatedInViewFadeIn>
       </section> */}
       <section className="container flex max-w-6xl flex-col items-center justify-center py-12 md:py-24">
-        <div className="container flex min-h-[80vh] max-w-[64rem] flex-col items-center justify-center gap-8 text-center md:min-h-[70vh] lg:min-h-[60vh]">
+        <div className="container flex min-h-[80vh] max-w-5xl flex-col items-center justify-center gap-8 text-center md:min-h-[70vh] lg:min-h-[60vh]">
           <H2 className="text-4xl">
             <span className="text-xl">Symbol/NEM</span>
             <br /> Community Xymposium 2.0
@@ -182,10 +182,10 @@ export default async function IndexPage() {
       </section>
       <section
         id="questions"
-        className="container flex min-h-[60vh] flex-col items-stretch space-y-6 py-20 md:max-w-[64rem]"
+        className="container flex min-h-[60vh] flex-col items-stretch space-y-6 py-20 md:max-w-5xl"
       >
         <H2 className="ml-0 text-center">よくある質問</H2>
-        <Paragraph className="text-center text-muted-foreground">
+        <Paragraph className="text-muted-foreground text-center">
           ご不明点がありましたら
           <Link className="px-1" href="mailto:support@nemtus.com">
             support@nemtus.com

@@ -36,7 +36,7 @@ H3.displayName = "H3";
 
 const Paragraph = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
-    <p ref={ref} className={cn("text-base font-normal leading-normal", className)} {...props} />
+    <p ref={ref} className={cn("text-base leading-normal font-normal", className)} {...props} />
   ),
 );
 Paragraph.displayName = "Paragraph";

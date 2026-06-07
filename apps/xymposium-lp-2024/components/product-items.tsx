@@ -20,7 +20,7 @@ export default function ProductItemLinks(props: Props): JSX.Element {
       {props.data.map((item, index) => (
         <AnimatedInViewFadeIn className="flex flex-col gap-4 md:gap-6" key={index}>
           <Paragraph className="pb-1 text-2xl font-bold">{item.title}</Paragraph>
-          <Paragraph className="pb-3 text-muted-foreground">{item.description}</Paragraph>
+          <Paragraph className="text-muted-foreground pb-3">{item.description}</Paragraph>
           <div className="mt-auto">
             <Link variant="outline" size="button" href={item.href} target="_blank" rel="noopener">
               More

@@ -5,7 +5,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <>
       <header
-        className="fixed z-40 flex h-20 w-[100vw] items-center bg-background backdrop-blur-sm"
+        className="bg-background fixed z-40 flex h-20 w-screen items-center backdrop-blur-xs"
         style={{ background: "hsla(0,0%,100%,.8)" }}
       >
         <MainNav

@@ -48,7 +48,7 @@ export function SignInForm({ className, ...props }: UserAuthFormProps) {
         <CardContent className="flex flex-col space-y-6">
           <div className="flex flex-col space-y-2 text-center">
             <H1 className="pb-0 text-2xl font-semibold tracking-tight sm:text-2xl md:text-2xl">Apply for an event</H1>
-            <Paragraph className="text-sm text-muted-foreground">Enter your name, email and symbol address</Paragraph>
+            <Paragraph className="text-muted-foreground text-sm">Enter your name, email and symbol address</Paragraph>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4">
