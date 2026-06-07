@@ -60,7 +60,7 @@ npm run dev    # http://localhost:3000
 npm run preview
 ```
 
-デプロイ (要 Cloudflare 認証情報):
+手動デプロイ (要 Cloudflare 認証情報):
 
 ```bash
 npx wrangler login                        # 初回のみ
@@ -69,12 +69,16 @@ npx wrangler secret put BASIC_AUTH_PASS
 npm run deploy
 ```
 
-### GitHub Actions による自動デプロイ
+### 自動デプロイ (Cloudflare Workers Builds / Git 連携)
 
-`main` への push で `.github/workflows/deploy.yml` が実行されます。以下のリポジトリ Secret が必要です。
+本番デプロイは **Cloudflare 側の GitHub 連携 (Workers Builds)** で行う。GitHub Actions では
+デプロイしない (このため deploy ワークフローは存在しない)。Cloudflare ダッシュボードで
+リポジトリを接続し、ビルド/デプロイ設定を行うこと。
 
-- `CLOUDFLARE_API_TOKEN`
-- `CLOUDFLARE_ACCOUNT_ID`
+- ビルドコマンド: `npx opennextjs-cloudflare build`
+- デプロイコマンド: `npx wrangler deploy`
+- 認証情報・`BASIC_AUTH_USER` / `BASIC_AUTH_PASS` などの Secret は **Cloudflare 側**で設定する
+  (GitHub Secrets ではない)。
 
 ## CI
 
