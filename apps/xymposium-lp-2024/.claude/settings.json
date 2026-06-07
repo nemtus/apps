@@ -37,6 +37,7 @@
       "Bash(git ls-files:*)",
       "Bash(git switch:*)",
       "Bash(git checkout -b:*)",
+      "Bash(pinact run:*)",
       "Bash(ls:*)",
       "Bash(cat:*)",
       "Bash(head:*)",
