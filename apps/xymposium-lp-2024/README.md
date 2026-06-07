@@ -84,11 +84,27 @@ npm run deploy
 
 `.github/workflows/ci.yml` が PR / push で以下を実行します。
 
-1. `quality`: audit (info 以上=level 問わず失敗) → format:check → lint → typecheck → knip (デッドコード) → dependency-cruiser (循環参照/境界) → build → build-storybook
-2. `test`: Vitest (ユニット + Storybook ブラウザモード)
-3. `e2e`: Playwright
+1. `actions-pinned`: [pinact](https://github.com/suzuki-shunsuke/pinact) で GitHub Actions が全て
+   full commit SHA に固定されているかを検証 (`pinact run --check`)。未固定があれば失敗する。
+2. `quality`: audit (info 以上=level 問わず失敗) → format:check → lint → typecheck → knip (デッドコード) → dependency-cruiser (循環参照/境界) → build → build-storybook
+3. `test`: Vitest (ユニット + Storybook ブラウザモード)
+4. `e2e`: Playwright
 
 依存更新は `.github/dependabot.yml` (npm / github-actions, 毎週) で自動 PR 化します。
+SHA 固定された Actions も Dependabot が SHA + バージョンコメントごと更新する。
+
+### GitHub Actions の SHA ピンニング
+
+サプライチェーン対策として、ワークフロー内の Actions は**タグではなく full commit SHA** で固定する
+(`uses: actions/checkout@<sha> # v4.x.x`)。タグは可変で乗っ取りリスクがあるため。
+
+```bash
+pinact run          # Actions を SHA に固定 (バージョンコメント付き)
+pinact run --check  # 固定漏れがないか検証 (CI と同じ)
+pinact run --verify # SHA とバージョンコメントの対応が正しいか検証
+```
+
+設定は `.pinact.yaml`。CI の `actions-pinned` ジョブが固定漏れを検出して失敗させる。
 
 ### サプライチェーン対策
 
