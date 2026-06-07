@@ -1,3 +1,4 @@
+import { JSX } from "react";
 import AnimatedInViewFadeIn from "@/components/ui/animated-inview-fadein";
 import { Link } from "@/components/ui/link";
 import TextSpan from "@/components/ui/text-span";

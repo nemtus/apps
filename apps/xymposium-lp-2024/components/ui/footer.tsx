@@ -1,3 +1,4 @@
+import { JSX } from "react";
 import SymbolLogoDark from "@/assets/symbol-logo-with-text-dark.png";
 import { Icons } from "@/components/ui/icons";
 import { Link } from "@/components/ui/link";

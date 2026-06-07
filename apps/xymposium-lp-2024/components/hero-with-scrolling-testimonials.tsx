@@ -1,3 +1,4 @@
+import { JSX } from "react";
 import HatchetIcon from "@/assets/images/hatchet.png";
 import NemtusIcon from "@/assets/images/nemtus.png";
 import JaguarIcon from "@/assets/images/hatchet.png";

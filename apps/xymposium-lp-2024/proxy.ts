@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const config = {};
 
-export default function middleware(req: NextRequest) {
+export default function proxy(req: NextRequest) {
   const basicAuth = req.headers.get("authorization");
 
   if (process.env.NODE_ENV === "development") {

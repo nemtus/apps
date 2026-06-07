@@ -1,3 +1,4 @@
+import { JSX } from "react";
 import AnimatedInViewFadeIn from "@/components/ui/animated-inview-fadein";
 import { H2 } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
