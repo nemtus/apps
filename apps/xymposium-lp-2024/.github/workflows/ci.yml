@@ -30,6 +30,10 @@ jobs:
         run: npm run lint
       - name: Typecheck
         run: npm run typecheck
+      - name: Dead code (knip)
+        run: npm run knip
+      - name: Dependency rules (dependency-cruiser)
+        run: npm run depcruise
       - name: Build (Next.js)
         run: npm run build
       - name: Build Storybook

@@ -40,6 +40,8 @@ npm run dev    # http://localhost:3000
 | `npm run build`           | 本番ビルド (Next.js)                               |
 | `npm run lint`            | ESLint                                             |
 | `npm run typecheck`       | `tsc --noEmit`                                     |
+| `npm run knip`            | 未使用ファイル/エクスポート/依存の検出             |
+| `npm run depcruise`       | 循環参照・依存境界違反の検出 (dependency-cruiser)  |
 | `npm run format`          | Prettier で整形                                    |
 | `npm run format:check`    | 整形チェック (CI 用)                               |
 | `npm run test`            | Vitest (ユニット + Storybook コンポーネントテスト) |
@@ -78,7 +80,7 @@ npm run deploy
 
 `.github/workflows/ci.yml` が PR / push で以下を実行します。
 
-1. `quality`: audit (high 以上で失敗) → format:check → lint → typecheck → build → build-storybook
+1. `quality`: audit (high 以上で失敗) → format:check → lint → typecheck → knip (デッドコード) → dependency-cruiser (循環参照/境界) → build → build-storybook
 2. `test`: Vitest (ユニット + Storybook ブラウザモード)
 3. `e2e`: Playwright
 
