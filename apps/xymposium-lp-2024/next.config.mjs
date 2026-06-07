@@ -11,5 +11,9 @@ const nextConfig = {
 
 export default nextConfig;
 
-// `next dev` 実行時に Cloudflare のバインディング(env など)を利用可能にする
-initOpenNextCloudflareForDev();
+// `next dev` 実行時に Cloudflare のバインディング(env など)を利用可能にする。
+// この関数は workerd プロセスを起動するため、Storybook build や next build で実行されると
+// workerd が残存してプロセスが終了せずハングする。`npm run dev` のときだけ呼び出す。
+if (process.env.npm_lifecycle_event === "dev") {
+  initOpenNextCloudflareForDev();
+}
