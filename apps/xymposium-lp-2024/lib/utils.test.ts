@@ -25,8 +25,34 @@ describe("TextValidation.isEmail", () => {
     expect(TextValidation.isEmail(email)).toBe(true);
   });
 
-  it.each(["", "plainaddress", "a@b", "a@@b.com", "a b@c.com", "no-at-sign.com"])("無効なメール: %s", (email) => {
+  it.each([
+    "",
+    "plainaddress",
+    "a@b",
+    "a@@b.com",
+    "a b@c.com",
+    "no-at-sign.com",
+    // 区切りドットが曖昧でない (= 連続/先頭/末尾ドットは無効) ことを固定する境界ケース。
+    "a@b..c",
+    "a@b.c.",
+    "a@.b",
+  ])("無効なメール: %s", (email) => {
     expect(TextValidation.isEmail(email)).toBe(false);
+  });
+
+  // ReDoS (js/polynomial-redos) ガード。脆弱な正規表現では入力長の2乗で
+  // バックトラッキングが爆発するため、攻撃文字列でしきい値を超過する。
+  // 線形な正規表現なら数ミリ秒で完了するので、十分なマージンを持つしきい値で検出する。
+  it("ReDoS 攻撃文字列でも即座に判定を返す", { timeout: 30_000 }, () => {
+    // 末尾の空白で「ほぼマッチするが最後に失敗」する形にし、曖昧な区切りドットの
+    // バックトラッキングを最大化する (脆弱な正規表現では入力長の2乗で増大する)。
+    const evil = "a@" + "a.".repeat(50_000) + " ";
+    const start = performance.now();
+    const result = TextValidation.isEmail(evil);
+    const elapsedMs = performance.now() - start;
+
+    expect(result).toBe(false);
+    expect(elapsedMs).toBeLessThan(1_000);
   });
 });
 
