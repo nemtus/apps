@@ -11,6 +11,8 @@ export class TextValidation {
   }
 
   static isEmail(input: string) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input);
+    // 区切りドットを文字クラスから除外して曖昧さ (overlap) を排除し、線形時間で判定する。
+    // これにより polynomial ReDoS を回避する。副次的に連続/先頭/末尾ドットは無効になる。
+    return /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(input);
   }
 }
