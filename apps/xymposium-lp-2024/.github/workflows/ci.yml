@@ -61,6 +61,13 @@ jobs:
         run: npm run knip
       - name: Dependency rules (dependency-cruiser)
         run: npm run depcruise
+      - name: Cache Next.js build
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: .next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.{ts,tsx,js,jsx,mjs,cjs,css}') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-
       - name: Build (Next.js)
         run: npm run build
       - name: Build Storybook
@@ -79,8 +86,21 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - name: Resolve Playwright version
+        id: pw
+        run: echo "v=$(node -p "require('playwright/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.pw.outputs.v }}
       - name: Install Playwright Chromium (Storybook browser mode 用)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
+      - name: Install Playwright system deps (キャッシュヒット時)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
       - name: "Run tests (vitest: unit + storybook)"
         run: npm run test
 
@@ -97,8 +117,28 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - name: Resolve Playwright version
+        id: pw
+        run: echo "v=$(node -p "require('playwright/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.pw.outputs.v }}
       - name: Install Playwright Chromium
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
+      - name: Install Playwright system deps (キャッシュヒット時)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+      - name: Cache Next.js build (E2E の webServer build 用)
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: .next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.{ts,tsx,js,jsx,mjs,cjs,css}') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-
       - name: Run E2E tests
         run: npm run test:e2e
         env:
