@@ -22,7 +22,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
-      <body className={"min-h-screen bg-background font-sans antialiased " + inter.variable}>{children}</body>
+      {/* ブラウザ拡張 (例: ColorZilla の cz-shortcut-listen) が body に属性を付与し
+          ハイドレーション不一致の警告を出すため、body の属性差分のみ抑制する */}
+      <body suppressHydrationWarning className={"min-h-screen bg-background font-sans antialiased " + inter.variable}>
+        {children}
+      </body>
     </html>
   );
 }
