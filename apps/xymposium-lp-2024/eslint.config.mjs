@@ -1,6 +1,8 @@
 import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
 import nextTypescript from "eslint-config-next/typescript";
 import eslintConfigPrettier from "eslint-config-prettier";
+// https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
+import storybook from "eslint-plugin-storybook";
 
 /** @type {import('eslint').Linter.Config[]} */
 const config = [
@@ -20,6 +22,7 @@ const config = [
   },
   ...nextCoreWebVitals,
   ...nextTypescript,
+  ...storybook.configs["flat/recommended"],
   // CommonJS な設定ファイルは require() を許可する
   {
     files: ["*.config.js", "*.config.cjs"],
