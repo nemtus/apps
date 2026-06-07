@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     },
   );
 
-  const responseJson = await res.json();
+  const responseJson = (await res.json()) as { message?: string };
 
   if (responseJson.message === "ok") {
     return NextResponse.json({ message: "ok" }, { status: 200 });
