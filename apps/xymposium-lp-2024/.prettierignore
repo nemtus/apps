@@ -12,6 +12,9 @@ node_modules/
 package-lock.json
 next-env.d.ts
 
+# serena (外部ツールが生成・管理する設定)
+.serena/
+
 # assets
 public/
 assets/lottie/

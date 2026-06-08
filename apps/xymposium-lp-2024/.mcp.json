@@ -1,15 +1,4 @@
 {
-  "contextFileName": "GEMINI.md",
-  "excludeTools": [
-    "run_shell_command(sudo)",
-    "run_shell_command(rm -rf /)",
-    "run_shell_command(rm -rf ~)",
-    "run_shell_command(git push --force)",
-    "run_shell_command(git push -f)",
-    "run_shell_command(git clean -fdx)",
-    "run_shell_command(chmod -R 777)",
-    "run_shell_command(npm publish)"
-  ],
   "mcpServers": {
     "serena": {
       "command": "uvx",
@@ -21,13 +10,13 @@
         "--context",
         "ide-assistant",
         "--project",
-        "."
+        "${CLAUDE_PROJECT_DIR:-.}"
       ]
     },
     "context7": {
       "command": "npx",
       "args": ["-y", "@upstash/context7-mcp@3.1.0"],
-      "env": { "CONTEXT7_API_KEY": "$CONTEXT7_API_KEY" }
+      "env": { "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY:-}" }
     },
     "playwright": {
       "command": "npx",
