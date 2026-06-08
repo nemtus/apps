@@ -15,7 +15,7 @@
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/oraios/serena",
+        "serena-agent==1.5.3",
         "serena",
         "start-mcp-server",
         "--context",
@@ -26,16 +26,16 @@
     },
     "context7": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp"],
+      "args": ["-y", "@upstash/context7-mcp@3.1.0"],
       "env": { "CONTEXT7_API_KEY": "$CONTEXT7_API_KEY" }
     },
     "playwright": {
       "command": "npx",
-      "args": ["-y", "@playwright/mcp@latest"]
+      "args": ["-y", "@playwright/mcp@0.0.75"]
     },
     "chrome-devtools": {
       "command": "npx",
-      "args": ["-y", "chrome-devtools-mcp@latest"]
+      "args": ["-y", "chrome-devtools-mcp@1.1.1"]
     }
   }
 }
