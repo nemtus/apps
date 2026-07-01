@@ -1,0 +1,79 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // オリジナル情報
+
+    // ユーザー情報
+    match /users/{userId} {
+      allow get: if request.auth.token.admin == true || request.auth.uid == userId;
+      allow list: if request.auth.token.admin == true;
+      allow create: if request.auth.token.admin == true || request.auth.uid == userId;
+      allow update: if request.auth.token.admin == true || request.auth.uid == userId;
+    }
+    // 店舗情報
+    match /users/{userId}/stores/{storeId} {
+      allow get: if request.auth.token.admin == true || (request.auth.uid == userId && request.auth.uid == storeId);
+      allow list: if request.auth.token.admin == true;
+      allow create: if request.auth.token.admin == true || (request.auth.uid == userId && request.auth.uid == storeId);
+      allow update: if request.auth.token.admin == true || (request.auth.uid == userId && request.auth.uid == storeId);
+    }
+    // 店舗KYC秘密情報
+    match /users/{userId}/stores/{storeId}/kyc/secret {
+      allow get: if request.auth.token.admin == true;
+      allow list: if request.auth.token.admin == true;
+      allow create: if request.auth.token.admin == true;
+      allow update: if request.auth.token.admin == true;
+    }
+    // 商品情報
+    match /users/{userId}/stores/{storeId}/items/{itemId} {
+      allow get: if request.auth.token.admin == true || (request.auth.uid == userId && request.auth.uid == storeId);
+      allow list: if request.auth.token.admin == true || (request.auth.uid == userId && request.auth.uid == storeId);
+      allow create: if request.auth.token.admin == true || (request.auth.uid == userId && request.auth.uid == storeId);
+      allow update: if request.auth.token.admin == true || (request.auth.uid == userId && request.auth.uid == storeId);
+    }
+    // 注文情報(購入者視点)
+    match /users/{userId}/orders/{orderId} {
+      allow get: if request.auth.token.admin == true || request.auth.uid == userId;
+      allow list: if request.auth.token.admin == true || request.auth.uid == userId;
+      allow create: if request.auth.token.admin == true || request.auth.uid == userId;
+      allow update: if request.auth.token.admin == true;
+    }
+    // 価格情報
+    match /exchanges/{exchangeId}/tickers/{tickerId}/currencies/{currencyId} {
+      allow get: if true;
+      allow list: if true;
+    }
+    // 設定情報
+    match /configs/{configId} {
+      allow get: if true;
+      allow list: if true;
+    }
+
+    // 公開のためのコピー情報
+
+    // 店舗情報
+    match /stores/{storeId} {
+      allow get: if true;
+      allow list: if true;
+    }
+    // 商品情報(同一店舗内情報に限る)
+    match /stores/{storeId}/items/{itemId} {
+      allow get: if true;
+      allow list: if true;
+    }
+
+    // 店舗側でのオペレーションのためのコピー情報
+
+    // 注文情報(店舗視点)
+    match /users/{userId}/stores/{storeId}/orders/{orderId} {
+      allow get: if request.auth.token.admin == true || (request.auth.uid == userId && request.auth.uid == storeId);
+      allow list: if request.auth.token.admin == true || (request.auth.uid == userId && request.auth.uid == storeId);
+      allow create: if request.auth.token.admin == true;
+      allow update: if request.auth.token.admin == true || (request.auth.uid == userId && request.auth.uid == storeId);
+    }
+  }
+}
