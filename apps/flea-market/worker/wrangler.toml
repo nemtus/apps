@@ -1,0 +1,32 @@
+# flea-market auth Worker. Fill the TODO ids after provisioning
+# (wrangler d1 create / kv namespace create / r2 bucket create).
+name = "flea-market-auth"
+main = "src/index.ts"
+compatibility_date = "2025-06-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Non-secret vars ([vars]); secrets go via `wrangler secret put <NAME>`:
+#   BETTER_AUTH_SECRET, FIREBASE_SIGNER_KEY, FIREBASE_SALT_SEPARATOR,
+#   AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and any *_CLIENT_SECRET.
+[vars]
+AUTH_BASE_URL = "http://localhost:8787"
+AWS_REGION = "ap-northeast-1"
+SES_FROM = "NEMTUS <no-reply@nemtus.com>"
+# TRUSTED_ORIGINS = "https://flea-market.nemtus.com"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "flea-market"
+database_id = "TODO_D1_DATABASE_ID"
+migrations_dir = "../../../packages/db/migrations"
+
+[[kv_namespaces]]
+binding = "SESSION_KV"
+id = "TODO_KV_NAMESPACE_ID"
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "flea-market"
+
+# Per-environment overrides (testnet/mainnet analogues) can be added as
+# [env.production] blocks with their own binding ids and AUTH_BASE_URL.

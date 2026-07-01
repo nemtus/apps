@@ -30,9 +30,9 @@ const auth = createAuth({
   `firebase-scrypt$<passwordHash>$<salt>` in `account.password`.
   `verifyPassword` (wired into `emailAndPassword.password.verify`) detects that
   marker and verifies it with `firebaseScryptVerify` (Workers scrypt + WebCrypto
-  AES-CTR). On success, call `rehashLegacyPassword(env.DB, userId, password)` from
-  a **sign-in after-hook** to upgrade the stored hash to the native `scrypt$...`
-  format. TODO: wire that hook against the installed better-auth version.
+  AES-CTR). On a successful `/sign-in/email`, `createAuth` runs an **after-hook**
+  that calls `rehashLegacyPassword` to upgrade the stored hash to the native
+  `scrypt$...` format (only when `emailAndPassword` + `firebaseHashConfig` are set).
 - **Identity.** Preserve the Firebase uid as the D1 `user.id` during ETL so
   Firestore/Storage/Symbol references stay valid. OAuth users get one `account`
   row per federated provider; `accountLinking` links by verified email.
