@@ -9,7 +9,7 @@
 #   Deploy command:    npx wrangler deploy
 #   Build watch paths: apps/hackathon-lp-2023/*   (so only this site rebuilds)
 #   Production branch: main   (PRs get preview URLs; ensure Preview URLs are enabled)
-name = "hackathon-lp-2023"
+name = "nemtus-hackathon-lp-2023"
 compatibility_date = "2025-06-01"
 
 [assets]
