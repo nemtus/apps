@@ -27,8 +27,10 @@ apps/
                         XYM order settlement. Own functions/.
   hackathon-lp/         Static aggregator/index site (public/ only, no build).
   hackathon-lp-2023/    Static per-year event sites (public/ only, no build).
-  hackathon-lp-2024/
-  hackathon-lp-2025/
+  hackathon-lp-2024/    Each hosts as a Cloudflare Worker (Static Assets) via its own
+  hackathon-lp-2025/    wrangler.toml (assets-only, serves public/); `npm run cf:deploy`.
+    flea-market/worker/ flea-market backend Worker (Better Auth on D1+KV, Stripe,
+                        /api/orders, /api/files). Workspace via the apps/*/worker glob.
 packages/               Shared, headless npm-workspace packages (Cloudflare Workers):
   db/                   Drizzle schema (Better Auth tables + KYC/admin fields) + D1 client
   auth/                 Better Auth (D1 + KV sessions), Firebase-scrypt lazy re-hash,

@@ -1,0 +1,11 @@
+# hackathon-lp — the multi-year aggregator/index site, hosted as a Cloudflare
+# Worker (Static Assets). Assets-only Worker (no `main`): serves ./public directly.
+name = "hackathon-lp"
+compatibility_date = "2025-06-01"
+
+[assets]
+directory = "./public"
+not_found_handling = "404-page"
+
+# Attach the custom domain after the first deploy / once DNS is on Cloudflare:
+# routes = [{ pattern = "hackathon.nemtus.com", custom_domain = true }]

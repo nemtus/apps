@@ -1,0 +1,12 @@
+# hackathon-lp-2025 — static site hosted as a Cloudflare Worker (Static Assets).
+# Assets-only Worker (no `main`): Cloudflare serves ./public directly.
+name = "hackathon-lp-2025"
+compatibility_date = "2025-06-01"
+
+[assets]
+directory = "./public"
+# Serve /404.html for unmatched paths (these are multi-page static sites, not SPAs).
+not_found_handling = "404-page"
+
+# Attach the custom domain after the first deploy / once DNS is on Cloudflare:
+# routes = [{ pattern = "hackathon-2025.nemtus.com", custom_domain = true }]
