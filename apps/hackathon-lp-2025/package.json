@@ -1,5 +1,5 @@
 {
-  "name": "hackathon-lp-2024",
+  "name": "hackathon-lp-2025",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nemtus/hackathon-lp-2024.git"
+    "url": "git+https://github.com/nemtus/hackathon-lp-2025.git"
   },
   "keywords": [],
   "author": "yasunori-matsuoka <yasunori.matsuoka@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nemtus/hackathon-lp-2024/issues"
+    "url": "https://github.com/nemtus/hackathon-lp-2025/issues"
   },
-  "homepage": "https://github.com/nemtus/hackathon-lp-2024",
+  "homepage": "https://github.com/nemtus/hackathon-lp-2025",
   "devDependencies": {
     "firebase-tools": "^12.9.1"
   }

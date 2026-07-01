@@ -1,0 +1,23 @@
+{
+  "name": "nemtus-apps",
+  "private": true,
+  "version": "0.0.0",
+  "description": "NEMTUS web apps & sites monorepo — shared auth/billing core plus hackathon, flea-market (formerly symbol-fest-market), and the hackathon landing pages.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nemtus/apps.git"
+  },
+  "comment": "apps/* install standalone (own lockfiles) to keep React 18 (hackathon) and React 19 (flea-market) isolated; only shared packages/* are workspaces. Revisit when hackathon migrates to React 19 (Phase 3).",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build:packages": "npm run build --workspaces --if-present",
+    "typecheck:packages": "npm run typecheck --workspaces --if-present",
+    "format": "prettier --write ."
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
