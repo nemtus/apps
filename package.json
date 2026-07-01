@@ -8,9 +8,10 @@
     "type": "git",
     "url": "git+https://github.com/nemtus/apps.git"
   },
-  "comment": "apps/* install standalone (own lockfiles) to keep React 18 (hackathon) and React 19 (flea-market) isolated; only shared packages/* are workspaces. Revisit when hackathon migrates to React 19 (Phase 3).",
+  "comment": "apps/* frontends install standalone (own lockfiles) to keep React 18 (hackathon) and React 19 (flea-market) isolated. Shared packages/* and the backend-only apps/*/worker (no React) are workspaces so they can consume @nemtus/* packages.",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*/worker"
   ],
   "scripts": {
     "build:packages": "npm run build --workspaces --if-present",

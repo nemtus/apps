@@ -13,10 +13,12 @@
  */
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { createAuthMiddleware } from 'better-auth/api';
 import { admin } from 'better-auth/plugins';
 import { createDb, schema } from '@nemtus/db';
 import type { EmailSender } from '@nemtus/email';
 import { hashPassword, verifyPassword } from './password';
+import { rehashLegacyPassword } from './rehash';
 import { kvSecondaryStorage } from './kv-secondary-storage';
 import { buildSocialProviders, type SocialProviderEnv } from './providers';
 import type { FirebaseHashConfig } from './firebase-scrypt';
@@ -116,6 +118,22 @@ export function createAuth(options: CreateAuthOptions) {
     },
     user: { additionalFields },
     plugins: [admin()],
+    // Lazy re-hash: after a successful email/password sign-in, if the stored
+    // credential is still a migrated Firebase hash, upgrade it to the native
+    // scrypt format. Only wired when Firebase-hash verification is in play.
+    hooks:
+      emailAndPassword && firebaseHashConfig
+        ? {
+            after: createAuthMiddleware(async (ctx) => {
+              if (ctx.path !== '/sign-in/email') return;
+              const newSession = ctx.context.newSession;
+              if (!newSession) return;
+              const password = (ctx.body as { password?: string } | undefined)?.password;
+              if (!password) return;
+              await rehashLegacyPassword(db, newSession.user.id, password);
+            }),
+          }
+        : undefined,
   });
 }
 

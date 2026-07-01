@@ -1,0 +1,27 @@
+{
+  "name": "flea-market-worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "flea-market backend Worker (Better Auth on Cloudflare Workers). Coexists with the Firebase app until cutover.",
+  "scripts": {
+    "typecheck": "tsc --noEmit && tsc --noEmit -p scripts/tsconfig.json",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "cf-typegen": "wrangler types",
+    "etl:users": "node --experimental-strip-types scripts/etl-users.ts"
+  },
+  "dependencies": {
+    "@nemtus/auth": "*",
+    "@nemtus/billing": "*",
+    "@nemtus/db": "*",
+    "@nemtus/email": "*",
+    "@nemtus/storage": "*"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250620.0",
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.2",
+    "wrangler": "^4.20.0"
+  }
+}

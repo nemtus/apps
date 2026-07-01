@@ -1,0 +1,40 @@
+/**
+ * Bindings + secrets for the flea-market auth Worker. Bindings come from
+ * wrangler.toml; secrets via `wrangler secret put`; non-secret vars via [vars].
+ */
+export interface Env {
+  // --- Cloudflare bindings ---
+  DB: D1Database;
+  SESSION_KV: KVNamespace;
+  BUCKET: R2Bucket;
+
+  // --- core auth config ---
+  BETTER_AUTH_SECRET: string;
+  AUTH_BASE_URL: string;
+  /** comma-separated extra trusted origins (SPA origins) */
+  TRUSTED_ORIGINS?: string;
+
+  // --- Firebase hash_config (for lazy password re-hash) ---
+  FIREBASE_SIGNER_KEY: string;
+  FIREBASE_SALT_SEPARATOR: string;
+  FIREBASE_ROUNDS?: string;
+  FIREBASE_MEM_COST?: string;
+
+  // --- social providers (optional; enabled only when both id+secret present) ---
+  GOOGLE_CLIENT_ID?: string;
+  GOOGLE_CLIENT_SECRET?: string;
+  GITHUB_CLIENT_ID?: string;
+  GITHUB_CLIENT_SECRET?: string;
+  TWITTER_CLIENT_ID?: string;
+  TWITTER_CLIENT_SECRET?: string;
+  MICROSOFT_CLIENT_ID?: string;
+  MICROSOFT_CLIENT_SECRET?: string;
+  APPLE_CLIENT_ID?: string;
+  APPLE_CLIENT_SECRET?: string;
+
+  // --- AWS SES ---
+  AWS_REGION: string;
+  AWS_ACCESS_KEY_ID: string;
+  AWS_SECRET_ACCESS_KEY: string;
+  SES_FROM: string;
+}
