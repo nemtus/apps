@@ -27,6 +27,25 @@ function str(v: unknown): string {
   return `'${String(v).replace(/'/g, "''")}'`;
 }
 
+// Mirrors @nemtus/storage's firebaseDownloadUrlToKey (inlined to keep this Node
+// script free of the Workers-typed package).
+function firebaseUrlToKey(url: string): string | null {
+  const m = /\/o\/([^?]+)/.exec(url);
+  if (!m || !m[1]) return null;
+  try {
+    return decodeURIComponent(m[1]);
+  } catch {
+    return null;
+  }
+}
+
+/** Rewrite a Firebase Storage download URL to the R2-served /api/files/<key> path. */
+function imageStr(v: unknown): string {
+  if (typeof v !== 'string' || v === '') return 'NULL';
+  const key = firebaseUrlToKey(v);
+  return key ? str(`/api/files/${key}`) : str(v);
+}
+
 function num(v: unknown, fallback = 0): number {
   const n = typeof v === 'number' ? v : Number(v);
   return Number.isFinite(n) ? n : fallback;
@@ -75,7 +94,7 @@ function main(): void {
         `${str(s.id)},${str(s.id)},${str(s.storeName)},${str(s.storeEmail)},` +
         `${str(s.storePhoneNumber)},${str(s.storeZipCode)},${str(s.storeAddress1)},` +
         `${str(s.storeAddress2)},${str(s.storeUrl)},${str(s.storeDescription)},` +
-        `${str(s.storeSymbolAddress)},${str(s.storeImageFile)},${str(s.storeCoverImageFile)},` +
+        `${str(s.storeSymbolAddress)},${imageStr(s.storeImageFile)},${imageStr(s.storeCoverImageFile)},` +
         `${c},${u});`,
     );
   }
@@ -88,7 +107,7 @@ function main(): void {
       'INSERT OR IGNORE INTO item ' +
         '(id,store_id,name,price_jpy,price_unit,description,image_url,status,created_at,updated_at) VALUES (' +
         `${str(i.id)},${str(i.storeId)},${str(i.itemName)},${num(i.itemPrice)},` +
-        `${str(i.itemPriceUnit ?? 'JPY')},${str(i.itemDescription)},${str(i.itemImageFile)},` +
+        `${str(i.itemPriceUnit ?? 'JPY')},${str(i.itemDescription)},${imageStr(i.itemImageFile)},` +
         `${str(status)},${c},${u});`,
     );
   }
