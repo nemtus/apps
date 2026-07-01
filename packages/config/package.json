@@ -1,0 +1,13 @@
+{
+  "name": "@nemtus/config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared config presets for the nemtus/apps packages (Prettier; TS base lives at repo root tsconfig.base.json).",
+  "exports": {
+    "./prettier": "./prettier.config.mjs"
+  },
+  "files": [
+    "prettier.config.mjs"
+  ]
+}

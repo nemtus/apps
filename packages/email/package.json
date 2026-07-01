@@ -1,0 +1,20 @@
+{
+  "name": "@nemtus/email",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Transactional email for Cloudflare Workers via AWS SES (SigV4 signed with aws4fetch).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "aws4fetch": "^1.0.20"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250620.0",
+    "typescript": "^5.7.2"
+  }
+}

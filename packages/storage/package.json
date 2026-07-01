@@ -1,0 +1,17 @@
+{
+  "name": "@nemtus/storage",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Cloudflare R2 helpers with auth-checked, per-user object access for nemtus/apps.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250620.0",
+    "typescript": "^5.7.2"
+  }
+}
