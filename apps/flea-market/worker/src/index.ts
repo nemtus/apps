@@ -12,6 +12,8 @@
 import { createAuth, socialProvidersFromEnv } from '@nemtus/auth';
 import { createSesSender } from '@nemtus/email';
 import type { Env } from './env';
+import { createOrderRoute } from './routes/orders';
+import { stripeWebhookRoute } from './routes/stripe-webhook';
 
 function buildAuth(env: Env) {
   return createAuth({
@@ -48,8 +50,17 @@ export default {
       return new Response('ok', { headers: { 'content-type': 'text/plain' } });
     }
 
+    // Stripe webhook must bypass auth and read the raw body.
+    if (url.pathname === '/api/stripe/webhook' && request.method === 'POST') {
+      return stripeWebhookRoute(request, env);
+    }
+
     if (url.pathname.startsWith('/api/auth')) {
       return buildAuth(env).handler(request);
+    }
+
+    if (url.pathname === '/api/orders' && request.method === 'POST') {
+      return createOrderRoute(request, env, buildAuth(env));
     }
 
     return new Response('Not found', { status: 404 });

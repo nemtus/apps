@@ -9,6 +9,7 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "cf-typegen": "wrangler types",
+    "db:generate": "drizzle-kit generate",
     "etl:users": "node --experimental-strip-types scripts/etl-users.ts"
   },
   "dependencies": {
@@ -16,11 +17,13 @@
     "@nemtus/billing": "*",
     "@nemtus/db": "*",
     "@nemtus/email": "*",
-    "@nemtus/storage": "*"
+    "@nemtus/storage": "*",
+    "drizzle-orm": "^0.45.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250620.0",
     "@types/node": "^22.10.0",
+    "drizzle-kit": "^0.31.1",
     "typescript": "^5.7.2",
     "wrangler": "^4.20.0"
   }

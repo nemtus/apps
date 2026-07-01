@@ -11,9 +11,16 @@ shared `@nemtus/*` packages — unlike the standalone React frontends.
 
 - `GET /health`
 - `ANY /api/auth/*` — Better Auth (sign-in/up, sessions, OAuth callbacks, reset, …)
+- `POST /api/orders` — auth + KYC gated; creates a `PENDING` order and a Stripe
+  Checkout session, returns `{ orderId, url }`
+- `POST /api/stripe/webhook` — verifies the signature and advances the D1 order
+  (`checkout.session.completed → PAID`, `async_payment_failed → FAILED`,
+  `charge.refunded → REFUNDED`). Bypasses auth; uses the raw body.
 
 Lazy Firebase password migration and the rehash-on-login hook are handled inside
-`@nemtus/auth`; this Worker just supplies bindings + config.
+`@nemtus/auth`; this Worker supplies bindings + config. The D1 schema is the
+combined auth (`@nemtus/db`) + flea-market domain (`store`/`item`/`order`) set,
+generated here (`npm run db:generate`, `migrations_dir → migrations`).
 
 ## Provisioning (fill the `TODO_*` ids in wrangler.toml)
 
@@ -31,7 +38,10 @@ wrangler secret put FIREBASE_SIGNER_KEY       # base64 hash_config.base64_signer
 wrangler secret put FIREBASE_SALT_SEPARATOR   # base64 hash_config.base64_salt_separator
 wrangler secret put AWS_ACCESS_KEY_ID
 wrangler secret put AWS_SECRET_ACCESS_KEY
+wrangler secret put STRIPE_SECRET_KEY
+wrangler secret put STRIPE_WEBHOOK_SECRET
 # + any *_CLIENT_ID / *_CLIENT_SECRET for social providers
+# and [vars]: CHECKOUT_SUCCESS_URL / CHECKOUT_CANCEL_URL
 ```
 
 ## User migration (ETL)
