@@ -1,11 +1,20 @@
-# hackathon-lp — the multi-year aggregator/index site, hosted as a Cloudflare
-# Worker (Static Assets). Assets-only Worker (no `main`): serves ./public directly.
+# hackathon-lp — the multi-year aggregator/index site, hosted on Cloudflare Workers
+# (Static Assets). Assets-only Worker (no `main`): serves ./public directly.
+#
+# Deployed via Cloudflare Workers Builds (Git-connected — NOT GitHub Actions, so no
+# Cloudflare token is stored in GitHub). Configure this Worker once in the Cloudflare
+# dashboard (Workers & Pages → connect the nemtus/apps repo) with:
+#   Root directory:    apps/hackathon-lp
+#   Build command:     (none — static)
+#   Deploy command:    npx wrangler deploy
+#   Build watch paths: apps/hackathon-lp/*   (so only this site rebuilds)
+#   Production branch: main   (PRs get preview URLs; ensure Preview URLs are enabled)
 name = "hackathon-lp"
 compatibility_date = "2025-06-01"
 
 [assets]
 directory = "./public"
-not_found_handling = "404-page"
+not_found_handling = "404-page" # serve /404.html for unmatched paths (multi-page static)
 
-# Attach the custom domain after the first deploy / once DNS is on Cloudflare:
+# Custom domain (later, once DNS is on Cloudflare):
 # routes = [{ pattern = "hackathon.nemtus.com", custom_domain = true }]

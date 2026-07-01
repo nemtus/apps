@@ -27,8 +27,8 @@ apps/
                         XYM order settlement. Own functions/.
   hackathon-lp/         Static aggregator/index site (public/ only, no build).
   hackathon-lp-2023/    Static per-year event sites (public/ only, no build).
-  hackathon-lp-2024/    Each hosts as a Cloudflare Worker (Static Assets) via its own
-  hackathon-lp-2025/    wrangler.toml (assets-only, serves public/); `npm run cf:deploy`.
+  hackathon-lp-2024/    Each hosts as an assets-only Cloudflare Worker (serves public/) via
+  hackathon-lp-2025/    its own wrangler.toml; deployed by Cloudflare Workers Builds (Git).
     flea-market/worker/ flea-market backend Worker (Better Auth on D1+KV, Stripe,
                         /api/orders, /api/files). Workspace via the apps/*/worker glob.
 packages/               Shared, headless npm-workspace packages (Cloudflare Workers):
@@ -64,14 +64,22 @@ packages/               Shared, headless npm-workspace packages (Cloudflare Work
 - **Pin every GitHub Actions `uses:` to a full commit SHA** (with a `# vX.Y.Z` comment);
   mutable tags are rejected by `pinact`.
 
-## CI/CD status (follow-up required)
+## CI/CD status
 
-The per-app deploy workflows imported from the source repos now live under
-`apps/<name>/.github/workflows/` and are **inert** — GitHub only runs workflows from the
-repo-root `.github/workflows/`. Root-level, **path-filtered** workflows (one trigger per app,
-`on.push.paths: ['apps/<name>/**']`) that re-establish the existing **OIDC + Workload
-Identity Federation** keyless deploy to each app's Firebase project still need to be authored.
-This requires the org's WIF provider + per-app deploy secrets and is tracked as a follow-up.
+**LP sites → Cloudflare Workers Builds (Git-connected, no GitHub Actions).** The four
+`hackathon-lp*` sites deploy through **Cloudflare Workers Builds** connected to this repo via
+the Cloudflare GitHub App — deliberately *not* GitHub Actions, so no Cloudflare token is stored
+in GitHub. Each site is a separate Worker in the Cloudflare dashboard pointed at its
+subdirectory (Root directory `apps/<site>`, Build watch paths `apps/<site>/*`, Deploy command
+`npx wrangler deploy`, production branch `main`). `main` merge → production `*.workers.dev`;
+PRs → preview URLs (commented on the PR by Cloudflare). Settings live in the Cloudflare
+dashboard; the repo artifact is each site's `wrangler.toml`.
+
+**Firebase apps (follow-up).** The per-app deploy workflows imported from the source repos live
+under `apps/<name>/.github/workflows/` and are **inert** (GitHub only runs workflows from the
+repo-root `.github/workflows/`). The `hackathon` / `flea-market` Firebase deploys still need to
+be re-established (OIDC + Workload Identity Federation) or migrated to their Cloudflare
+equivalents; tracked as a follow-up.
 
 ## Roadmap
 
