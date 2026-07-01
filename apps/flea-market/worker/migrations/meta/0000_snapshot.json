@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "9294a915-4fe3-4a62-aef3-46382f31b0f5",
+  "id": "c6d7c03e-9cae-420b-b146-27b72e09e77f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "account": {
@@ -630,7 +630,22 @@
           "autoincrement": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "order_stripe_session_id_unique": {
+          "name": "order_stripe_session_id_unique",
+          "columns": [
+            "stripe_session_id"
+          ],
+          "isUnique": true
+        },
+        "order_stripe_payment_intent_id_unique": {
+          "name": "order_stripe_payment_intent_id_unique",
+          "columns": [
+            "stripe_payment_intent_id"
+          ],
+          "isUnique": true
+        }
+      },
       "foreignKeys": {
         "order_buyer_user_id_user_id_fk": {
           "name": "order_buyer_user_id_user_id_fk",
@@ -642,7 +657,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
+          "onDelete": "restrict",
           "onUpdate": "no action"
         },
         "order_store_id_store_id_fk": {
@@ -655,7 +670,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
+          "onDelete": "restrict",
           "onUpdate": "no action"
         },
         "order_item_id_item_id_fk": {
@@ -785,7 +800,15 @@
           "autoincrement": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "store_owner_user_id_unique": {
+          "name": "store_owner_user_id_unique",
+          "columns": [
+            "owner_user_id"
+          ],
+          "isUnique": true
+        }
+      },
       "foreignKeys": {
         "store_owner_user_id_user_id_fk": {
           "name": "store_owner_user_id_user_id_fk",

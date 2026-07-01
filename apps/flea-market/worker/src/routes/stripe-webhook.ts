@@ -4,27 +4,41 @@
  *
  *   POST /api/stripe/webhook   (raw body + `stripe-signature` header)
  */
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { createStripe, verifyWebhook } from '@nemtus/billing';
 import type { OrderPaymentStatus } from '../schema/domain';
 import { createDb, schema } from '../db';
 import type { Env } from '../env';
 
+/**
+ * Advance an order's status only from an allowed prior state, so duplicate or
+ * out-of-order Stripe events are idempotent (e.g. a replayed `completed` won't
+ * revert a `REFUNDED` order, and only a `PAID` order can become `REFUNDED`).
+ */
 async function setOrderStatus(
   env: Env,
   match: { sessionId?: string | null; paymentIntentId?: string | null },
-  status: OrderPaymentStatus,
+  from: OrderPaymentStatus,
+  to: OrderPaymentStatus,
   paymentIntentId?: string | null,
 ): Promise<void> {
   const db = createDb(env.DB);
-  const set = { paymentStatus: status, updatedAt: new Date(), ...(paymentIntentId ? { stripePaymentIntentId: paymentIntentId } : {}) };
+  const set = {
+    paymentStatus: to,
+    updatedAt: new Date(),
+    ...(paymentIntentId ? { stripePaymentIntentId: paymentIntentId } : {}),
+  };
+  const guard = eq(schema.order.paymentStatus, from);
   if (match.sessionId) {
-    await db.update(schema.order).set(set).where(eq(schema.order.stripeSessionId, match.sessionId));
+    await db
+      .update(schema.order)
+      .set(set)
+      .where(and(eq(schema.order.stripeSessionId, match.sessionId), guard));
   } else if (match.paymentIntentId) {
     await db
       .update(schema.order)
       .set(set)
-      .where(eq(schema.order.stripePaymentIntentId, match.paymentIntentId));
+      .where(and(eq(schema.order.stripePaymentIntentId, match.paymentIntentId), guard));
   }
 }
 
@@ -46,18 +60,18 @@ export async function stripeWebhookRoute(request: Request, env: Env): Promise<Re
     case 'checkout.session.completed': {
       const s = event.data.object;
       const paymentIntentId = typeof s.payment_intent === 'string' ? s.payment_intent : s.payment_intent?.id;
-      await setOrderStatus(env, { sessionId: s.id }, 'PAID', paymentIntentId);
+      await setOrderStatus(env, { sessionId: s.id }, 'PENDING', 'PAID', paymentIntentId);
       break;
     }
     case 'checkout.session.async_payment_failed': {
       const s = event.data.object;
-      await setOrderStatus(env, { sessionId: s.id }, 'FAILED');
+      await setOrderStatus(env, { sessionId: s.id }, 'PENDING', 'FAILED');
       break;
     }
     case 'charge.refunded': {
       const c = event.data.object;
       const paymentIntentId = typeof c.payment_intent === 'string' ? c.payment_intent : c.payment_intent?.id;
-      await setOrderStatus(env, { paymentIntentId }, 'REFUNDED', paymentIntentId);
+      await setOrderStatus(env, { paymentIntentId }, 'PAID', 'REFUNDED', paymentIntentId);
       break;
     }
     default:

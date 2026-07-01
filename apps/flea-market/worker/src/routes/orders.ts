@@ -35,7 +35,15 @@ export async function createOrderRoute(request: Request, env: Env, auth: Auth): 
 
   const body = (await request.json().catch(() => ({}))) as CreateOrderBody;
   if (!body.itemId) return json({ error: 'itemId required' }, 400);
-  const quantity = body.quantity && body.quantity > 0 ? Math.floor(body.quantity) : 1;
+
+  // Reject invalid quantities instead of silently coercing; default only when omitted.
+  let quantity = 1;
+  if (body.quantity !== undefined) {
+    if (typeof body.quantity !== 'number' || !Number.isInteger(body.quantity) || body.quantity < 1) {
+      return json({ error: 'invalid_quantity' }, 400);
+    }
+    quantity = body.quantity;
+  }
 
   const db = createDb(env.DB);
   const items = await db.select().from(schema.item).where(eq(schema.item.id, body.itemId));
@@ -60,15 +68,25 @@ export async function createOrderRoute(request: Request, env: Env, auth: Auth): 
   });
 
   const stripe = createStripe(env.STRIPE_SECRET_KEY);
-  const checkout = await createCheckoutSession(stripe, {
-    orderId,
-    name: it.name,
-    amount: total, // JPY is zero-decimal
-    quantity,
-    successUrl: env.CHECKOUT_SUCCESS_URL,
-    cancelUrl: env.CHECKOUT_CANCEL_URL,
-    customerEmail: (session.user as { email?: string }).email,
-  });
+  let checkout;
+  try {
+    checkout = await createCheckoutSession(stripe, {
+      orderId,
+      name: it.name,
+      amount: total, // JPY is zero-decimal
+      quantity,
+      successUrl: env.CHECKOUT_SUCCESS_URL,
+      cancelUrl: env.CHECKOUT_CANCEL_URL,
+      customerEmail: (session.user as { email?: string }).email,
+    });
+  } catch {
+    // Don't leave an unreconcilable PENDING row with no Stripe id.
+    await db
+      .update(schema.order)
+      .set({ paymentStatus: 'FAILED', updatedAt: new Date() })
+      .where(eq(schema.order.id, orderId));
+    return json({ error: 'checkout_failed' }, 502);
+  }
 
   await db
     .update(schema.order)
