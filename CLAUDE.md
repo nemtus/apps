@@ -29,8 +29,14 @@ apps/
   hackathon-lp-2023/    Static per-year event sites (public/ only, no build).
   hackathon-lp-2024/
   hackathon-lp-2025/
-packages/               Shared, headless workspace packages (added in Phase 1):
-                        db, auth, billing, email, storage, config.
+packages/               Shared, headless npm-workspace packages (Cloudflare Workers):
+  db/                   Drizzle schema (Better Auth tables + KYC/admin fields) + D1 client
+  auth/                 Better Auth (D1 + KV sessions), Firebase-scrypt lazy re-hash,
+                        social providers, KYC/admin, SES email hooks
+  email/                AWS SES via aws4fetch (SigV4)
+  storage/              R2 helpers with auth-checked, per-user access
+  billing/              Stripe Checkout + webhook verification (replaces XYM settlement)
+  config/               shared Prettier preset (TS base = repo-root tsconfig.base.json)
 ```
 
 ## Conventions
