@@ -1,0 +1,70 @@
+name: CD Firebase mainnet
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: mainnet
+
+    strategy:
+      matrix:
+        node: ['24.x']
+
+    name: Node ${{ matrix.node }} CD Firebase mainnet
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
+          cache-dependency-path: |
+            package-lock.json
+            functions/package-lock.json
+
+      - name: Audit dependencies (high+) before install
+        run: npm audit --audit-level=high
+      - name: Audit functions dependencies (high+) before install
+        run: npm audit --audit-level=high
+        working-directory: ./functions
+      - name: Create empty env file for mainnet build
+        run: touch .env.mainnet
+      - name: Restore mainnet env file content from secret
+        env:
+          REACT_ENV: ${{ secrets.REACT_ENV }}
+        run: echo $REACT_ENV | base64 --decode --ignore-garbage > .env.mainnet
+      - name: Create empty env file for testnet functions build
+        run: touch ./functions/.env
+      - name: Restore testnet env file content from secret
+        env:
+          FUNCTIONS_ENV: ${{ secrets.FUNCTIONS_ENV }}
+        run: echo $FUNCTIONS_ENV | base64 --decode --ignore-garbage > ./functions/.env
+      - run: ls functions -la
+
+      - run: npm ci
+      - run: npm run build:mainnet
+      - run: npm ci
+        working-directory: ./functions
+      - run: npm run build
+        working-directory: ./functions
+      - name: Authenticate to Google Cloud via Workload Identity Federation
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ vars.DEPLOY_SERVICE_ACCOUNT }}
+      - run: npx firebase deploy --project mainnet --non-interactive --force
+
+      - name: Clear env file
+        if: always()
+        run: rm .env.mainnet
+      - name: Clear functions env file
+        if: always()
+        run: rm ./functions/.env

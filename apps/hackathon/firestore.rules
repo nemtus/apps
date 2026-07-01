@@ -1,0 +1,415 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // auth rule functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return request.auth.token.admin == true;
+    }
+
+    function isAdminAuthenticated() {
+      return isAuthenticated() && isAdmin();
+    }
+
+    function isUserAuthenticated(userId) {
+      return isAuthenticated() && userId == request.auth.uid;
+    }
+
+    function isUserOrAdminAuthenticated(userId) {
+      return isUserAuthenticated(userId) || isAdminAuthenticated();
+    }
+
+    // schema rule functions
+    function isValidEntry(entry, userId, yearId) {
+      return entry.keys().hasAll([
+        'id',
+        'yearId',
+        'userId',
+        'createdAt',
+        'updatedAt'
+      ]) &&
+      entry.id is string &&
+      entry.yearId == yearId &&
+      entry.userId == userId &&
+      entry.createdAt is timestamp &&
+      entry.updatedAt is timestamp;
+    }
+
+    function isValidTeam(team, userId, yearId, teamId) {
+      return team.keys().hasAll([
+        'id',
+        'yearId',
+        'name',
+        'users',
+        'addressForPrizeReceipt',
+        'approved',
+        'createdAt',
+        'updatedAt',
+      ]) &&
+      team.id == userId &&
+      team.id == teamId &&
+      team.yearId == yearId &&
+      team.name is string &&
+      team.users is list &&
+      team.addressForPrizeReceipt is string &&
+      team.approved is bool &&
+      team.createdAt is timestamp &&
+      team.updatedAt is timestamp;
+    }
+
+    function isCreateableTeam(team, userId, yearId, teamId) {
+      return isValidTeam(team, userId, yearId, teamId) &&
+      team.approved == false;
+    }
+
+    function isValidSubmission(submission, userId, yearId, submissionId) {
+      return submission.keys().hasAll([
+        'id',
+        'yearId',
+        'teamId',
+        'name',
+        'description',
+        'url',
+        'imageUrl',
+        'repositoryUrl',
+        'storeRepositoryUrlOnChain',
+        'createdAt',
+        'updatedAt',
+        'approved',
+      ]) &&
+      submission.id == userId &&
+      submission.id == submissionId &&
+      submission.yearId == yearId &&
+      submission.teamId == userId &&
+      submission.teamId == submissionId &&
+      submission.name is string &&
+      submission.description is string &&
+      submission.url is string &&
+      submission.imageUrl is string &&
+      submission.repositoryUrl is string &&
+      submission.storeRepositoryUrlOnChain is bool &&
+      submission.createdAt is timestamp &&
+      submission.updatedAt is timestamp &&
+      submission.approved is bool;
+    }
+
+    function isCreateableSubmission(submission, userId, yearId, submissionId) {
+      return isValidSubmission(submission, userId, yearId, submissionId) &&
+      submission.approved == false;
+    }
+
+    function isValidJudge(judge, userId, yearId, judgeId) {
+      return judge.keys().hasAll([
+        'id',
+        'userId',
+        'yearId',
+        'judges',
+        'totalPoints',
+        'approved',
+        'createdAt',
+        'updatedAt',
+      ]) &&
+      judge.id == userId &&
+      judge.id == judgeId &&
+      judge.userId == userId &&
+      judge.yearId == yearId &&
+      // judge.judges is list &&
+      judge.totalPoints is number &&
+      // judge.totalPoints == judge.judges.length * 100 &&
+      judge.approved is bool &&
+      judge.createdAt is timestamp &&
+      judge.updatedAt is timestamp;
+    }
+
+    function isCreateableJudge(judge, userId, yearId, judgeId) {
+      return isValidJudge(judge, userId, yearId, judgeId) &&
+      judge.approved == false;
+    }
+
+    function isValidVote(vote, userId, yearId, voteId) {
+      return vote.keys().hasAll([
+        'id',
+        'userId',
+        'yearId',
+        'votes',
+        'totalPoints',
+        'approved',
+        'createdAt',
+        'updatedAt',
+      ]) &&
+      vote.id == userId &&
+      vote.id == voteId &&
+      vote.userId == userId &&
+      vote.yearId == yearId &&
+      // vote.votes is list &&
+      vote.totalPoints is number &&
+      // vote.totalPoints == vote.votes.length * 5 &&
+      vote.approved is bool &&
+      vote.createdAt is timestamp &&
+      vote.updatedAt is timestamp;
+    }
+
+    function isCreateableVote(vote, userId, yearId, voteId) {
+      return isValidVote(vote, userId, yearId, voteId) &&
+      vote.approved == false;
+    }
+
+    function isValidFinalJudge(judge, userId, yearId, judgeId) {
+      return judge.keys().hasAll([
+        'id',
+        'userId',
+        'yearId',
+        'judges',
+        'totalPoints',
+        'approved',
+        'createdAt',
+        'updatedAt',
+      ]) &&
+      judge.id == userId &&
+      judge.id == judgeId &&
+      judge.userId == userId &&
+      judge.yearId == yearId &&
+      // judge.judges is list &&
+      judge.totalPoints is number &&
+      // judge.totalPoints == judge.judges.length * 100 &&
+      judge.approved is bool &&
+      judge.createdAt is timestamp &&
+      judge.updatedAt is timestamp;
+    }
+
+    function isCreateableFinalJudge(judge, userId, yearId, judgeId) {
+      return isValidFinalJudge(judge, userId, yearId, judgeId) &&
+      judge.approved == false;
+    }
+
+    function isValidFinalVote(vote, userId, yearId, voteId) {
+      return vote.keys().hasAll([
+        'id',
+        'userId',
+        'yearId',
+        'votes',
+        'totalPoints',
+        'approved',
+        'createdAt',
+        'updatedAt',
+      ]) &&
+      vote.id == userId &&
+      vote.id == voteId &&
+      vote.userId == userId &&
+      vote.yearId == yearId &&
+      // vote.votes is list &&
+      vote.totalPoints is number &&
+      // vote.totalPoints == vote.votes.length * 5 &&
+      vote.approved is bool &&
+      vote.createdAt is timestamp &&
+      vote.updatedAt is timestamp;
+    }
+
+    function isCreateableFinalVote(vote, userId, yearId, voteId) {
+      return isValidFinalVote(vote, userId, yearId, voteId) &&
+      vote.approved == false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // for admin
+    match /v/1/scopes/admin/users/{userId} {
+      allow get: if isAdminAuthenticated();
+      allow list: if isAdminAuthenticated();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/admin/teams/{teamId} {
+      allow get: if isAdminAuthenticated();
+      allow list: if isAdminAuthenticated();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/admin/users/{userId}/years/{yearId}/entries/{entryId} {
+      allow get: if isAdminAuthenticated();
+      allow list: if isAdminAuthenticated();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/admin/users/{userId}/years/{yearId}/entries/{entryId}/txs/{txId} {
+      allow get: if isAdminAuthenticated();
+      allow list: if isAdminAuthenticated();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/admin/users/{userId}/years/{yearId}/teams/{teamId} {
+      allow get: if isAdminAuthenticated();
+      allow list: if isAdminAuthenticated();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/admin/users/{userId}/years/{year}/submissions/{submissionId}/judges/{judgeId} {
+      allow get: if isAdminAuthenticated();
+      allow list: if isAdminAuthenticated();
+      allow create: if isAdminAuthenticated() && submissionId == judgeId;
+      allow update: if isAdminAuthenticated() && submissionId == judgeId;
+      allow delete: if false;
+    }
+
+    // for user or admin
+    match /v/1/scopes/private/users/{userId} {
+      allow get: if isUserOrAdminAuthenticated(userId);
+      allow list: if isAdminAuthenticated();
+      allow create: if false;
+      allow update: if isUserOrAdminAuthenticated(userId);
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/private/users/{userId}/txs/{txId} {
+      allow get: if isUserOrAdminAuthenticated(userId);
+      allow list: if isUserOrAdminAuthenticated(userId);
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/private/users/{userId}/years/{yearId}/entries/{entryId} {
+      allow get: if isUserOrAdminAuthenticated(userId);
+      allow list: if isUserOrAdminAuthenticated(userId);
+      allow create: if isUserOrAdminAuthenticated(userId) && isValidEntry(request.resource.data, userId, yearId);
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/private/users/{userId}/years/{yearId}/teams/{teamId} {
+      allow get: if isUserOrAdminAuthenticated(userId);
+      allow list: if isUserOrAdminAuthenticated(userId);
+      allow create: if isUserOrAdminAuthenticated(userId) && isCreateableTeam(request.resource.data, userId, yearId, teamId);
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/private/users/{userId}/years/{yearId}/submissions/{submissionId} {
+      allow get: if isUserOrAdminAuthenticated(userId);
+      allow list: if isUserOrAdminAuthenticated(userId);
+      allow create: if isUserOrAdminAuthenticated(userId) && isCreateableSubmission(request.resource.data, userId, yearId, submissionId);
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/private/users/{userId}/years/{yearId}/judges/{judgeId} {
+      allow get: if isUserOrAdminAuthenticated(userId);
+      allow list: if isUserOrAdminAuthenticated(userId);
+      allow create: if isUserOrAdminAuthenticated(userId) && isCreateableJudge(request.resource.data, userId, yearId, judgeId);
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/private/users/{userId}/years/{yearId}/votes/{voteId} {
+      allow get: if isUserOrAdminAuthenticated(userId);
+      allow list: if isUserOrAdminAuthenticated(userId);
+      allow create: if isUserOrAdminAuthenticated(userId) && isCreateableVote(request.resource.data, userId, yearId, voteId);
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/private/users/{userId}/years/{yearId}/finalJudges/{finalJudgeId} {
+      allow get: if isUserOrAdminAuthenticated(userId);
+      allow list: if isUserOrAdminAuthenticated(userId);
+      allow create: if isUserOrAdminAuthenticated(userId) && isCreateableJudge(request.resource.data, userId, yearId, finalJudgeId);
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/private/users/{userId}/years/{yearId}/finalVotes/{finalVoteId} {
+      allow get: if isUserOrAdminAuthenticated(userId);
+      allow list: if isUserOrAdminAuthenticated(userId);
+      allow create: if isUserOrAdminAuthenticated(userId) && isCreateableVote(request.resource.data, userId, yearId, finalVoteId);
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    // for public
+    match /v/1/scopes/public/users/{userId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/public/years/{yearId}/entries/{entryId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/public/years/{yearId}/teams/{teamId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/public/years/{yearId}/submissions/{submissionId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/public/years/{yearId}/judges/{judgeId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/public/years/{yearId}/votes/{voteId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/public/years/{yearId}/finalJudges/{finalJudgeId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/public/years/{yearId}/finalVotes/{finalVoteId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/configs/hackathon/{document=**} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+  }
+}
