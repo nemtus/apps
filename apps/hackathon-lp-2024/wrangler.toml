@@ -12,9 +12,9 @@
 name = "nemtus-hackathon-lp-2024"
 compatibility_date = "2025-06-01"
 
+# Custom domain (managed as code; attached by Workers Builds on deploy):
+routes = [{ pattern = "hackathon-2024.nemtus.com", custom_domain = true }]
+
 [assets]
 directory = "./public"
 not_found_handling = "404-page" # serve /404.html for unmatched paths (multi-page static)
-
-# Custom domain (later, once DNS is on Cloudflare):
-# routes = [{ pattern = "hackathon-2024.nemtus.com", custom_domain = true }]
