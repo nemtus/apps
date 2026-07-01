@@ -38,6 +38,23 @@ export function listObjects(bucket: R2Bucket, prefix: string): Promise<R2Objects
   return bucket.list({ prefix });
 }
 
+/**
+ * Extract the R2/Storage object key from a Firebase Storage download URL, e.g.
+ *   https://firebasestorage.googleapis.com/v0/b/<bucket>/o/users%2Fu1%2F...%2Fa.png?alt=media&token=…
+ *   → "users/u1/.../a.png"
+ * Returns null if the URL isn't a recognizable Firebase Storage `/o/<path>` URL.
+ * Used by the Storage → R2 migration to rewrite image references to R2 keys.
+ */
+export function firebaseDownloadUrlToKey(url: string): string | null {
+  const m = /\/o\/([^?]+)/.exec(url);
+  if (!m || !m[1]) return null;
+  try {
+    return decodeURIComponent(m[1]);
+  } catch {
+    return null;
+  }
+}
+
 /** True if `key` belongs to `userId` under the `users/<userId>/...` convention. */
 export function isOwnedBy(key: string, userId: string): boolean {
   return key === `users/${userId}` || key.startsWith(`users/${userId}/`);

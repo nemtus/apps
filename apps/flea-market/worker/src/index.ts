@@ -14,6 +14,7 @@ import { createSesSender } from '@nemtus/email';
 import type { Env } from './env';
 import { createOrderRoute } from './routes/orders';
 import { stripeWebhookRoute } from './routes/stripe-webhook';
+import { filesRoute } from './routes/files';
 
 function buildAuth(env: Env) {
   return createAuth({
@@ -61,6 +62,10 @@ export default {
 
     if (url.pathname === '/api/orders' && request.method === 'POST') {
       return createOrderRoute(request, env, buildAuth(env));
+    }
+
+    if (url.pathname.startsWith('/api/files/') && request.method === 'GET') {
+      return filesRoute(request, env);
     }
 
     return new Response('Not found', { status: 404 });

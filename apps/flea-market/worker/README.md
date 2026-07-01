@@ -13,6 +13,8 @@ shared `@nemtus/*` packages — unlike the standalone React frontends.
 - `ANY /api/auth/*` — Better Auth (sign-in/up, sessions, OAuth callbacks, reset, …)
 - `POST /api/orders` — auth + KYC gated; creates a `PENDING` order and a Stripe
   Checkout session, returns `{ orderId, url }`
+- `GET /api/files/<key>` — serves migrated product images from R2 (keys under
+  `.../images/...`); replaces Firebase Storage download URLs
 - `POST /api/stripe/webhook` — verifies the signature and advances the D1 order
   (`checkout.session.completed → PAID`, `async_payment_failed → FAILED`,
   `charge.refunded → REFUNDED`). Bypasses auth; uses the raw body.
@@ -77,5 +79,19 @@ and legacy `orderStatus` maps to `payment_status` (`CONFIRMED`/`SENT`→`PAID`,
 `TIMEOUT`/`ABORTED`→`FAILED`, else `PENDING`); the XYM tx hash is kept in
 `legacy_symbol_tx_hash`. The transform loads with foreign_keys OFF and **reports orders
 that reference now-deleted items** — review that count before applying to production.
+
+## Storage migration (Firebase Storage → R2)
+
+```bash
+# copy all objects to R2 (preserves keys); needs Admin creds + R2 S3 creds
+GOOGLE_APPLICATION_CREDENTIALS=./sa.json FIREBASE_STORAGE_BUCKET=symbol-fest-market.appspot.com \
+R2_ACCOUNT_ID=... R2_ACCESS_KEY_ID=... R2_SECRET_ACCESS_KEY=... R2_BUCKET=flea-market \
+  node --experimental-strip-types scripts/copy-storage.ts
+```
+
+The domain ETL (`etl-domain.ts`) rewrites store/item image references from Firebase
+download URLs to `/api/files/<key>`, where `<key>` is the original Storage path (also
+the R2 key the copy preserves). The Worker's `GET /api/files/*` route serves them from
+R2, so no image data lives in Firebase after cutover.
 
 > ⚠️ Validate `firebaseScryptVerify` against a real exported hash before cutover.
