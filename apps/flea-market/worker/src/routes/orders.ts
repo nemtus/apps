@@ -40,7 +40,7 @@ export async function createOrderRoute(request: Request, env: Env, auth: Auth): 
   const db = createDb(env.DB);
   const items = await db.select().from(schema.item).where(eq(schema.item.id, body.itemId));
   const it = items[0];
-  if (!it || !it.enabled) return json({ error: 'item_unavailable' }, 404);
+  if (!it || it.status !== 'ON_SALE') return json({ error: 'item_unavailable' }, 404);
 
   const total = it.priceJpy * quantity;
   const orderId = crypto.randomUUID();
@@ -51,6 +51,7 @@ export async function createOrderRoute(request: Request, env: Env, auth: Auth): 
     buyerUserId: buyer.id,
     storeId: it.storeId,
     itemId: it.id,
+    itemNameSnapshot: it.name,
     quantity,
     totalJpy: total,
     paymentStatus: 'PENDING',
