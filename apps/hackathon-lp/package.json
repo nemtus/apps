@@ -6,8 +6,8 @@
   "scripts": {
     "build": "echo \"Info: no build specified\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "cf:dev": "wrangler dev",
-    "cf:deploy": "wrangler deploy"
+    "cf:dev": "npx --yes wrangler@4 dev",
+    "cf:deploy": "npx --yes wrangler@4 deploy"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/nemtus/hackathon-lp",
   "devDependencies": {
-    "firebase-tools": "^12.7.0",
-    "wrangler": "^4.20.0"
+    "firebase-tools": "^12.7.0"
   }
 }
