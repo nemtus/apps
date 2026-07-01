@@ -15,7 +15,7 @@
     "db:migrate:remote": "wrangler d1 migrations apply DB --remote"
   },
   "dependencies": {
-    "drizzle-orm": "^0.44.2"
+    "drizzle-orm": "^0.45.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250620.0",

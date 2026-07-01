@@ -37,4 +37,10 @@ export interface Env {
   AWS_ACCESS_KEY_ID: string;
   AWS_SECRET_ACCESS_KEY: string;
   SES_FROM: string;
+
+  // --- Stripe ---
+  STRIPE_SECRET_KEY: string;
+  STRIPE_WEBHOOK_SECRET: string;
+  CHECKOUT_SUCCESS_URL: string;
+  CHECKOUT_CANCEL_URL: string;
 }

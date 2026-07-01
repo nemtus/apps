@@ -18,7 +18,8 @@ SES_FROM = "NEMTUS <no-reply@nemtus.com>"
 binding = "DB"
 database_name = "flea-market"
 database_id = "TODO_D1_DATABASE_ID"
-migrations_dir = "../../../packages/db/migrations"
+# Combined auth (@nemtus/db) + flea-market domain schema, generated here:
+migrations_dir = "migrations"
 
 [[kv_namespaces]]
 binding = "SESSION_KV"
