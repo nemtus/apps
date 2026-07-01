@@ -63,8 +63,10 @@ CREATE TABLE `item` (
 	`store_id` text NOT NULL,
 	`name` text NOT NULL,
 	`price_jpy` integer NOT NULL,
-	`image_key` text,
-	`enabled` integer DEFAULT true NOT NULL,
+	`price_unit` text DEFAULT 'JPY' NOT NULL,
+	`description` text,
+	`image_url` text,
+	`status` text DEFAULT 'SOLD_OUT' NOT NULL,
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL,
 	FOREIGN KEY (`store_id`) REFERENCES `store`(`id`) ON UPDATE no action ON DELETE cascade
@@ -75,24 +77,44 @@ CREATE TABLE `order` (
 	`buyer_user_id` text NOT NULL,
 	`store_id` text NOT NULL,
 	`item_id` text NOT NULL,
+	`item_name_snapshot` text,
 	`quantity` integer DEFAULT 1 NOT NULL,
 	`total_jpy` integer NOT NULL,
 	`payment_status` text DEFAULT 'PENDING' NOT NULL,
 	`stripe_session_id` text,
 	`stripe_payment_intent_id` text,
+	`legacy_symbol_tx_hash` text,
+	`ship_name` text,
+	`ship_phone` text,
+	`ship_zip` text,
+	`ship_address1` text,
+	`ship_address2` text,
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL,
-	FOREIGN KEY (`buyer_user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade,
-	FOREIGN KEY (`store_id`) REFERENCES `store`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`buyer_user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE restrict,
+	FOREIGN KEY (`store_id`) REFERENCES `store`(`id`) ON UPDATE no action ON DELETE restrict,
 	FOREIGN KEY (`item_id`) REFERENCES `item`(`id`) ON UPDATE no action ON DELETE restrict
 );
 --> statement-breakpoint
+CREATE UNIQUE INDEX `order_stripe_session_id_unique` ON `order` (`stripe_session_id`);--> statement-breakpoint
+CREATE UNIQUE INDEX `order_stripe_payment_intent_id_unique` ON `order` (`stripe_payment_intent_id`);--> statement-breakpoint
 CREATE TABLE `store` (
 	`id` text PRIMARY KEY NOT NULL,
 	`owner_user_id` text NOT NULL,
 	`name` text NOT NULL,
+	`email` text,
+	`phone_number` text,
+	`zip_code` text,
+	`address1` text,
+	`address2` text,
+	`url` text,
+	`description` text,
 	`symbol_address` text,
+	`image_url` text,
+	`cover_image_url` text,
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL,
 	FOREIGN KEY (`owner_user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
 );
+--> statement-breakpoint
+CREATE UNIQUE INDEX `store_owner_user_id_unique` ON `store` (`owner_user_id`);

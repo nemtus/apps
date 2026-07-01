@@ -56,4 +56,26 @@ Preserves the Firebase uid as `user.id`; credential users import with a
 `firebase-scrypt$…` marker (verified + lazily re-hashed on first login); federated
 identities become per-provider `account` rows; custom claims → admin role + KYC fields.
 
+## Domain migration (Firestore → D1)
+
+Two stages — run **after** the user ETL (orders/stores reference `user.id`):
+
+```bash
+# 1. dump Firestore to JSONL (needs Admin credentials)
+GOOGLE_APPLICATION_CREDENTIALS=./sa.json \
+  node --experimental-strip-types scripts/dump-firestore.ts ./firestore-dump
+
+# 2. transform → D1 SQL (pure) and apply
+node --experimental-strip-types scripts/etl-domain.ts ./firestore-dump > domain.sql
+wrangler d1 execute flea-market --file=domain.sql --remote
+```
+
+Firestore stored no timestamps, so `created_at`/`updated_at` come from the document
+`createTime`/`updateTime` metadata captured at dump time. Orders were denormalized
+(User+Store+Item in one doc), so shipping + item name are snapshotted onto the order,
+and legacy `orderStatus` maps to `payment_status` (`CONFIRMED`/`SENT`→`PAID`,
+`TIMEOUT`/`ABORTED`→`FAILED`, else `PENDING`); the XYM tx hash is kept in
+`legacy_symbol_tx_hash`. The transform loads with foreign_keys OFF and **reports orders
+that reference now-deleted items** — review that count before applying to production.
+
 > ⚠️ Validate `firebaseScryptVerify` against a real exported hash before cutover.

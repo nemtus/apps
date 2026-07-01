@@ -25,6 +25,7 @@
     "@types/node": "^22.10.0",
     "drizzle-kit": "^0.31.1",
     "typescript": "^5.7.2",
-    "wrangler": "^4.20.0"
+    "wrangler": "^4.20.0",
+    "firebase-admin": "^13.0.0"
   }
 }
