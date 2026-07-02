@@ -71,7 +71,7 @@ export function Footer() {
         </div>
 
         <div className="border-border border-t pt-8 text-center">
-          <p className="text-muted-foreground text-sm">© 2025 NEMTUS. All rights reserved.</p>
+          <p className="text-muted-foreground text-sm">© 2026 NEMTUS. All rights reserved.</p>
         </div>
       </div>
     </footer>

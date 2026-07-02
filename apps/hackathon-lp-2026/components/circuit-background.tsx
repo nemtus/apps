@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 
 const generateGridPaths = () => {
@@ -56,9 +57,16 @@ const generateGridPaths = () => {
   return paths
 }
 
-const gridPaths = generateGridPaths()
-
 export function CircuitBackground() {
+  // Randomized paths are generated on the client only. Doing this at module scope
+  // would run once at build (static export prerender) and again on hydration with
+  // different Math.random() values, causing a hydration mismatch / flicker.
+  const [gridPaths, setGridPaths] = useState<ReturnType<typeof generateGridPaths>>([])
+
+  useEffect(() => {
+    setGridPaths(generateGridPaths())
+  }, [])
+
   return (
     <div className="pointer-events-none absolute inset-0 z-0">
       <svg
