@@ -1,0 +1,46 @@
+# Socket (https://socket.dev) configuration — token-free supply-chain hardening,
+# mirroring nemtus/symbol-rest-api-client.
+#
+# Two independent, zero-cost layers:
+#   - Layer A (this file): the Socket GitHub App. It comments on PRs that change
+#     dependencies, flagging 70+ supply-chain risk types (malware, install scripts,
+#     new network/filesystem access, obfuscation, typosquats, protestware, license
+#     issues). Takes effect once an org owner installs the Socket App on this repo via
+#     the GitHub Marketplace (one-time, no token, no cost).
+#   - Layer B (CI workflows): Socket Firewall Free (`sfw`, mode: firewall-free) wraps
+#     installs and blocks confirmed-malicious packages at fetch time. Needs no account.
+#
+# Complements the existing hardening: `npm/pnpm audit` (known CVEs), `.npmrc`
+# (ignore-scripts, save-exact), and SHA-pinned Actions.
+version: 2
+
+# Build outputs / generated code are not dependency manifests — skip them.
+projectIgnorePaths:
+  - "**/dist"
+  - "**/.next"
+  - "**/out"
+  - "**/build"
+  - "**/lib"
+  - "apps/*/public"
+
+# Re-scan only when a dependency manifest actually changes. This monorepo mixes an
+# npm workspace (root + packages/* + apps/*/worker), standalone npm apps
+# (apps/<app> and their apps/<app>/functions), and one pnpm app (apps/hackathon-lp-2026).
+triggerPaths:
+  - package.json
+  - package-lock.json
+  - packages/*/package.json
+  - apps/*/package.json
+  - apps/*/package-lock.json
+  - apps/*/pnpm-lock.yaml
+  - apps/*/worker/package.json
+  - apps/*/functions/package.json
+  - apps/*/functions/package-lock.json
+
+githubApp:
+  enabled: true
+  pullRequestAlertsEnabled: true
+  dependencyOverviewEnabled: true
+  projectReportsEnabled: true
+  ignoreUsers: []
+  disableCommentsAndCheckRuns: false
