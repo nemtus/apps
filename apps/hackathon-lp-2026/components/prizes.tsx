@@ -96,7 +96,7 @@ const SPONSOR_PRIZES = [
 
 function SponsorPrizeCard({ prize, index }: { prize: (typeof SPONSOR_PRIZES)[0]; index: number }) {
   const [isOpen, setIsOpen] = useState(false)
-  const { ref, isInView } = useInView()
+  const { ref, isInView } = useInView<HTMLDivElement>()
   const contentId = `sponsor-prize-${index}`
 
   return (
@@ -107,15 +107,15 @@ function SponsorPrizeCard({ prize, index }: { prize: (typeof SPONSOR_PRIZES)[0];
       transition={{ duration: 0.6, delay: index * 0.1 }}
       className="w-full"
     >
-      <Card className="bg-white/5 border-white/10 hover:border-white/20 transition-all duration-300 p-6 h-full">
-        <div className="flex flex-col items-center mb-4">
-          <h3 className="text-lg font-bold text-gray-200 text-center">{prize.name}</h3>
-          <p className="text-sm text-gray-400 mt-2 text-center">{prize.prize}</p>
+      <Card className="h-full border-white/10 bg-white/5 p-6 transition-all duration-300 hover:border-white/20">
+        <div className="mb-4 flex flex-col items-center">
+          <h3 className="text-center text-lg font-bold text-gray-200">{prize.name}</h3>
+          <p className="mt-2 text-center text-sm text-gray-400">{prize.prize}</p>
         </div>
 
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full flex items-center justify-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors mt-4"
+          className="text-primary hover:text-primary/80 mt-4 flex w-full items-center justify-center gap-2 text-sm transition-colors"
           aria-expanded={isOpen}
           aria-controls={contentId}
         >
@@ -138,14 +138,18 @@ function SponsorPrizeCard({ prize, index }: { prize: (typeof SPONSOR_PRIZES)[0];
           role="region"
           aria-hidden={!isOpen}
         >
-          <div className="pt-4 mt-4 border-t border-white/10 space-y-3">
+          <div className="mt-4 space-y-3 border-t border-white/10 pt-4">
             <div>
-              <h4 className="text-sm font-semibold text-gray-300 mb-2">賞の内容</h4>
-              <p className="text-sm text-gray-400 whitespace-pre-line leading-relaxed">{prize.details}</p>
+              <h4 className="mb-2 text-sm font-semibold text-gray-300">賞の内容</h4>
+              <p className="text-sm leading-relaxed whitespace-pre-line text-gray-400">
+                {prize.details}
+              </p>
             </div>
             <div>
-              <h4 className="text-sm font-semibold text-gray-300 mb-2">審査基準</h4>
-              <p className="text-sm text-gray-400 whitespace-pre-line leading-relaxed">{prize.criteria}</p>
+              <h4 className="mb-2 text-sm font-semibold text-gray-300">審査基準</h4>
+              <p className="text-sm leading-relaxed whitespace-pre-line text-gray-400">
+                {prize.criteria}
+              </p>
             </div>
           </div>
         </motion.div>
@@ -158,19 +162,21 @@ export function Prizes() {
   const { ref, isInView } = useInView()
 
   return (
-    <section id="prizes" ref={ref} className="py-12 md:py-20 relative">
-      <div className="container mx-auto px-4 overflow-hidden">
+    <section id="prizes" ref={ref} className="relative py-12 md:py-20">
+      <div className="container mx-auto overflow-hidden px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="mb-12 text-center"
         >
-          <h2 className="text-3xl md:text-5xl font-bold mb-4 text-gray-300">賞金</h2>
-          <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">各テーマごとに1位～3位を表彰します</p>
+          <h2 className="mb-4 text-3xl font-bold text-gray-300 md:text-5xl">賞金</h2>
+          <p className="mx-auto max-w-2xl text-base text-gray-400 md:text-lg">
+            各テーマごとに1位～3位を表彰します
+          </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-16">
+        <div className="mx-auto mb-16 grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-3">
           {PRIZES.map((prize, index) => (
             <motion.div
               key={prize.title}
@@ -179,14 +185,16 @@ export function Prizes() {
               transition={{ duration: 0.6, delay: index * 0.15 }}
               className="w-full"
             >
-              <Card className="relative bg-gradient-to-br from-primary/20 via-secondary/20 to-tertiary/20 border-border hover:border-primary/50 transition-all duration-300 p-6 h-full group overflow-hidden w-full">
+              <Card className="from-primary/20 via-secondary/20 to-tertiary/20 border-border hover:border-primary/50 group relative h-full w-full overflow-hidden bg-gradient-to-br p-6 transition-all duration-300">
                 <div
-                  className={`w-16 h-16 rounded-full bg-gradient-to-br ${prize.gradient} flex items-center justify-center mb-4 mx-auto flex-shrink-0 shadow-lg`}
+                  className={`h-16 w-16 rounded-full bg-gradient-to-br ${prize.gradient} mx-auto mb-4 flex flex-shrink-0 items-center justify-center shadow-lg`}
                 >
                   <prize.icon size={28} className="text-black/80" />
                 </div>
-                <h3 className="text-xl font-bold mb-3 text-foreground text-center break-words">{prize.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed text-center text-pretty break-words">
+                <h3 className="text-foreground mb-3 text-center text-xl font-bold break-words">
+                  {prize.title}
+                </h3>
+                <p className="text-muted-foreground text-center text-sm leading-relaxed text-pretty break-words">
                   {prize.description}
                 </p>
               </Card>
@@ -199,13 +207,15 @@ export function Prizes() {
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-center mb-8"
+            className="mb-8 text-center"
           >
-            <h3 className="text-2xl md:text-3xl font-bold mb-3 text-gray-300">スポンサー賞</h3>
-            <p className="text-gray-400 text-sm md:text-base">各スポンサーから特別賞をご用意しています</p>
+            <h3 className="mb-3 text-2xl font-bold text-gray-300 md:text-3xl">スポンサー賞</h3>
+            <p className="text-sm text-gray-400 md:text-base">
+              各スポンサーから特別賞をご用意しています
+            </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-2">
             {SPONSOR_PRIZES.map((prize, index) => (
               <SponsorPrizeCard key={prize.name} prize={prize} index={index} />
             ))}

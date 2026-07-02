@@ -74,11 +74,11 @@ export function Navigation() {
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-background/95 backdrop-blur-md border-b border-border" : "bg-transparent"
+      className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${
+        isScrolled ? "bg-background/95 border-border border-b backdrop-blur-md" : "bg-transparent"
       }`}
     >
-      <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
+      <nav className="container mx-auto flex items-center justify-between px-4 py-4">
         <div className="flex items-center gap-2">
           <Image
             src="/images/design-mode/logo_hacktus_%EF%BD%82_2026S.png"
@@ -87,16 +87,18 @@ export function Navigation() {
             height={32}
             className="object-contain"
           />
-          <span className="font-bold text-lg hidden sm:inline text-foreground">NEMTUS Hackathon 2026 HACK+</span>
+          <span className="text-foreground hidden text-lg font-bold sm:inline">
+            NEMTUS Hackathon 2026 HACK+
+          </span>
         </div>
 
         {/* デスクトップナビゲーション */}
-        <div className="hidden lg:flex items-center gap-6">
+        <div className="hidden items-center gap-6 lg:flex">
           {NAV_ITEMS.map((item) => (
             <button
               key={item.href}
               onClick={() => scrollToSection(item.href)}
-              className={`text-sm transition-colors hover:text-primary relative ${
+              className={`hover:text-primary relative text-sm transition-colors ${
                 activeSection === item.href.slice(1) ? "text-primary" : "text-muted-foreground"
               }`}
             >
@@ -104,7 +106,7 @@ export function Navigation() {
               {activeSection === item.href.slice(1) && (
                 <motion.div
                   layoutId="activeSection"
-                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary"
+                  className="bg-primary absolute right-0 -bottom-1 left-0 h-0.5"
                   transition={{ type: "spring", stiffness: 380, damping: 30 }}
                 />
               )}
@@ -116,15 +118,19 @@ export function Navigation() {
           {isEntryOpen ? (
             <Button
               asChild
-              className="bg-gradient-to-r from-primary to-secondary hover:shadow-[0_0_20px_var(--glow-primary)] transition-shadow duration-300 text-foreground border-0"
+              className="from-primary to-secondary text-foreground border-0 bg-gradient-to-r transition-shadow duration-300 hover:shadow-[0_0_20px_var(--glow-primary)]"
             >
               <a href="#entry">今すぐエントリー</a>
             </Button>
           ) : (
             <Button
               disabled
-              aria-label={IS_HACKATHON_ENDED ? "エントリーは終了しました" : "エントリーは2025年12月7日から開始されます"}
-              className="bg-gradient-to-r from-primary to-secondary opacity-50 cursor-not-allowed text-foreground border-0"
+              aria-label={
+                IS_HACKATHON_ENDED
+                  ? "エントリーは終了しました"
+                  : "エントリーは2025年12月7日から開始されます"
+              }
+              className="from-primary to-secondary text-foreground cursor-not-allowed border-0 bg-gradient-to-r opacity-50"
             >
               {IS_HACKATHON_ENDED ? "エントリー終了" : "今すぐエントリー"}
             </Button>
@@ -133,7 +139,7 @@ export function Navigation() {
           {/* モバイルメニューボタン */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 text-foreground"
+            className="text-foreground p-2 md:hidden"
             aria-label="メニュー"
             aria-expanded={isMobileMenuOpen}
           >
@@ -149,14 +155,14 @@ export function Navigation() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-background/98 backdrop-blur-md border-t border-border overflow-y-auto max-h-[calc(100vh-80px)]"
+            className="bg-background/98 border-border max-h-[calc(100vh-80px)] overflow-y-auto border-t backdrop-blur-md md:hidden"
           >
-            <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
+            <div className="container mx-auto flex flex-col gap-4 px-4 py-4">
               {NAV_ITEMS.map((item) => (
                 <button
                   key={item.href}
                   onClick={() => scrollToSection(item.href)}
-                  className={`text-left py-2 transition-colors hover:text-primary ${
+                  className={`hover:text-primary py-2 text-left transition-colors ${
                     activeSection === item.href.slice(1) ? "text-primary" : "text-muted-foreground"
                   }`}
                 >

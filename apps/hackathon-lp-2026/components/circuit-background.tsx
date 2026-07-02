@@ -60,8 +60,12 @@ const gridPaths = generateGridPaths()
 
 export function CircuitBackground() {
   return (
-    <div className="absolute inset-0 pointer-events-none z-0">
-      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1400 1800" preserveAspectRatio="xMidYMid slice">
+    <div className="pointer-events-none absolute inset-0 z-0">
+      <svg
+        className="absolute inset-0 h-full w-full"
+        viewBox="0 0 1400 1800"
+        preserveAspectRatio="xMidYMid slice"
+      >
         {gridPaths.map((path, i) => (
           <g key={i}>
             {path.type === "horizontal" ? (
@@ -81,8 +85,12 @@ export function CircuitBackground() {
                   stroke="#00cc00"
                   strokeWidth="0.5"
                   vectorEffect="non-scaling-stroke"
-                  initial={path.direction === "forward" ? { x1: -1, x2: 0 } : { x1: 1401, x2: 1400 }}
-                  animate={path.direction === "forward" ? { x1: 1400, x2: 1401 } : { x1: 0, x2: -1 }}
+                  initial={
+                    path.direction === "forward" ? { x1: -1, x2: 0 } : { x1: 1401, x2: 1400 }
+                  }
+                  animate={
+                    path.direction === "forward" ? { x1: 1400, x2: 1401 } : { x1: 0, x2: -1 }
+                  }
                   transition={{
                     duration: path.duration,
                     delay: path.delay,
@@ -109,8 +117,12 @@ export function CircuitBackground() {
                   stroke="#00cc00"
                   strokeWidth="0.5"
                   vectorEffect="non-scaling-stroke"
-                  initial={path.direction === "forward" ? { y1: -1, y2: 0 } : { y1: 1801, y2: 1800 }}
-                  animate={path.direction === "forward" ? { y1: 1800, y2: 1801 } : { y1: 0, y2: -1 }}
+                  initial={
+                    path.direction === "forward" ? { y1: -1, y2: 0 } : { y1: 1801, y2: 1800 }
+                  }
+                  animate={
+                    path.direction === "forward" ? { y1: 1800, y2: 1801 } : { y1: 0, y2: -1 }
+                  }
                   transition={{
                     duration: path.duration,
                     delay: path.delay,

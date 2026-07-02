@@ -1,12 +1,19 @@
 {
-  "name": "my-v0-project",
+  "name": "hackathon-lp-2026",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "next build",
     "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "preview": "serve out -l 4321 -n",
     "lint": "eslint .",
-    "start": "next start"
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "type:check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",
@@ -48,7 +55,7 @@
     "framer-motion": "12.23.24",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
-    "next": "16.0.10",
+    "next": "16.2.10",
     "next-themes": "^0.4.6",
     "react": "19.2.0",
     "react-day-picker": "9.8.0",
@@ -63,19 +70,41 @@
     "zod": "3.25.76"
   },
   "devDependencies": {
+    "@next/eslint-plugin-next": "^16.2.10",
+    "@playwright/test": "^1.61.1",
     "@tailwindcss/postcss": "^4.1.9",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^6.0.3",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.7.0",
+    "jsdom": "^29.1.1",
     "postcss": "^8.5",
+    "prettier": "^3.9.4",
+    "prettier-plugin-tailwindcss": "^0.8.0",
+    "serve": "^14.2.6",
     "tailwindcss": "^4.1.9",
     "tw-animate-css": "1.3.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "typescript-eslint": "^8.62.1",
+    "vitest": "^4.1.9"
   },
   "pnpm": {
     "comment": "Pin motion-dom to the release paired with framer-motion@12.23.24; the v0 lockfile resolved motion-dom@12.42.2, which dropped the `activeAnimations` export framer-motion 12.23.24 imports.",
     "overrides": {
       "motion-dom": "12.23.23"
+    },
+    "auditConfig": {
+      "ignoreGhsas": [
+        "GHSA-r5fr-rjxr-66jc"
+      ]
     }
   }
 }

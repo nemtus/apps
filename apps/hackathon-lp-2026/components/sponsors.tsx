@@ -5,7 +5,8 @@ import { ExternalLink, ChevronDown, ChevronUp } from "lucide-react"
 import { useInView } from "@/hooks/use-in-view"
 import { useState } from "react"
 
-const SPONSOR_FORM_URL = "https://docs.google.com/forms/d/17fG0KkelfOregkwpexwH4NeugNlxTjoiciZao_77fXc/edit"
+const SPONSOR_FORM_URL =
+  "https://docs.google.com/forms/d/17fG0KkelfOregkwpexwH4NeugNlxTjoiciZao_77fXc/edit"
 
 const SPONSOR_LOGOS = [
   {
@@ -60,7 +61,8 @@ const SPONSOR_LOGOS = [
   {
     name: "株式会社インプリム",
     logo: "/images/pleasanter.png",
-    description: "無償で使えるオープンソースのノーコード・ローコード開発ツール「プリザンター」の開発企業",
+    description:
+      "無償で使えるオープンソースのノーコード・ローコード開発ツール「プリザンター」の開発企業",
     url: "https://implem.co.jp/",
   },
   {
@@ -83,7 +85,11 @@ function SponsorCard({
   sponsor,
   index,
   isInView,
-}: { sponsor: (typeof SPONSOR_LOGOS)[0]; index: number; isInView: boolean }) {
+}: {
+  sponsor: (typeof SPONSOR_LOGOS)[0]
+  index: number
+  isInView: boolean
+}) {
   const [isExpanded, setIsExpanded] = useState(false)
   const shouldTruncate = sponsor.description.length > 100
 
@@ -100,11 +106,11 @@ function SponsorCard({
         scale: 1.05,
         transition: { duration: 0.3 },
       }}
-      className="relative w-full h-full"
+      className="relative h-full w-full"
     >
-      <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+      <div className="pointer-events-none absolute inset-0 rounded-lg opacity-0 transition-opacity duration-500 group-hover:opacity-100">
         <div
-          className="absolute inset-0 rounded-lg bg-gradient-to-r from-primary via-secondary to-tertiary bg-[length:200%_100%] animate-gradient-flow"
+          className="from-primary via-secondary to-tertiary animate-gradient-flow absolute inset-0 rounded-lg bg-gradient-to-r bg-[length:200%_100%]"
           style={{
             WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
             WebkitMaskComposite: "xor",
@@ -114,23 +120,28 @@ function SponsorCard({
         />
       </div>
 
-      <div className="relative flex flex-col p-6 bg-card-hover rounded-lg border border-border hover:border-transparent transition-all duration-300 hover:bg-muted h-full group w-full min-h-[320px]">
-        <a href={sponsor.url} target="_blank" rel="noopener noreferrer" className="flex flex-col flex-shrink-0">
-          <div className="flex items-center justify-center mb-4 h-32 bg-white rounded-md p-4">
+      <div className="bg-card-hover border-border hover:bg-muted group relative flex h-full min-h-[320px] w-full flex-col rounded-lg border p-6 transition-all duration-300 hover:border-transparent">
+        <a
+          href={sponsor.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex flex-shrink-0 flex-col"
+        >
+          <div className="mb-4 flex h-32 items-center justify-center rounded-md bg-white p-4">
             <img
               src={sponsor.logo || "/placeholder.svg"}
               alt={sponsor.name}
-              className="max-w-full max-h-full object-contain opacity-100 group-hover:opacity-70 transition-opacity duration-300"
+              className="max-h-full max-w-full object-contain opacity-100 transition-opacity duration-300 group-hover:opacity-70"
             />
           </div>
-          <h3 className="text-lg font-semibold mb-2 text-left group-hover:text-primary transition-colors break-words">
+          <h3 className="group-hover:text-primary mb-2 text-left text-lg font-semibold break-words transition-colors">
             {sponsor.name}
           </h3>
         </a>
 
-        <div className="flex flex-col flex-grow">
+        <div className="flex flex-grow flex-col">
           <p
-            className={`text-sm text-muted-foreground leading-relaxed text-left text-pretty break-words ${!isExpanded && shouldTruncate ? "line-clamp-3" : ""}`}
+            className={`text-muted-foreground text-left text-sm leading-relaxed text-pretty break-words ${!isExpanded && shouldTruncate ? "line-clamp-3" : ""}`}
           >
             {sponsor.description}
           </p>
@@ -138,15 +149,15 @@ function SponsorCard({
           {shouldTruncate && (
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="text-sm text-purple-400 hover:text-purple-300 transition-colors mt-2 flex items-center gap-1 self-start"
+              className="mt-2 flex items-center gap-1 self-start text-sm text-purple-400 transition-colors hover:text-purple-300"
             >
               {isExpanded ? (
                 <>
-                  閉じる <ChevronUp className="w-4 h-4" />
+                  閉じる <ChevronUp className="h-4 w-4" />
                 </>
               ) : (
                 <>
-                  もっと見る <ChevronDown className="w-4 h-4" />
+                  もっと見る <ChevronDown className="h-4 w-4" />
                 </>
               )}
             </button>
@@ -157,9 +168,9 @@ function SponsorCard({
           href={sponsor.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex justify-center mt-4 flex-shrink-0"
+          className="mt-4 flex flex-shrink-0 justify-center"
         >
-          <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+          <ExternalLink className="text-muted-foreground group-hover:text-primary h-4 w-4 transition-colors" />
         </a>
       </div>
     </motion.div>
@@ -170,16 +181,16 @@ export function Sponsors() {
   const { ref, isInView } = useInView({ amount: 1.0 })
 
   return (
-    <section id="sponsors" ref={ref} className="py-6 md:py-10 relative">
+    <section id="sponsors" ref={ref} className="relative py-6 md:py-10">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-4"
+          className="mb-4 text-center"
         >
-          <h2 className="text-3xl md:text-5xl font-bold mb-4 text-gray-300">SPONSOR</h2>
-          <p className="text-muted-foreground text-sm text-left md:text-center text-pretty px-4 md:px-0">
+          <h2 className="mb-4 text-3xl font-bold text-gray-300 md:text-5xl">SPONSOR</h2>
+          <p className="text-muted-foreground px-4 text-left text-sm text-pretty md:px-0 md:text-center">
             NEMTUS Hackathon 2026 Hack+ を
             <br className="sm:hidden" />
             支援して頂くスポンサー
@@ -190,11 +201,11 @@ export function Sponsors() {
           initial={{ opacity: 0, y: 30, scale: 0.9 }}
           animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="max-w-6xl mx-auto mb-6"
+          className="mx-auto mb-6 max-w-6xl"
         >
-          <div className="relative bg-card/50 backdrop-blur-sm rounded-lg p-6 md:p-8 border border-border/30">
-            <div className="flex justify-center mb-3">
-              <span className="inline-block px-4 py-1 bg-muted/30 rounded-full text-xs font-bold text-gray-300 border border-border/20">
+          <div className="bg-card/50 border-border/30 relative rounded-lg border p-6 backdrop-blur-sm md:p-8">
+            <div className="mb-3 flex justify-center">
+              <span className="bg-muted/30 border-border/20 inline-block rounded-full border px-4 py-1 text-xs font-bold text-gray-300">
                 SPECIAL SPONSOR
               </span>
             </div>
@@ -203,13 +214,13 @@ export function Sponsors() {
               href="https://x.com/SymbolSyndicate"
               target="_blank"
               rel="noopener noreferrer"
-              className="block group/link mb-3"
+              className="group/link mb-3 block"
             >
               <div className="flex justify-center">
                 <img
                   src="/sp_tss_logo.png"
                   alt="The Symbol Syndicate"
-                  className="max-w-full h-auto max-w-xs md:max-w-md group-hover/link:opacity-80 transition-opacity"
+                  className="h-auto max-w-full max-w-xs transition-opacity group-hover/link:opacity-80 md:max-w-md"
                 />
               </div>
             </a>
@@ -218,15 +229,15 @@ export function Sponsors() {
               href="https://x.com/SymbolSyndicate"
               target="_blank"
               rel="noopener noreferrer"
-              className="block group/link"
+              className="group/link block"
             >
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-3 text-gray-300 group-hover/link:text-gray-200 transition-colors flex items-center justify-center gap-2 whitespace-nowrap">
+              <h3 className="mb-3 flex items-center justify-center gap-2 text-center text-xl font-bold whitespace-nowrap text-gray-300 transition-colors group-hover/link:text-gray-200 sm:text-2xl md:text-3xl">
                 The Symbol Syndicate
-                <ExternalLink className="w-4 h-4 md:w-5 md:h-5 text-gray-400 group-hover/link:text-gray-300 transition-colors flex-shrink-0" />
+                <ExternalLink className="h-4 w-4 flex-shrink-0 text-gray-400 transition-colors group-hover/link:text-gray-300 md:h-5 md:w-5" />
               </h3>
             </a>
 
-            <p className="text-sm md:text-base text-gray-400 text-center leading-normal max-w-3xl mx-auto">
+            <p className="mx-auto max-w-3xl text-center text-sm leading-normal text-gray-400 md:text-base">
               The Symbol
               Syndicate（TSS）は、NEMおよびSymbolブロックチェーンのエコシステムを推進する非営利組織です。NEMやSymbolブロックチェーンのプロトコルに関する技術開発を行い、世界各地でのエコシステム発展を支援しています。
             </p>
@@ -237,9 +248,9 @@ export function Sponsors() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="max-w-6xl mx-auto mb-6"
+          className="mx-auto mb-6 max-w-6xl"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {SPONSOR_LOGOS.map((sponsor, index) => (
               <SponsorCard key={sponsor.name} sponsor={sponsor} index={index} isInView={isInView} />
             ))}
@@ -250,13 +261,13 @@ export function Sponsors() {
           initial={{ opacity: 0, y: 40, scale: 0.9 }}
           animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
           transition={{ duration: 1.0, delay: 1.2, ease: [0.34, 1.56, 0.64, 1] }}
-          className="max-w-6xl mx-auto pb-6 text-center"
+          className="mx-auto max-w-6xl pb-6 text-center"
         >
           <a
             href={SPONSOR_FORM_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-gray-400 hover:text-gray-300 transition-colors inline-flex items-center gap-1"
+            className="inline-flex items-center gap-1 text-sm text-gray-400 transition-colors hover:text-gray-300"
           >
             スポンサー募集中
             <ExternalLink className="h-3 w-3" />

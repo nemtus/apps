@@ -27,19 +27,19 @@ export function Results() {
   const { ref, isInView } = useInView({ amount: 0.3 })
 
   return (
-    <section id="results" className="py-12 md:py-16 relative" ref={ref}>
-      <div className="container mx-auto px-4 overflow-hidden">
+    <section id="results" className="relative py-12 md:py-16" ref={ref}>
+      <div className="container mx-auto overflow-hidden px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-10"
+          className="mb-10 text-center"
         >
-          <h2 className="text-3xl md:text-5xl font-bold mb-4 text-gray-300">結果発表</h2>
+          <h2 className="mb-4 text-3xl font-bold text-gray-300 md:text-5xl">結果発表</h2>
           <p className="text-gray-400">HACK+ 2026は終了しました。ご参加ありがとうございました。</p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-2">
           {RESULTS.map((result, index) => (
             <motion.div
               key={result.title}
@@ -49,22 +49,26 @@ export function Results() {
               whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}
               className="relative w-full"
             >
-              <Card className="relative bg-card-hover border-border hover:border-primary/50 transition-all duration-300 p-6 h-full group flex flex-col w-full">
+              <Card className="bg-card-hover border-border hover:border-primary/50 group relative flex h-full w-full flex-col p-6 transition-all duration-300">
                 <motion.div
-                  className="w-14 h-14 rounded-lg bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
-                  whileHover={{ scale: 1.2, rotate: 10, transition: { duration: 0.4, ease: "easeInOut" } }}
+                  className="from-primary/20 to-secondary/20 mb-4 flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br transition-transform duration-300 group-hover:scale-110"
+                  whileHover={{
+                    scale: 1.2,
+                    rotate: 10,
+                    transition: { duration: 0.4, ease: "easeInOut" },
+                  }}
                 >
                   <result.icon size={28} className="text-primary" />
                 </motion.div>
-                <h3 className="text-xl font-bold mb-2 text-foreground text-left">{result.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed mb-6 text-left">
+                <h3 className="text-foreground mb-2 text-left text-xl font-bold">{result.title}</h3>
+                <p className="text-muted-foreground mb-6 text-left text-sm leading-relaxed">
                   {result.description}
                 </p>
 
                 <div className="mt-auto">
                   <Button
                     asChild
-                    className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-white w-full"
+                    className="from-primary to-secondary w-full bg-gradient-to-r text-white hover:opacity-90"
                   >
                     <a href={result.url} target="_blank" rel="noopener noreferrer">
                       {result.buttonText}

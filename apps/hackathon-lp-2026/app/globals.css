@@ -91,10 +91,12 @@
 }
 
 @theme inline {
-  --font-sans: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", YuGothic,
-    Meiryo, sans-serif;
-  --font-heading: -apple-system, BlinkMacMacSystemFont, "SF Pro Display", "Hiragino Sans", "Hiragino Kaku Gothic ProN",
-    sans-serif;
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic",
+    YuGothic, Meiryo, sans-serif;
+  --font-heading:
+    -apple-system, BlinkMacMacSystemFont, "SF Pro Display", "Hiragino Sans",
+    "Hiragino Kaku Gothic ProN", sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -210,7 +212,9 @@ section[id] {
     box-shadow: 0 0 20px var(--glow-primary);
   }
   50% {
-    box-shadow: 0 0 40px var(--glow-primary), 0 0 60px var(--glow-secondary);
+    box-shadow:
+      0 0 40px var(--glow-primary),
+      0 0 60px var(--glow-secondary);
   }
 }
 

@@ -56,18 +56,18 @@ export function Schedule() {
   const { ref, isInView } = useInView()
 
   return (
-    <section id="schedule" ref={ref} className="py-12 md:py-20 relative">
+    <section id="schedule" ref={ref} className="relative py-12 md:py-20">
       <div className="container mx-auto px-6 md:px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="mb-16 text-center"
         >
-          <h2 className="text-3xl md:text-5xl font-bold mb-4 text-gray-300">スケジュール</h2>
+          <h2 className="mb-4 text-3xl font-bold text-gray-300 md:text-5xl">スケジュール</h2>
         </motion.div>
 
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="mx-auto max-w-4xl space-y-6">
           {SCHEDULE_ITEMS.map((item, index) => (
             <motion.div
               key={index}
@@ -75,12 +75,14 @@ export function Schedule() {
               animate={isInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
-              <Card className="bg-card-hover border-border hover:border-primary/30 transition-all duration-300 p-6 relative overflow-hidden group">
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary to-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="flex flex-col pl-4 min-h-[120px]">
-                  <div className="flex-1 text-left mb-4">
-                    <h3 className="text-lg md:text-xl font-bold mb-3 text-foreground text-pretty">{item.title}</h3>
-                    <div className="flex flex-col sm:flex-row gap-4 text-muted-foreground">
+              <Card className="bg-card-hover border-border hover:border-primary/30 group relative overflow-hidden p-6 transition-all duration-300">
+                <div className="from-primary to-secondary absolute top-0 bottom-0 left-0 w-1 bg-gradient-to-b opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="flex min-h-[120px] flex-col pl-4">
+                  <div className="mb-4 flex-1 text-left">
+                    <h3 className="text-foreground mb-3 text-lg font-bold text-pretty md:text-xl">
+                      {item.title}
+                    </h3>
+                    <div className="text-muted-foreground flex flex-col gap-4 sm:flex-row">
                       <div className="flex items-start gap-2">
                         <Calendar size={18} className="text-primary mt-0.5 flex-shrink-0" />
                         <span className="text-sm text-pretty">{item.date}</span>
@@ -92,13 +94,13 @@ export function Schedule() {
                     </div>
                   </div>
                   {item.connpassUrl !== undefined && (
-                    <div className="flex justify-end mt-auto">
+                    <div className="mt-auto flex justify-end">
                       {item.active ? (
                         <Button
                           asChild
                           size="sm"
                           variant="outline"
-                          className="border-muted text-muted-foreground hover:bg-muted/50 bg-transparent h-auto py-1.5 text-xs px-3"
+                          className="border-muted text-muted-foreground hover:bg-muted/50 h-auto bg-transparent px-3 py-1.5 text-xs"
                         >
                           <a href={item.connpassUrl!} target="_blank" rel="noopener noreferrer">
                             イベント詳細・申込
@@ -110,7 +112,7 @@ export function Schedule() {
                           size="sm"
                           variant="outline"
                           disabled
-                          className="border-muted text-muted-foreground/40 bg-transparent opacity-40 cursor-not-allowed h-auto py-1.5 text-xs px-3"
+                          className="border-muted text-muted-foreground/40 h-auto cursor-not-allowed bg-transparent px-3 py-1.5 text-xs opacity-40"
                         >
                           イベント詳細・申込
                           <ExternalLink className="ml-1.5" size={14} />
@@ -128,10 +130,10 @@ export function Schedule() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.8 }}
-          className="mt-8 max-w-4xl mx-auto"
+          className="mx-auto mt-8 max-w-4xl"
         >
           <Card className="bg-muted/20 border-muted/30 p-6">
-            <p className="text-sm text-muted-foreground leading-relaxed text-left text-pretty">
+            <p className="text-muted-foreground text-left text-sm leading-relaxed text-pretty">
               <strong className="text-foreground">ハッカソン参加要件：</strong>
               (※1),(※2)のオンライン申込および(※3)で参加方法はオフライン・オンラインを選択可能。事前提出物審査とは別の加点機会です。※不参加であっても失格にはなりません。
             </p>

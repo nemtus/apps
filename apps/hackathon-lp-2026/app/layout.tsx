@@ -39,7 +39,8 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "NEMTUS Hackathon 2026 HACK+ Re:Free",
-    description: "Connect Beyond Blocks — ブロックチェーン×クリエイティブの最前線へ。総額6,000 USDC",
+    description:
+      "Connect Beyond Blocks — ブロックチェーン×クリエイティブの最前線へ。総額6,000 USDC",
     type: "website",
   },
 }
@@ -59,7 +60,8 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Event",
               name: "NEMTUS Hackathon 2026 HACK+ Re:Free",
-              description: "ブロックチェーン×クリエイティブの最前線へ。総額6,000 USDC、2テーマで開催",
+              description:
+                "ブロックチェーン×クリエイティブの最前線へ。総額6,000 USDC、2テーマで開催",
               startDate: "2025-12-07T00:00:00+09:00",
               endDate: "2026-03-15T23:59:00+09:00",
               eventAttendanceMode: "https://schema.org/MixedEventAttendanceMode",

@@ -28,23 +28,25 @@ export function Themes() {
   const { ref, isInView } = useInView()
 
   return (
-    <section id="themes" ref={ref} className="py-12 md:py-20 relative">
+    <section id="themes" ref={ref} className="relative py-12 md:py-20">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-8"
+          className="mb-8 text-center"
         >
-          <h2 className="text-3xl md:text-5xl font-bold mb-4 text-gray-300">Hackathon 2026 テーマ</h2>
-          <p className="text-sm text-gray-400 mb-12 px-6 md:px-0 text-left md:text-center">
+          <h2 className="mb-4 text-3xl font-bold text-gray-300 md:text-5xl">
+            Hackathon 2026 テーマ
+          </h2>
+          <p className="mb-12 px-6 text-left text-sm text-gray-400 md:px-0 md:text-center">
             次の2種類のテーマを設定。興味のあるテーマを選択してください。
             <br className="md:hidden" />
             ※両方に挑戦することも可能です
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2">
           {THEMES.map((theme, index) => (
             <motion.div
               key={theme.title}
@@ -52,16 +54,20 @@ export function Themes() {
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: index * 0.2 }}
             >
-              <Card className="bg-white/5 border-white/10 hover:border-white/20 transition-all duration-300 p-6 md:p-8 h-full">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-purple-600/20 flex items-center justify-center border border-purple-500/30">
+              <Card className="h-full border-white/10 bg-white/5 p-6 transition-all duration-300 hover:border-white/20 md:p-8">
+                <div className="mb-6 flex items-center gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-purple-500/30 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-purple-600/20">
                     <theme.icon size={24} className="text-purple-400" />
                   </div>
                   <span className="text-lg font-bold text-gray-300">{theme.themeNumber}</span>
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-gray-200">{theme.title}</h3>
-                <p className="text-sm md:text-base font-semibold mb-4 text-gray-300">{theme.subtitle}</p>
-                <p className="text-sm text-gray-400 leading-normal whitespace-pre-line">{theme.description}</p>
+                <h3 className="mb-3 text-2xl font-bold text-gray-200">{theme.title}</h3>
+                <p className="mb-4 text-sm font-semibold text-gray-300 md:text-base">
+                  {theme.subtitle}
+                </p>
+                <p className="text-sm leading-normal whitespace-pre-line text-gray-400">
+                  {theme.description}
+                </p>
               </Card>
             </motion.div>
           ))}

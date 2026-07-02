@@ -40,33 +40,37 @@ export function ParticipationFlow() {
   const { ref, isInView } = useInView()
 
   return (
-    <section id="flow" ref={ref} className="py-12 md:py-20 relative">
+    <section id="flow" ref={ref} className="relative py-12 md:py-20">
       <div className="container mx-auto px-6 md:px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-5xl font-bold mb-8 text-center text-gray-300">参加の流れ</h2>
+          <h2 className="mb-8 text-center text-3xl font-bold text-gray-300 md:text-5xl">
+            参加の流れ
+          </h2>
 
-          <div className="flex flex-col md:flex-row gap-4 md:gap-4 max-w-5xl mx-auto md:justify-center">
+          <div className="mx-auto flex max-w-5xl flex-col gap-4 md:flex-row md:justify-center md:gap-4">
             {steps.map((step, index) => (
               <motion.div
                 key={step.number}
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="flex md:flex-col items-center md:items-center"
+                className="flex items-center md:flex-col md:items-center"
               >
-                <div className="flex md:flex-col items-center md:items-center gap-3 md:gap-0 flex-1 md:flex-none md:min-w-[160px]">
-                  <div className="w-12 h-12 flex-shrink-0 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-sm font-bold md:mb-2">
+                <div className="flex flex-1 items-center gap-3 md:min-w-[160px] md:flex-none md:flex-col md:items-center md:gap-0">
+                  <div className="from-primary to-secondary flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r text-sm font-bold md:mb-2">
                     {step.number}
                   </div>
-                  <div className="flex flex-col md:items-center flex-1 md:flex-none">
-                    <div className="flex items-center gap-1 mb-1">
-                      <h3 className="text-sm font-bold text-gray-300 md:text-center">{step.title}</h3>
+                  <div className="flex flex-1 flex-col md:flex-none md:items-center">
+                    <div className="mb-1 flex items-center gap-1">
+                      <h3 className="text-sm font-bold text-gray-300 md:text-center">
+                        {step.title}
+                      </h3>
                       {step.required && (
-                        <span className="px-1.5 py-0.5 bg-red-500/80 rounded text-[10px] font-bold whitespace-nowrap text-white">
+                        <span className="rounded bg-red-500/80 px-1.5 py-0.5 text-[10px] font-bold whitespace-nowrap text-white">
                           必須
                         </span>
                       )}
@@ -76,7 +80,7 @@ export function ParticipationFlow() {
                 </div>
 
                 {index < steps.length - 1 && (
-                  <div className="text-gray-600 text-2xl md:mx-2 my-2 md:my-0 md:mb-8">
+                  <div className="my-2 text-2xl text-gray-600 md:mx-2 md:my-0 md:mb-8">
                     <span className="md:hidden">↓</span>
                     <span className="hidden md:inline">→</span>
                   </div>
@@ -85,7 +89,7 @@ export function ParticipationFlow() {
             ))}
           </div>
 
-          <p className="text-center text-sm text-gray-500 mt-6 max-w-3xl mx-auto">
+          <p className="mx-auto mt-6 max-w-3xl text-center text-sm text-gray-500">
             各ステップの詳細は下記のセクションをご確認ください
           </p>
         </motion.div>

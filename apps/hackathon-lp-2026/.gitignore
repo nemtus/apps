@@ -27,3 +27,7 @@ yarn-error.log*
 next-env.d.ts
 # cloudflare wrangler local state
 /.wrangler/
+/coverage/
+/test-results/
+/playwright-report/
+/playwright/.cache/
