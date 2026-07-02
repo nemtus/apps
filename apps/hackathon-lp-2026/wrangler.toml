@@ -13,8 +13,13 @@
 name = "nemtus-hackathon-lp-2026"
 compatibility_date = "2025-06-01"
 
-# Custom domain (managed as code; attached by Workers Builds on deploy):
-routes = [{ pattern = "hackathon-2026.nemtus.com", custom_domain = true }]
+# Custom domain — TEMPORARILY DISABLED for the Vercel → Cloudflare cutover.
+# hackathon-2026.nemtus.com currently resolves to Vercel via an existing Cloudflare DNS
+# record, so attaching it to this Worker now would fail with a DNS conflict. With this
+# commented out, the first Workers Builds deploy reaches the *.workers.dev URL only, for
+# safe verification without touching the live site. Re-enable it (uncomment) AFTER
+# deleting the Vercel DNS record for this hostname — see the "restore custom domain" PR.
+# routes = [{ pattern = "hackathon-2026.nemtus.com", custom_domain = true }]
 
 [assets]
 directory = "./out" # Next.js static-export output (built by `pnpm build`; not committed)
