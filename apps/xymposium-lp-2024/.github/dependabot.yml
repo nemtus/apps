@@ -1,0 +1,36 @@
+version: 2
+updates:
+  # npm 依存
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
+    versioning-strategy: increase
+    groups:
+      # minor / patch はまとめて 1 PR に
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # eslint 10 は eslint-config-next 同梱の eslint-plugin-react が未対応で
+      # 動かない（ESLint 10 で削除された context.getFilename() を呼びクラッシュ）。
+      # 対応版プラグインが上流に出るまでメジャー 10 を保留する。
+      # 追従できたらこの ignore を削除して再度 PR を受け入れること。
+      - dependency-name: eslint
+        versions:
+          - ">=10"
+    labels:
+      - dependencies
+
+  # GitHub Actions
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    labels:
+      - dependencies
+      - github-actions
