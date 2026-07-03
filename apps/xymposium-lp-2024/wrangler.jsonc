@@ -8,8 +8,9 @@
   // Cloudflare token is stored in GitHub). Configure this Worker once in the Cloudflare
   // dashboard (Workers & Pages → connect the nemtus/apps repo) with:
   //   Root directory:    apps/xymposium-lp-2024
-  //   Build command:     npx opennextjs-cloudflare build   (runs `next build` + Workers adapt)
-  //   Deploy command:    npx wrangler deploy
+  //   Build command:     npm run cf:build   (= opennextjs-cloudflare build; runs `next build`
+  //                                          + Workers adapt, emits .open-next/worker.js)
+  //   Deploy command:    npx wrangler deploy   (uniform with every other app)
   //   Build watch paths: apps/xymposium-lp-2024/*   (so only this site rebuilds)
   //   Production branch: main   (PRs get preview URLs; ensure Preview URLs are enabled)
   // Requires Node >=20.9 / npm >=11.10 (see package.json engines).

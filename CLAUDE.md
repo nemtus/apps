@@ -85,8 +85,10 @@ dashboard; the repo artifact is each site's `wrangler.toml`.
 
 The `xymposium-lp*` sites use the same Workers Builds model, with two shapes that differ from
 the assets-only default: **`xymposium-lp-2024`** is a Next.js/OpenNext *server* Worker — its
-Build command is `npx opennextjs-cloudflare build` (emits `.open-next/worker.js`), Deploy stays
-`npx wrangler deploy`, config in `wrangler.jsonc`. **`xymposium-lp`** (the redirect aggregator)
+Build command is `npm run cf:build` (= `opennextjs-cloudflare build`, emits
+`.open-next/worker.js`; an SSR worker inherently needs a build step, so this is the one command
+that can't be dropped), Deploy stays the uniform `npx wrangler deploy`, config in
+`wrangler.jsonc`. **`xymposium-lp`** (the redirect aggregator)
 has no build but ships a `main` Worker script (`src/index.ts`, bundled by wrangler on deploy).
 `xymposium-lp-2025` is a plain assets-only static site like the `hackathon-lp*`.
 
