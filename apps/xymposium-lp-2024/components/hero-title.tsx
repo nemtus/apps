@@ -1,0 +1,32 @@
+import type { JSX } from "react";
+import AnimatedBorderTrail from "@/components/ui/animated-border-trail";
+import { Link } from "@/components/ui/link";
+import TextSpan from "@/components/ui/text-span";
+import { H1, Paragraph } from "@/components/ui/typography";
+
+/**
+ * サイトトップページの最初のエリア
+ */
+export default function HeroTitle(): JSX.Element {
+  return (
+    <div className="container flex min-h-[80vh] max-w-5xl flex-col items-center justify-center gap-8 text-center md:min-h-[70vh] lg:min-h-[60vh]">
+      <H1 className="text-4xl">
+        <span className="text-xl">Symbol/NEM</span>
+        <br /> Community Xymposium 2.0
+      </H1>
+      <Paragraph className="max-w-3xl leading-8 text-muted-foreground">
+        <TextSpan>Xymposium 2.0の</TextSpan>
+        <TextSpan>サイドイベントを</TextSpan>
+        <TextSpan>コミュニティにより開催</TextSpan>
+      </Paragraph>
+      <AnimatedBorderTrail duration="5s" trailSize="lg" className="mt-4">
+        {/* <Link variant="ghost" size="buttonLg" href={"/registration"} aria-disabled className="px-20">
+          参加申込み
+        </Link> */}
+        <Link variant="ghost" size="buttonLg" href={"#"} aria-disabled className="px-20">
+          受付を終了しました
+        </Link>
+      </AnimatedBorderTrail>
+    </div>
+  );
+}

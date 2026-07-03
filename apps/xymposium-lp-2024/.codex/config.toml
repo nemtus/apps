@@ -1,0 +1,62 @@
+# OpenAI Codex CLI プロジェクト設定
+# 指示書は AGENTS.md (CLAUDE.md へのシンボリックリンク) を参照。
+# プロジェクト .codex/ 層は「信頼済み(trusted)」プロジェクトでのみ読み込まれる。
+
+# 危険な操作は都度承認を求める (Claude の ask 相当)
+approval_policy = "on-request"
+
+# --- ライフサイクルフック (Claude Code の hooks 相当) ---
+
+# 編集/作成したファイルを Prettier で整形する
+[[hooks.PostToolUse]]
+matcher = "*"
+
+[[hooks.PostToolUse.hooks]]
+type = "command"
+command = 'bash "$(git rev-parse --show-toplevel)/.claude/hooks/format-file.sh"'
+timeout = 60
+statusMessage = "Prettier で整形中"
+
+# 応答終了時に CI 相当の静的ゲートを実行 (失敗時はブロックして修正を促す)
+[[hooks.Stop]]
+
+[[hooks.Stop.hooks]]
+type = "command"
+command = 'bash "$(git rev-parse --show-toplevel)/.claude/hooks/precheck.sh"'
+timeout = 240
+statusMessage = "lint/typecheck/knip/depcruise/build/test を検証中"
+
+# Bash 実行前に危険なコマンドを拒否 (Claude の permissions.deny 相当)
+[[hooks.PreToolUse]]
+matcher = "Bash|Shell|shell|run_shell_command"
+
+[[hooks.PreToolUse.hooks]]
+type = "command"
+command = 'bash "$(git rev-parse --show-toplevel)/.codex/hooks/policy.sh"'
+timeout = 15
+statusMessage = "危険コマンドを検査中"
+
+# --- MCP サーバー (Claude の .mcp.json / Gemini の mcpServers 相当) ---
+# project 層の mcp_servers は trusted プロジェクトでのみロードされる。
+# 一部バージョン/クライアントでは project 層 MCP が読まれない既知問題がある
+# (openai/codex #13025, #13056)。効かない場合は同じ定義を ~/.codex/config.toml に置く。
+# 秘密情報 (Context7 API キー等) はここに書かず user 層 or 環境変数で渡すこと。
+# 再現性のためバージョンは固定する (.npmrc save-exact / min-release-age と同じ思想)。
+# 更新時は 3 ファイル (.mcp.json / .gemini/settings.json / .codex/config.toml) を揃えること。
+
+[mcp_servers.serena]
+command = "uvx"
+args = ["--from", "serena-agent==1.5.3", "serena", "start-mcp-server", "--context", "codex", "--project", "."]
+startup_timeout_sec = 60
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp@3.1.0"]
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["-y", "@playwright/mcp@0.0.75"]
+
+[mcp_servers.chrome-devtools]
+command = "npx"
+args = ["-y", "chrome-devtools-mcp@1.1.1"]

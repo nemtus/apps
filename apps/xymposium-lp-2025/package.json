@@ -1,0 +1,22 @@
+{
+  "name": "xymposium-lp-2025",
+  "version": "1.0.0",
+  "private": true,
+  "description": "XYMPOSIUM 2025 event landing page (static, served on Cloudflare Workers)",
+  "scripts": {
+    "build": "echo \"Info: no build specified\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cf:dev": "npx --yes wrangler@4 dev",
+    "cf:deploy": "npx --yes wrangler@4 deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nemtus/apps.git"
+  },
+  "author": "yasunori-matsuoka <yasunori.matsuoka@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nemtus/apps/issues"
+  },
+  "homepage": "https://github.com/nemtus/apps/tree/main/apps/xymposium-lp-2025"
+}

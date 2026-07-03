@@ -1,0 +1,14 @@
+# Code owners — PR レビューの既定担当者。
+# 有効化には branch protection / ruleset で "Require review from Code Owners" をオンにする必要がある。
+
+# 既定の owner
+* @YasunoriMATSUOKA @h-gocchi @ymuichiro
+
+# セキュリティ上重要なファイルは特に必須レビュー
+/.github/ @YasunoriMATSUOKA @h-gocchi @ymuichiro
+/.github/workflows/ @YasunoriMATSUOKA @h-gocchi @ymuichiro
+/middleware.ts @YasunoriMATSUOKA @h-gocchi @ymuichiro
+/wrangler.jsonc @YasunoriMATSUOKA @h-gocchi @ymuichiro
+/open-next.config.ts @YasunoriMATSUOKA @h-gocchi @ymuichiro
+/next.config.mjs @YasunoriMATSUOKA @h-gocchi @ymuichiro
+/.npmrc @YasunoriMATSUOKA @h-gocchi @ymuichiro
