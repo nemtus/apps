@@ -5,9 +5,11 @@
   "description": "XYMPOSIUM multi-year redirect aggregator (Cloudflare Worker) at xymposium.nemtus.com",
   "scripts": {
     "build": "echo \"Info: no build specified (wrangler bundles src/index.ts)\"",
+    "typecheck": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1",
     "cf:dev": "npx --yes wrangler@4 dev",
-    "cf:deploy": "npx --yes wrangler@4 deploy"
+    "cf:deploy": "npx --yes wrangler@4 deploy",
+    "cf:dry-run": "npx --yes wrangler@4 deploy --dry-run"
   },
   "repository": {
     "type": "git",
@@ -18,5 +20,9 @@
   "bugs": {
     "url": "https://github.com/nemtus/apps/issues"
   },
-  "homepage": "https://github.com/nemtus/apps/tree/main/apps/xymposium-lp"
+  "homepage": "https://github.com/nemtus/apps/tree/main/apps/xymposium-lp",
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20260703.1",
+    "typescript": "6.0.3"
+  }
 }

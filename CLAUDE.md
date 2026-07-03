@@ -90,6 +90,19 @@ Build command is `npx opennextjs-cloudflare build` (emits `.open-next/worker.js`
 has no build but ships a `main` Worker script (`src/index.ts`, bundled by wrangler on deploy).
 `xymposium-lp-2025` is a plain assets-only static site like the `hackathon-lp*`.
 
+**Checks CI → GitHub Actions (repo-root, path-filtered, token-free Socket).** Apps with a real
+build/test surface get a **checks-only** workflow at `.github/workflows/ci-<app>.yml` (deploys
+stay on Workers Builds). Each is path-filtered to its app, pins every `uses:` to a full commit
+SHA, and hardens installs with **Socket Firewall Free** (`SocketDev/action`, `mode:
+firewall-free`) so `sfw npm ci` / `sfw pnpm install` blocks confirmed-malicious packages at
+fetch time — no Socket token/account. This complements the repo-root `socket.yml` (Socket
+GitHub App: PR dependency-risk comments) and `.npmrc` (`ignore-scripts`, `save-exact`). Current
+workflows: `ci-hackathon-lp-2026` (pnpm/Next), `ci-xymposium-lp-2024` (npm/Next: quality +
+vitest + Playwright e2e), `ci-xymposium-lp` (aggregator: `npm ci` → typecheck → `wrangler
+deploy --dry-run`). The static assets-only sites have nothing to install/build, so they get no
+checks workflow. When adding a Socket-wrapped workflow, reuse the SHAs already pinned in these
+files.
+
 **Firebase apps (follow-up).** The per-app deploy workflows imported from the source repos live
 under `apps/<name>/.github/workflows/` and are **inert** (GitHub only runs workflows from the
 repo-root `.github/workflows/`). The `hackathon` / `flea-market` Firebase deploys still need to
