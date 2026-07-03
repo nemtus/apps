@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base target="_top" />
+    <title>Xymposium 2025 チケット</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP",
+          sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        color: #2c3e50;
+        line-height: 1.6;
+      }
+
+      .ticket-container {
+        background: white;
+        border-radius: 16px;
+        padding: 2.5rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        max-width: 480px;
+        width: 100%;
+        text-align: center;
+        border: 1px solid #e1e8ed;
+      }
+
+      .event-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid #3498db;
+        position: relative;
+      }
+
+      .event-header::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 2px;
+        background: #e74c3c;
+      }
+
+      .event-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.5px;
+      }
+
+      .event-year {
+        font-size: 1.1rem;
+        color: #3498db;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+      }
+
+      .event-subtitle {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+        font-weight: 400;
+      }
+
+      .warning-section {
+        background: #fff8e1;
+        border: 1px solid #ffcc02;
+        border-radius: 8px;
+        padding: 1.2rem;
+        margin: 2rem 0;
+        position: relative;
+      }
+
+      .warning-icon {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        display: block;
+      }
+
+      .warning-title {
+        font-weight: 700;
+        color: #f57c00;
+        margin-bottom: 0.5rem;
+      }
+
+      .warning-text {
+        font-size: 0.9rem;
+        color: #e65100;
+        line-height: 1.4;
+      }
+
+      .instructions {
+        font-size: 1rem;
+        color: #5a6c7d;
+        margin-bottom: 2.5rem;
+        line-height: 1.8;
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border-left: 4px solid #3498db;
+      }
+
+      .instruction-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.8rem;
+      }
+
+      .instruction-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .instruction-icon {
+        font-size: 1.2rem;
+        margin-right: 0.8rem;
+        min-width: 24px;
+      }
+
+      .swipe-container {
+        position: relative;
+        background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        border-radius: 50px;
+        padding: 6px;
+        margin: 2rem 0;
+        height: 70px;
+        overflow: hidden;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .swipe-track {
+        position: relative;
+        height: 100%;
+        border-radius: 44px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+      }
+
+      .swipe-button {
+        position: absolute;
+        left: -2px;
+        top: -2px;
+        width: 62px;
+        height: 62px;
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        cursor: grab;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        z-index: 10;
+        user-select: none;
+      }
+
+      .swipe-button:active {
+        cursor: grabbing;
+        transform: scale(0.95);
+      }
+
+      .swipe-button.dragging {
+        transition: none;
+      }
+
+      .swipe-button.completed {
+        background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+        left: calc(100% - 66px);
+        cursor: default;
+      }
+
+      .swipe-text {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1rem;
+        font-weight: 600;
+        color: #6c757d;
+        pointer-events: none;
+        opacity: 1;
+        transition: opacity 0.3s ease;
+      }
+
+      .swipe-text.hidden {
+        opacity: 0;
+      }
+
+      .swipe-instruction {
+        font-size: 0.85rem;
+        color: #868e96;
+        margin-top: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .swipe-arrow {
+        margin-left: 0.5rem;
+        animation: swipe-hint 2s infinite;
+      }
+
+      @keyframes swipe-hint {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        50% {
+          transform: translateX(8px);
+        }
+      }
+
+      .result {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        min-height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      .result.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .result.success {
+        background: #d5f4e6;
+        color: #155724;
+        border: 1px solid #b8e6c1;
+      }
+
+      .result.error {
+        background: #fdeaea;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .success-content {
+        text-align: center;
+      }
+
+      .success-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        display: block;
+        animation: bounce 1s ease-in-out;
+      }
+
+      @keyframes bounce {
+        0%,
+        20%,
+        60%,
+        100% {
+          transform: translateY(0);
+        }
+        40% {
+          transform: translateY(-8px);
+        }
+        80% {
+          transform: translateY(-4px);
+        }
+      }
+
+      .success-message {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
+
+      .success-sub {
+        font-size: 0.9rem;
+        color: #0f5132;
+        opacity: 0.8;
+      }
+
+      .error-content {
+        text-align: center;
+      }
+
+      .error-icon {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+        display: block;
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-top: 1rem;
+        background: #e3f2fd;
+        color: #1565c0;
+        border: 1px solid #bbdefb;
+      }
+
+      .processing-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .processing-overlay.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .processing-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      }
+
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f4f6;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .ticket-container {
+          padding: 2rem 1.5rem;
+        }
+
+        .event-title {
+          font-size: 1.8rem;
+        }
+
+        .instructions {
+          padding: 1.2rem;
+        }
+
+        .swipe-container {
+          height: 65px;
+        }
+
+        .swipe-button {
+          width: 57px;
+          height: 57px;
+          font-size: 1.3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ticket-container">
+      <div class="event-header">
+        <h1 class="event-title">Xymposium</h1>
+        <div class="event-year">2025</div>
+        <div class="event-subtitle">イベント</div>
+      </div>
+
+      <div class="warning-section">
+        <span class="warning-icon">⚠️</span>
+        <div class="warning-title">スタッフ専用操作</div>
+        <div class="warning-text">
+          このスライダーはスタッフのみが操作してください。<br />お客様は操作しないでください。
+        </div>
+      </div>
+
+      <div class="instructions">
+        <div class="instruction-item">
+          <span class="instruction-icon">📱</span>
+          <span>この画面を受付スタッフに提示します</span>
+        </div>
+        <div class="instruction-item">
+          <span class="instruction-icon">👥</span>
+          <span>スタッフがスライダーを操作します</span>
+        </div>
+        <div class="instruction-item">
+          <span class="instruction-icon">✅</span>
+          <span>完了後、会場にお進みください</span>
+        </div>
+      </div>
+
+      <div class="swipe-container" id="swipeContainer">
+        <div class="swipe-track">
+          <div class="swipe-button" id="swipeButton">🎟️</div>
+          <div class="swipe-text" id="swipeText">チケットを使用する</div>
+        </div>
+      </div>
+
+      <div class="swipe-instruction">
+        スライドして使用 <span class="swipe-arrow">→</span>
+      </div>
+
+      <div class="status-badge" id="statusBadge">待機中</div>
+
+      <div id="result" class="result"></div>
+    </div>
+
+    <div class="processing-overlay" id="processingOverlay">
+      <div class="processing-content">
+        <div class="spinner"></div>
+        <div>チケットを処理中...</div>
+      </div>
+    </div>
+
+    <script>
+      const hash = "<?= hash ?>";
+      let isUsed = false;
+      let isDragging = false;
+      let startX = 0;
+      let currentX = 0;
+      let swipeThreshold = 0.7; // 70%スワイプで発火
+
+      const swipeButton = document.getElementById("swipeButton");
+      const swipeContainer = document.getElementById("swipeContainer");
+      const swipeText = document.getElementById("swipeText");
+      const statusBadge = document.getElementById("statusBadge");
+      const processingOverlay = document.getElementById("processingOverlay");
+      const result = document.getElementById("result");
+
+      // タッチイベント
+      swipeButton.addEventListener("touchstart", handleStart, {
+        passive: false,
+      });
+      swipeButton.addEventListener("touchmove", handleMove, { passive: false });
+      swipeButton.addEventListener("touchend", handleEnd, { passive: false });
+
+      // マウスイベント
+      swipeButton.addEventListener("mousedown", handleStart);
+      document.addEventListener("mousemove", handleMove);
+      document.addEventListener("mouseup", handleEnd);
+
+      function handleStart(e) {
+        if (isUsed) return;
+
+        e.preventDefault();
+        isDragging = true;
+        swipeButton.classList.add("dragging");
+
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        startX = clientX - swipeButton.offsetLeft;
+      }
+
+      function handleMove(e) {
+        if (!isDragging || isUsed) return;
+
+        e.preventDefault();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        currentX = clientX - startX;
+
+        const containerWidth = swipeContainer.offsetWidth;
+        const buttonWidth = swipeButton.offsetWidth;
+        const maxX = containerWidth - buttonWidth - 8;
+
+        // 範囲制限
+        if (currentX < 4) currentX = 4;
+        if (currentX > maxX) currentX = maxX;
+
+        swipeButton.style.left = currentX + "px";
+
+        // テキストの透明度調整
+        const progress = currentX / maxX;
+        swipeText.style.opacity = 1 - progress;
+
+        // 70%以上で色を変更
+        if (progress >= swipeThreshold) {
+          swipeButton.style.background =
+            "linear-gradient(135deg, #27ae60 0%, #229954 100%)";
+        } else {
+          swipeButton.style.background =
+            "linear-gradient(135deg, #3498db 0%, #2980b9 100%)";
+        }
+      }
+
+      function handleEnd(e) {
+        if (!isDragging || isUsed) return;
+
+        isDragging = false;
+        swipeButton.classList.remove("dragging");
+
+        const containerWidth = swipeContainer.offsetWidth;
+        const buttonWidth = swipeButton.offsetWidth;
+        const maxX = containerWidth - buttonWidth - 8;
+        const progress = currentX / maxX;
+
+        if (progress >= swipeThreshold) {
+          // 使用処理を実行
+          useTicket();
+        } else {
+          // 元の位置に戻す
+          resetSwipe();
+        }
+      }
+
+      function resetSwipe() {
+        swipeButton.style.transition = "all 0.3s ease";
+        swipeButton.style.left = "4px";
+        swipeButton.style.background =
+          "linear-gradient(135deg, #3498db 0%, #2980b9 100%)";
+        swipeText.style.opacity = "1";
+
+        setTimeout(() => {
+          swipeButton.style.transition = "none";
+        }, 300);
+      }
+
+      function useTicket() {
+        if (isUsed) return;
+
+        isUsed = true;
+
+        // 完了位置にスナップ
+        const containerWidth = swipeContainer.offsetWidth;
+        const buttonWidth = swipeButton.offsetWidth;
+        const maxX = containerWidth - buttonWidth - 8;
+
+        swipeButton.style.transition = "all 0.3s ease";
+        swipeButton.style.left = maxX + "px";
+        swipeButton.style.background =
+          "linear-gradient(135deg, #27ae60 0%, #229954 100%)";
+        swipeButton.innerHTML = "✅";
+        swipeButton.classList.add("completed");
+
+        swipeText.classList.add("hidden");
+
+        // ステータス更新
+        statusBadge.textContent = "処理中";
+        statusBadge.style.background = "#fff3e0";
+        statusBadge.style.color = "#e65100";
+
+        // 処理オーバーレイ表示
+        processingOverlay.classList.add("show");
+
+        // 結果をクリア
+        result.className = "result";
+        result.innerHTML = "";
+
+        google.script.run
+          .withSuccessHandler((msg) => {
+            processingOverlay.classList.remove("show");
+
+            // ステータスバッジを更新
+            statusBadge.textContent = "使用済み";
+            statusBadge.style.background = "#e8f5e8";
+            statusBadge.style.color = "#2e7d32";
+
+            showResult(msg, "success");
+          })
+          .withFailureHandler((error) => {
+            processingOverlay.classList.remove("show");
+
+            // エラー時は元に戻す
+            isUsed = false;
+            resetSwipe();
+            swipeButton.innerHTML = "🎟️";
+            swipeButton.classList.remove("completed");
+            swipeText.classList.remove("hidden");
+
+            // ステータスバッジを元に戻す
+            statusBadge.textContent = "待機中";
+            statusBadge.style.background = "#e3f2fd";
+            statusBadge.style.color = "#1565c0";
+
+            showResult("エラーが発生しました: " + error, "error");
+          })
+          .useTicket(hash);
+      }
+
+      function showResult(message, type) {
+        result.className = `result ${type}`;
+
+        if (type === "success") {
+          result.innerHTML = `
+            <div class="success-content">
+              <span class="success-icon">🎉</span>
+              <div class="success-message">${message}</div>
+              <div class="success-sub">チケットが正常に使用されました</div>
+            </div>
+          `;
+        } else {
+          result.innerHTML = `
+            <div class="error-content">
+              <span class="error-icon">❌</span>
+              <div>${message}</div>
+            </div>
+          `;
+        }
+
+        // アニメーション表示
+        setTimeout(() => {
+          result.classList.add("show");
+        }, 100);
+      }
+    </script>
+  </body>
+</html>

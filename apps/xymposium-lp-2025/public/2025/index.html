@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XYMPOSIUM 2025 - Symbol Blockchain Event</title>
+    <meta name="description" content="Symbol ブロックチェーンの最新情報とコミュニティが集まるイベント XYMPOSIUM 2025。2025年9月19日開催。">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="https://xymposium.io/assets/favicon.ico">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://xymposium.io/2025/">
+    <meta property="og:title" content="XYMPOSIUM 2025 - Symbol Blockchain Event">
+    <meta property="og:description" content="Symbol ブロックチェーンの最新情報とコミュニティが集まるイベント XYMPOSIUM 2025。2025年9月19日開催。">
+    <meta property="og:image" content="https://xymposium.io/assets/twitter_card.png">
+    <meta property="og:site_name" content="XYMPOSIUM 2025">
+    <meta property="og:locale" content="ja_JP">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://xymposium.io/2025/">
+    <meta property="twitter:title" content="XYMPOSIUM 2025 - Symbol Blockchain Event">
+    <meta property="twitter:description" content="Symbol ブロックチェーンの最新情報とコミュニティが集まるイベント XYMPOSIUM 2025。2025年9月19日開催。">
+    <meta property="twitter:image" content="https://xymposium.io/assets/twitter_card.png">
+    
+    <!-- Additional SEO -->
+    <meta name="keywords" content="Symbol, ブロックチェーン, イベント, XYMPOSIUM, 2025, 暗号通貨, コミュニティ">
+    <meta name="author" content="Symbol/NEM OSS Community">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://xymposium.io/2025/">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'symbol-blue': '#1E40AF',
+                        'symbol-cyan': '#06B6D4',
+                        'symbol-purple': '#8B5CF6',
+                        'symbol-dark': '#0F172A',
+                    },
+                    fontFamily: {
+                        'futura': ['Futura', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #0891b2;
+            --secondary: #3b82f6;
+            --accent: #8b5cf6;
+            --dark: #0f172a;
+            --gray-900: #0f172a;
+            --gray-800: #1e293b;
+            --gray-700: #334155;
+            --gray-600: #475569;
+            --gray-400: #94a3b8;
+            --gray-300: #cbd5e1;
+            --text-primary: #f8fafc;
+            --text-secondary: #e2e8f0;
+            --text-tertiary: #94a3b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .font-space {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        /* Enhanced gradients */
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #0f172a 50%, #1e293b 75%, #0f172a 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #0891b2 0%, #3b82f6 30%, #8b5cf6 60%, #0891b2 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+        }
+        
+        .card-glow {
+            box-shadow: 0 0 30px rgba(8, 145, 178, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .card-glow:hover {
+            box-shadow: 0 0 40px rgba(8, 145, 178, 0.4);
+            transform: translateY(-5px);
+        }
+        
+        /* Enhanced animations */
+        .animate-float {
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(2deg); }
+            50% { transform: translateY(-25px) rotate(0deg); }
+            75% { transform: translateY(-15px) rotate(-2deg); }
+        }
+        
+        .animate-pulse-slow {
+            animation: pulse-slow 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+        
+        /* Navigation styles */
+        .nav-backdrop {
+            backdrop-filter: blur(20px);
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid rgba(8, 145, 178, 0.2);
+        }
+        
+        .nav-link {
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover {
+            color: var(--primary);
+            background: rgba(8, 145, 178, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link:hover::after {
+            width: 80%;
+        }
+        
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(20px);
+            background: rgba(15, 23, 42, 0.98);
+        }
+        
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+        
+        /* Enhanced button styles */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(8, 145, 178, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(8, 145, 178, 0.4);
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        /* Enhanced card styles */
+        .feature-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(8, 145, 178, 0.2);
+            border-radius: 1rem;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            border-radius: 1rem;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            background: rgba(30, 41, 59, 0.8);
+            color: #fff !important;
+        }
+        .feature-card:hover h3,
+        .feature-card:hover h4,
+        .feature-card:hover h2 {
+            color: #fff !important;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+        }
+        .feature-card:hover p,
+        .feature-card:hover li,
+        .feature-card:hover span {
+            color: #e0e7ef !important;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+        .feature-card:hover a {
+            color: #fff !important;
+            text-decoration: underline;
+        }
+        
+        /* Section transitions */
+        .section-enter {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+        
+        .section-enter.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Enhanced typography */
+        .heading-xl {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+        
+        .heading-lg {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+        }
+        
+        /* Particle effect */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: particle-float 8s infinite linear;
+        }
+        
+        @keyframes particle-float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--gray-800);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .heading-xl {
+                font-size: 3rem;
+            }
+            
+            .heading-lg {
+                font-size: 2rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+        }
+        /* Schedule session enhancements */
+        .session-card {
+            position: relative;
+            padding-top: 1.5rem;
+        }
+        .session-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .4rem .9rem;
+            border-radius: 9999px;
+            font-size: .75rem;
+            font-weight: 600;
+            letter-spacing: .5px;
+            background: linear-gradient(135deg, rgba(8,145,178,.15), rgba(139,92,246,.15));
+            border: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(6px);
+        }
+        .timeline {
+            position: relative;
+            margin-top: 1rem;
+            padding-left: 1rem;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, rgba(8,145,178,.6), rgba(139,92,246,.4));
+        }
+        .timeline-item { position: relative; padding: .75rem 0 .75rem 1.25rem; }
+        .timeline-item:not(:last-child){ border-bottom:1px dashed rgba(255,255,255,0.06); }
+        .timeline-time { font-weight:600; font-size:.85rem; letter-spacing:.5px; display:inline-block; min-width:6.5rem; color:#06b6d4; }
+        .timeline-time.break { color:#c084fc; }
+        .timeline-title { font-weight:600; }
+        .break-label { display:inline-block; font-size:.7rem; font-weight:600; padding:.15rem .5rem; margin-left:.5rem; border-radius:6px; background:rgba(139,92,246,0.15); color:#c084fc; letter-spacing:.5px; }
+        .agenda { font-size:.75rem; color:#94a3b8; margin-top:.25rem; line-height:1.4; }
+        .session-footer { margin-top:1.25rem; font-size:.7rem; color:#94a3b8; display:grid; gap:.35rem; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); }
+        .session-footer strong { font-weight:600; color:#e2e8f0; }
+        @media (max-width:640px){
+            .timeline { padding-left: .75rem; }
+            .timeline::before { left: 0; }
+            .timeline-item { padding-left: .75rem; }
+            .timeline-time { display:block; margin-bottom:.15rem; min-width:0; }
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-white">
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 nav-backdrop border-b border-slate-700">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <img src="../assets/logo.webp" alt="Symbol Logo" class="h-10 w-auto">
+                    <span class="ml-3 text-xl font-bold text-symbol-cyan">XYMPOSIUM 2025</span>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden lg:flex items-center space-x-8">
+                    <a href="#home" class="nav-link text-gray-300 hover:text-symbol-cyan font-medium">ホーム</a>
+                    <a href="#about" class="nav-link text-gray-300 hover:text-symbol-cyan font-medium">Symbol について</a>
+                    <a href="#schedule" class="nav-link text-gray-300 hover:text-symbol-cyan font-medium">スケジュール</a>
+                    <a href="#access" class="nav-link text-gray-300 hover:text-symbol-cyan font-medium">アクセス</a>
+                    <a href="#register" class="nav-link text-gray-300 hover:text-symbol-cyan font-medium">参加申し込み</a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="lg:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-symbol-cyan focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="lg:hidden mobile-menu fixed top-16 left-0 right-0 bg-slate-900 border-b border-slate-700">
+            <div class="px-4 py-4 space-y-4">
+                <a href="#home" class="block text-gray-300 hover:text-symbol-cyan font-medium py-2">ホーム</a>
+                <a href="#about" class="block text-gray-300 hover:text-symbol-cyan font-medium py-2">Symbol について</a>
+                <a href="#schedule" class="block text-gray-300 hover:text-symbol-cyan font-medium py-2">スケジュール</a>
+                <a href="#access" class="block text-gray-300 hover:text-symbol-cyan font-medium py-2">アクセス</a>
+                <a href="#register" class="block text-gray-300 hover:text-symbol-cyan font-medium py-2">参加申し込み（無料）</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden pt-24">
+        <!-- Particles Background -->
+        <div class="particles"></div>
+        
+        <!-- Background Effects -->
+        <div class="absolute inset-0 gradient-bg"></div>
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.03"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
+        
+        <!-- Floating Elements -->
+        <div class="absolute top-20 left-10 w-20 h-20 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full opacity-20 animate-float blur-sm"></div>
+        <div class="absolute top-40 right-20 w-16 h-16 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full opacity-30 animate-float blur-sm" style="animation-delay: 2s;"></div>
+        <div class="absolute bottom-20 left-20 w-24 h-24 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full opacity-25 animate-float blur-sm" style="animation-delay: 4s;"></div>
+        <div class="absolute top-60 right-10 w-12 h-12 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full opacity-20 animate-float blur-sm" style="animation-delay: 6s;"></div>
+        
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <div class="max-w-5xl mx-auto">
+                <!-- Logo/Symbol -->
+                <div class="mb-12">
+                    <div class="w-40 h-40 mx-auto bg-slate-800/40 backdrop-blur-sm rounded-full flex items-center justify-center mb-8 animate-pulse-slow border-2 border-slate-700/50 shadow-2xl">
+                        <img src="../assets/logo.webp" alt="Symbol Logo" class="h-24 w-auto filter drop-shadow-lg">
+                    </div>
+                </div>
+                <!-- Main Title -->
+                <h1 class="heading-xl font-space mb-8 hero-gradient bg-clip-text text-transparent animate-pulse-slow">
+                    XYMPOSIUM
+                </h1>
+                <div class="text-5xl md:text-7xl font-space font-light mb-12 text-gray-200 tracking-wider">
+                    2025
+                </div>
+                <!-- Subtitle -->
+                <p class="text-xl md:text-2xl mb-16 text-gray-300 max-w-3xl mx-auto leading-relaxed font-light">
+                    Symbol ブロックチェーンの未来を形作る<br>
+                    <span class="text-cyan-400 font-medium">テクノロジーとコミュニティの祭典</span>
+                </p>
+                <!-- Event Info -->
+                <div class="feature-card mb-16 max-w-4xl mx-auto">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="text-center md:text-left">
+                            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full mb-4">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-semibold mb-4 text-cyan-400">開催日</h3>
+                            <p class="text-lg text-gray-300 mb-2">2025年9月19日（金）</p>
+                        </div>
+                        <div class="text-center md:text-left">
+                            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mb-4">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-semibold mb-4 text-cyan-400">会場</h3>
+                            <div class="space-y-3">
+                                <p class="text-lg">
+                                    <span class="font-semibold text-blue-400">昼の部</span><br>
+                                    TOKYO CULTURE CULTURE（渋谷）<br>
+                                    <span class="text-gray-400">11:00 - 16:00</span>
+                                </p>
+                                <p class="text-lg">
+                                    <span class="font-semibold text-purple-400">夜の部</span><br>
+                                    Crypto Lounge GOX（東新宿）<br>
+                                    <span class="text-gray-400">18:30開場</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- CTA Button -->
+                <div class="mb-8 flex flex-col items-center justify-center relative">
+                    <a href="#register" class="btn-primary text-lg font-semibold px-8 py-4 mx-auto">
+                        参加申し込み（無料）
+                    </a>
+                    <!-- Scroll indicator (centered under button) -->
+                    <div class="mt-4 animate-bounce flex justify-center w-full">
+                        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Symbol Section -->
+    <section id="about" class="py-20 bg-slate-800/50 section-enter">
+        <div class="container mx-auto px-4">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-20">
+                    <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full mb-6">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="heading-lg font-space mb-6 text-cyan-400">Symbol ブロックチェーン</h2>
+                    <p class="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                        次世代のブロックチェーン技術で、実用的でシンプル、そして未来的なソリューションを提供
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="feature-card group">
+                        <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-4 font-space">高速処理</h3>
+                        <p class="text-gray-400 leading-relaxed">
+                            革新的なアーキテクチャにより、高速で効率的なトランザクション処理を実現します
+                        </p>
+                    </div>
+                    
+                    <div class="feature-card group">
+                        <div class="w-16 h-16 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-4 font-space">セキュリティ</h3>
+                        <p class="text-gray-400 leading-relaxed">
+                            多層的なセキュリティ機能で、デジタル資産と取引を安全に保護します
+                        </p>
+                    </div>
+                    
+                    <div class="feature-card group">
+                        <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c-1.657 0-3-4.03-3-9s1.343-9 3-9m0 18c1.657 0 3-4.03 3-9s-1.343-9-3-9m-9 9a9 9 0 019-9"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-4 font-space">実用性</h3>
+                        <p class="text-gray-400 leading-relaxed">
+                            実世界のビジネス課題を解決する実用的なブロックチェーンソリューション
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Additional info section -->
+                <div class="mt-20 text-center">
+                    <div class="feature-card max-w-4xl mx-auto">
+                        <h3 class="text-2xl font-semibold mb-6 font-space text-cyan-400">なぜ Symbol なのか？</h3>
+                        <div class="grid md:grid-cols-2 gap-8 text-left">
+                            <div>
+                                <h4 class="font-semibold mb-3 text-blue-400">技術的革新</h4>
+                                <ul class="text-gray-400 space-y-2">
+                                    <li>• アグリゲートトランザクション</li>
+                                    <li>• マルチシグネチャアカウント</li>
+                                    <li>• 強力なモザイクシステム</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-3 text-purple-400">開発者体験</h4>
+                                <ul class="text-gray-400 space-y-2">
+                                    <li>• 包括的なSDK</li>
+                                    <li>• 直感的なAPI</li>
+                                    <li>• 豊富なドキュメント</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Event Schedule -->
+    <section id="schedule" class="py-20 bg-slate-900/50 section-enter">
+        <div class="container mx-auto px-4">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-20">
+                    <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mb-6">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="heading-lg font-space mb-6 text-cyan-400">イベントスケジュール</h2>
+                    <p class="text-xl text-gray-300 leading-relaxed">
+                        最新のタイムテーブル・各部の詳細は下記をご参照ください。
+                    </p>
+                </div>
+                <div class="grid lg:grid-cols-2 gap-12">
+                    <!-- 昼の部 -->
+                    <div class="feature-card session-card">
+                        <div class="flex items-start justify-between flex-wrap gap-3">
+                            <h3 class="text-3xl font-bold font-space text-blue-400">昼の部（TOKYO CULTURE CULTURE）</h3>
+                            <span class="session-badge">DAY SESSION</span>
+                        </div>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="agenda">第1部</div>
+                                <span class="timeline-time">11:00〜11:40</span>
+                                <span class="timeline-title">TSS からのアナウンス <span class="text-xs font-normal text-cyan-300">(Q&A 10分含む)</span></span>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-time break">11:40〜12:00</span>
+                                <span class="timeline-title">休憩 ① <span class="break-label">BREAK</span></span>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="agenda">第2部</div>
+                                <span class="timeline-time">12:00〜13:40</span>
+                                <span class="timeline-title">Symbol 関連企業による発表</span>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-time break">13:40〜13:50</span>
+                                <span class="timeline-title">休憩 ② <span class="break-label">BREAK</span></span>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="agenda">第3部</div>
+                                <span class="timeline-time">13:50〜14:50</span>
+                                <span class="timeline-title">外部メンバーとのディスカッション</span>
+                                <div class="agenda">Symbolの現在地点 / ゼロ知識証明(ZKP)の最新動向と所感 / Web3や各領域での今後の見通し</div>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-time break">14:50〜15:00</span>
+                                <span class="timeline-title">休憩 ③ <span class="break-label">BREAK</span></span>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="agenda">第4部</div>
+                                <span class="timeline-time">15:00〜16:00</span>
+                                <span class="timeline-title">コミュニティ内部のディスカッション</span>
+                                <div class="agenda">Symbol活用理由 / 事例の深掘り / 今後に求める機能や発展への提案</div>
+                            </div>
+                        </div>
+                        <div class="session-footer">
+                            <div><strong>開場：</strong>10:30</div>
+                            <div><strong>本編：</strong>11:00〜16:00</div>
+                            <div><strong>片付け：</strong>16:00〜16:30</div>
+                            <div><strong>撤収：</strong>17:00</div>
+                        </div>
+                    </div>
+                    <!-- 夜の部 -->
+                    <div class="feature-card session-card">
+                        <div class="flex items-start justify-between flex-wrap gap-3">
+                            <h3 class="text-3xl font-bold font-space text-purple-400">夜の部（Crypto Lounge GOX）</h3>
+                            <span class="session-badge">NIGHT SESSION</span>
+                        </div>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <span class="timeline-time break">18:00〜18:30</span>
+                                <span class="timeline-title">準備 <span class="break-label">SETUP</span></span>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-time">18:30</span>
+                                <span class="timeline-title">開場</span>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-time">18:30〜</span>
+                                <span class="timeline-title">夜の部概要</span>
+                                <div class="agenda">NEMTUS活動紹介 / ピッチ / 次回ハッカソン告知 / フリートーク / 物販(並行実施)</div>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-time break">21:00</span>
+                                <span class="timeline-title">片付け開始</span>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-time break">22:00</span>
+                                <span class="timeline-title">完全撤収</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Additional info -->
+                <div class="mt-16 text-center">
+                    <div class="feature-card max-w-3xl mx-auto">
+                        <h3 class="text-xl font-semibold mb-4 font-space text-cyan-400">参加のメリット</h3>
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <div>
+                                <h4 class="font-semibold text-blue-400 mb-2">最新技術・事例に触れられる</h4>
+                                <p class="text-gray-400 text-sm">Symbolブロックチェーンの最前線を体験できます</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-purple-400 mb-2">コミュニティ交流</h4>
+                                <p class="text-gray-400 text-sm">開発者・ユーザー・企業・投資家が集う場</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-cyan-400 mb-2">新たな挑戦・発見</h4>
+                                <p class="text-gray-400 text-sm">Web3の未来を語り合い、次の一歩を踏み出せます</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Venue Access Section -->
+    <section id="access" class="py-20 bg-slate-800">
+        <div class="container mx-auto px-4">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6 text-symbol-cyan">会場へのアクセス</h2>
+                    <p class="text-xl text-gray-300">
+                        昼の部：TOKYO CULTURE CULTURE<br>
+                        夜の部：Crypto Lounge GOX<br>
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <!-- TOKYO CULTURE CULTURE -->
+                    <div class="bg-slate-900 rounded-2xl p-8 border border-slate-700">
+                        <h3 class="text-2xl font-bold mb-4 text-blue-400">TOKYO CULTURE CULTURE</h3>
+                        <p class="text-gray-300 mb-2">東京都渋谷区渋谷1-23-16 cocoti SHIBUYA 4F</p>
+                        <p class="text-gray-400 text-sm mb-2">昼の部</p>
+                        <a href="https://tokyocultureculture.com/" target="_blank" class="text-cyan-400 underline">公式サイト</a>
+                    </div>
+                    <!-- Crypto Lounge GOX -->
+                    <div class="bg-slate-900 rounded-2xl p-8 border border-slate-700">
+                        <h3 class="text-2xl font-bold mb-4 text-purple-400">Crypto Lounge GOX</h3>
+                        <p class="text-gray-300 mb-2">東京都新宿区歌舞伎町2丁目19-15 てなむタウンビル6F</p>
+                        <p class="text-gray-400 text-sm mb-2">夜の部</p>
+                        <a href="https://cryptoloungegox.com/" target="_blank" class="text-purple-400 underline">公式サイト</a>
+                    </div>
+                </div>
+                <div class="mt-12 text-center">
+                    <div class="bg-slate-900 rounded-2xl p-8 border border-slate-700 text-left">
+                        <h4 class="text-lg font-bold mb-2 text-cyan-400">ご来場の際の注意事項</h4>
+                        <ul class="text-gray-400 text-sm list-disc list-inside">
+                            <li>昼・夜の部ともに事前申し込みが必要です。</li>
+                            <li>会場内は飲食可能ですが、持ち込みはご遠慮ください。</li>
+                            <li>夜の部は18:00から準備開始、18:30開場となります。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Section -->
+    <section id="register" class="py-20 bg-slate-800/50 section-enter">
+        <div class="container mx-auto px-4">
+            <div class="max-w-5xl mx-auto text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mb-6">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    </svg>
+                </div>
+                <h2 class="heading-lg font-space mb-6 text-cyan-400">参加申し込み</h2>
+                <p class="text-xl text-gray-300 mb-16 leading-relaxed">
+                    Symbolブロックチェーンの未来を一緒に創造しましょう<br>
+                    昼の部・夜の部いずれか、または両方の参加が可能です。
+                </p>
+                <div class="feature-card mb-16">
+                    <div class="mb-8">
+                        <p class="text-gray-400 text-sm">下記フォームよりご希望の参加部（昼・夜・両方）を選択してください。</p>
+                    </div>
+                    <!-- Google Form Button -->
+                    <div class="mb-10">
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeWed3M5BxFFTgjw-R2MjbhyWiVmZoWwinaoreLLHFAmmJjsg/viewform?fbzx=7923300270625516136" target="_blank" class="btn-primary">申し込みフォームへ（無料）</a>
+                    </div>
+                    <div class="bg-slate-800/50 rounded-lg p-6 mb-8">
+                        <h4 class="text-lg font-bold mb-4 text-cyan-400">FAQ</h4>
+                        <div class="space-y-2">
+                            <div>
+                                <button class="faq-question w-full text-left flex items-center justify-between focus:outline-none py-2">
+                                    <span class="text-gray-400 text-sm">Q. 両部とも参加できますか？</span>
+                                    <svg class="faq-arrow w-5 h-5 text-cyan-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </button>
+                                <div class="faq-answer text-gray-400 text-sm pl-2 mt-1" style="display: none;">
+                                    A. はい、昼・夜の部ともに参加可能です。申し込み時にご希望を選択してください。
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-question w-full text-left flex items-center justify-between focus:outline-none py-2">
+                                    <span class="text-gray-400 text-sm">Q. 申し込み締切は？</span>
+                                    <svg class="faq-arrow w-5 h-5 text-cyan-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </button>
+                                <div class="faq-answer text-gray-400 text-sm pl-2 mt-1" style="display: none;">
+                                    A. 定員に達し次第締切となります。お早めにお申し込みください。
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-question w-full text-left flex items-center justify-between focus:outline-none py-2">
+                                    <span class="text-gray-400 text-sm">Q. 会場での物販はありますか？</span>
+                                    <svg class="faq-arrow w-5 h-5 text-cyan-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </button>
+                                <div class="faq-answer text-gray-400 text-sm pl-2 mt-1" style="display: none;">
+                                    A. 夜の部で物販を実施予定です。
+                                </div>
+                            </div>
+                            <div>
+                                <button class="faq-question w-full text-left flex items-center justify-between focus:outline-none py-2">
+                                    <span class="text-gray-400 text-sm">Q. 参加費はかかりますか？</span>
+                                    <svg class="faq-arrow w-5 h-5 text-cyan-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </button>
+                                <div class="faq-answer text-gray-400 text-sm pl-2 mt-1" style="display: none;">
+                                    A. 昼の部・夜の部ともに「無料」でご参加いただけます。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                </div>
+                <!-- FAQ Section -->
+                <div class="mt-16">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-slate-900 border-t border-slate-700">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-slate-800/50 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6 border border-slate-700">
+                    <img src="../assets/logo.webp" alt="Symbol Logo" class="h-10 w-auto">
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-symbol-cyan">XYMPOSIUM 2025</h3>
+                <p class="text-gray-400 mb-6">
+                    Symbolブロックチェーンの未来を共に創造する
+                </p>
+                <div class="mb-4">
+                    <a href="../terms/participation.html" class="text-symbol-cyan hover:text-symbol-blue transition-colors mr-4">参加規約</a>
+                    <a href="../terms/privacy.html" class="text-symbol-cyan hover:text-symbol-blue transition-colors">プライバシーポリシー</a>
+                </div>
+                <div class="text-sm text-gray-500">
+                    <p>&copy; 2025 XYMPOSIUM. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Particle generation
+        function createParticles() {
+            const particles = document.querySelector('.particles');
+            if (!particles) return;
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 5) + 's';
+                particles.appendChild(particle);
+            }
+        }
+        
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('active');
+            });
+            
+            // Close mobile menu when clicking on a link
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                });
+            });
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                    mobileMenu.classList.remove('active');
+                }
+            });
+        }
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Enhanced scroll reveal animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all sections with section-enter class
+        document.querySelectorAll('.section-enter').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'all 0.8s ease-out';
+            observer.observe(section);
+        });
+        
+        // Initialize first section
+        const heroSection = document.querySelector('#home');
+        if (heroSection) {
+            heroSection.style.opacity = '1';
+            heroSection.style.transform = 'translateY(0)';
+        }
+        
+        // Parallax effect for floating elements
+        function handleParallax() {
+            const scrolled = window.pageYOffset;
+            const parallaxElements = document.querySelectorAll('.animate-float');
+            
+            parallaxElements.forEach((element, index) => {
+                const speed = 0.5 + (index * 0.1);
+                const yPos = -(scrolled * speed);
+                element.style.transform = `translate3d(0, ${yPos}px, 0)`;
+            });
+        }
+        
+        // Throttle function for performance
+        function throttle(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+        
+        // Add scroll event listener with throttling
+        window.addEventListener('scroll', throttle(handleParallax, 10));
+        
+        // Initialize particles when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            
+            // Add loading animation
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease-in';
+            
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+        
+        // Add hover effects for cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Add click animation to buttons
+        document.querySelectorAll('.btn-primary').forEach(button => {
+            button.addEventListener('click', function(e) {
+                // Create ripple effect
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${x}px;
+                    top: ${y}px;
+                    background: rgba(255, 255, 255, 0.3);
+                    border-radius: 50%;
+                    transform: scale(0);
+                    animation: ripple 0.6s ease-out;
+                    pointer-events: none;
+                `;
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+        
+        // Add ripple animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // FAQ個別アコーディオン
+        document.querySelectorAll('.faq-question').forEach((btn, idx) => {
+            btn.addEventListener('click', function() {
+                const answer = this.parentNode.querySelector('.faq-answer');
+                const arrow = this.querySelector('.faq-arrow');
+                const isOpen = answer.style.display === 'block';
+                answer.style.display = isOpen ? 'none' : 'block';
+                arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+            });
+        });
+    </script>
+</body>
+</html>
