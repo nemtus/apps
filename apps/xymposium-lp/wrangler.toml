@@ -1,0 +1,18 @@
+# xymposium-lp — the XYMPOSIUM multi-year redirect aggregator at xymposium.nemtus.com.
+# Unlike the assets-only LP sites, this Worker has a `main` script (src/index.ts, bundled by
+# wrangler) that 302s `/` to the latest year and 301s `/<year>` to that year's site.
+#
+# Deployed via Cloudflare Workers Builds (Git-connected — NOT GitHub Actions, so no
+# Cloudflare token is stored in GitHub). Configure this Worker once in the Cloudflare
+# dashboard (Workers & Pages → connect the nemtus/apps repo) with:
+#   Root directory:    apps/xymposium-lp
+#   Build command:     (none — wrangler bundles src/index.ts)
+#   Deploy command:    npx wrangler deploy
+#   Build watch paths: apps/xymposium-lp/*   (so only this site rebuilds)
+#   Production branch: main   (PRs get preview URLs; ensure Preview URLs are enabled)
+name = "nemtus-xymposium-lp"
+main = "src/index.ts"
+compatibility_date = "2025-06-01"
+
+# Custom domain (managed as code; attached by Workers Builds on deploy):
+routes = [{ pattern = "xymposium.nemtus.com", custom_domain = true }]

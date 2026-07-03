@@ -1,0 +1,21 @@
+# xymposium-lp-2025 — the 2025 XYMPOSIUM event site, hosted on Cloudflare Workers (Static
+# Assets). Assets-only Worker (no `main`): Cloudflare serves ./public directly. The root
+# ./public/index.html is a meta-refresh redirect to /2025/, where the real landing lives.
+#
+# Deployed via Cloudflare Workers Builds (Git-connected — NOT GitHub Actions, so no
+# Cloudflare token is stored in GitHub). Configure this Worker once in the Cloudflare
+# dashboard (Workers & Pages → connect the nemtus/apps repo) with:
+#   Root directory:    apps/xymposium-lp-2025
+#   Build command:     (none — static)
+#   Deploy command:    npx wrangler deploy
+#   Build watch paths: apps/xymposium-lp-2025/*   (so only this site rebuilds)
+#   Production branch: main   (PRs get preview URLs; ensure Preview URLs are enabled)
+name = "nemtus-xymposium-lp-2025"
+compatibility_date = "2025-06-01"
+
+# Custom domain (managed as code; attached by Workers Builds on deploy):
+routes = [{ pattern = "xymposium-2025.nemtus.com", custom_domain = true }]
+
+[assets]
+directory = "./public"
+not_found_handling = "404-page" # serve /404.html for unmatched paths (multi-page static)

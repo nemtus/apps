@@ -29,6 +29,14 @@ apps/
   hackathon-lp-2023/    Static per-year event sites (public/ only, no build).
   hackathon-lp-2024/    Each hosts as an assets-only Cloudflare Worker (serves public/) via
   hackathon-lp-2025/    its own wrangler.toml; deployed by Cloudflare Workers Builds (Git).
+  xymposium-lp/         XYMPOSIUM redirect aggregator (xymposium.nemtus.com). NOT assets-only:
+                        a `main` Worker (src/index.ts) — 302 `/`→latest year, 301 `/<year>`→
+                        that year's site. Add a year = one edit to src/index.ts.
+  xymposium-lp-2024/    XYMPOSIUM 2024 site. Next.js 16 + React 19 on Cloudflare Workers via
+                        @opennextjs/cloudflare (a *server* Worker, not static export). Own
+                        CLAUDE.md + tooling; optional Basic auth via middleware.ts.
+  xymposium-lp-2025/    XYMPOSIUM 2025 site. Static (public/ only, no build); root index.html
+                        meta-refreshes to /2025/. Assets-only Worker like the hackathon-lp*.
     flea-market/worker/ flea-market backend Worker (Better Auth on D1+KV, Stripe,
                         /api/orders, /api/files). Workspace via the apps/*/worker glob.
 packages/               Shared, headless npm-workspace packages (Cloudflare Workers):
@@ -75,6 +83,13 @@ subdirectory (Root directory `apps/<site>`, Build watch paths `apps/<site>/*`, D
 PRs → preview URLs (commented on the PR by Cloudflare). Settings live in the Cloudflare
 dashboard; the repo artifact is each site's `wrangler.toml`.
 
+The `xymposium-lp*` sites use the same Workers Builds model, with two shapes that differ from
+the assets-only default: **`xymposium-lp-2024`** is a Next.js/OpenNext *server* Worker — its
+Build command is `npx opennextjs-cloudflare build` (emits `.open-next/worker.js`), Deploy stays
+`npx wrangler deploy`, config in `wrangler.jsonc`. **`xymposium-lp`** (the redirect aggregator)
+has no build but ships a `main` Worker script (`src/index.ts`, bundled by wrangler on deploy).
+`xymposium-lp-2025` is a plain assets-only static site like the `hackathon-lp*`.
+
 **Firebase apps (follow-up).** The per-app deploy workflows imported from the source repos live
 under `apps/<name>/.github/workflows/` and are **inert** (GitHub only runs workflows from the
 repo-root `.github/workflows/`). The `hackathon` / `flea-market` Firebase deploys still need to
@@ -92,7 +107,7 @@ preserved as the D1 `user.id`.
 
 ## History
 
-This repo consolidates six formerly separate repositories, preserving their full git history
+This repo consolidates formerly separate repositories, preserving their full git history
 under `apps/<name>/`:
 
 | `apps/` dir | Source repo |
@@ -103,8 +118,14 @@ under `apps/<name>/`:
 | `hackathon-lp-2023` | `nemtus/hackathon-lp-2023` |
 | `hackathon-lp-2024` | `nemtus/hackathon-lp-2024` |
 | `hackathon-lp-2025` | `nemtus/hackathon-lp-2025` |
+| `xymposium-lp-2024` | `nemtus/symbol-community-xymposium-2024` |
+| `xymposium-lp-2025` | `nemtus/xymposium-lp` |
 
 Import was done with `git filter-repo --to-subdirectory-filter` + merge
 `--allow-unrelated-histories`, so `git log --follow` and `git blame` work across the move.
 Any source tags would be namespaced `<name>-legacy-*` (the source repos had none). The
 predecessor repositories are superseded by this monorepo.
+
+Note the XYMPOSIUM naming: the source repo `nemtus/xymposium-lp` held the *2025* event site, so
+it maps to `apps/xymposium-lp-2025`; the name `apps/xymposium-lp` is reused for the **new**,
+authored-in-monorepo redirect aggregator (no source repo).

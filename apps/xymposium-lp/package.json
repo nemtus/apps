@@ -1,0 +1,22 @@
+{
+  "name": "xymposium-lp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "XYMPOSIUM multi-year redirect aggregator (Cloudflare Worker) at xymposium.nemtus.com",
+  "scripts": {
+    "build": "echo \"Info: no build specified (wrangler bundles src/index.ts)\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cf:dev": "npx --yes wrangler@4 dev",
+    "cf:deploy": "npx --yes wrangler@4 deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nemtus/apps.git"
+  },
+  "author": "yasunori-matsuoka <yasunori.matsuoka@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nemtus/apps/issues"
+  },
+  "homepage": "https://github.com/nemtus/apps/tree/main/apps/xymposium-lp"
+}

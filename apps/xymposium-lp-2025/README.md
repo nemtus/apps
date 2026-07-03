@@ -2,7 +2,7 @@
 
 Symbol ブロックチェーンの未来を形作るテクノロジーとコミュニティの祭典「XYMPOSIUM」の公式ランディングページです。
 
-https://xymposium.io/2025/
+https://xymposium-2025.nemtus.com/2025/
 
 ## 技術仕様
 

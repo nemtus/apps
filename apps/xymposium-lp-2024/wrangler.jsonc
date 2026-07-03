@@ -1,6 +1,20 @@
 {
+  // xymposium-lp-2024 — the 2024 XYMPOSIUM event site: Next.js 16 (App Router) built for
+  // Cloudflare Workers with @opennextjs/cloudflare. Unlike the assets-only LP sites, this is a
+  // *server* Worker: `opennextjs-cloudflare build` emits `.open-next/worker.js` (served here)
+  // plus `.open-next/assets`. `middleware.ts` gates optional Basic auth (see comment below).
+  //
+  // Deployed via Cloudflare Workers Builds (Git-connected — NOT GitHub Actions, so no
+  // Cloudflare token is stored in GitHub). Configure this Worker once in the Cloudflare
+  // dashboard (Workers & Pages → connect the nemtus/apps repo) with:
+  //   Root directory:    apps/xymposium-lp-2024
+  //   Build command:     npx opennextjs-cloudflare build   (runs `next build` + Workers adapt)
+  //   Deploy command:    npx wrangler deploy
+  //   Build watch paths: apps/xymposium-lp-2024/*   (so only this site rebuilds)
+  //   Production branch: main   (PRs get preview URLs; ensure Preview URLs are enabled)
+  // Requires Node >=20.9 / npm >=11.10 (see package.json engines).
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "symbol-community-xymposium-2024",
+  "name": "nemtus-xymposium-lp-2024",
   "main": ".open-next/worker.js",
   "compatibility_date": "2025-04-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
@@ -8,6 +22,8 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS",
   },
+  // Custom domain (managed as code; attached by Workers Builds on deploy):
+  "routes": [{ "pattern": "xymposium-2024.nemtus.com", "custom_domain": true }],
   "observability": {
     "enabled": true,
   },
