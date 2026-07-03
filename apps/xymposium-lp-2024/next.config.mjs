@@ -2,6 +2,14 @@ import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // このアプリは monorepo (nemtus/apps) 内の standalone パッケージ (apps/* は独自の
+  // package-lock.json を持つ)。Next はリポジトリ root の package-lock.json も検出して
+  // workspace root を誤推定し、turbopack / outputFileTracing の警告を出す。実体である
+  // このディレクトリを明示的に root に固定して黙らせる (推定ではなく確定させる)。
+  turbopack: {
+    root: import.meta.dirname,
+  },
+  outputFileTracingRoot: import.meta.dirname,
   images: {
     // Cloudflare Workers では Next 標準の画像最適化は動かないため無効化する
     unoptimized: true,
