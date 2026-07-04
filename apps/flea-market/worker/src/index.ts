@@ -16,10 +16,13 @@ import { createOrderRoute } from './routes/orders';
 import { stripeWebhookRoute } from './routes/stripe-webhook';
 import { filesRoute } from './routes/files';
 
-function buildAuth(env: Env) {
+function buildAuth(env: Env, ctx: ExecutionContext) {
   return createAuth({
     db: env.DB,
     kv: env.SESSION_KV,
+    // Send verification/reset emails off the response path (uniform timing + guaranteed
+    // delivery on Workers).
+    waitUntil: ctx.waitUntil.bind(ctx),
     secret: env.BETTER_AUTH_SECRET,
     baseURL: env.AUTH_BASE_URL,
     trustedOrigins: env.TRUSTED_ORIGINS?.split(',')
@@ -44,7 +47,7 @@ function buildAuth(env: Env) {
 }
 
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
     if (url.pathname === '/health') {
@@ -57,11 +60,11 @@ export default {
     }
 
     if (url.pathname.startsWith('/api/auth')) {
-      return buildAuth(env).handler(request);
+      return buildAuth(env, ctx).handler(request);
     }
 
     if (url.pathname === '/api/orders' && request.method === 'POST') {
-      return createOrderRoute(request, env, buildAuth(env));
+      return createOrderRoute(request, env, buildAuth(env, ctx));
     }
 
     if (url.pathname.startsWith('/api/files/') && request.method === 'GET') {
