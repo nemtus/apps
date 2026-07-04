@@ -16,7 +16,14 @@
   "scripts": {
     "build:packages": "npm run build --workspaces --if-present",
     "typecheck:packages": "npm run typecheck --workspaces --if-present",
-    "format": "prettier --write ."
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "format": "prettier --write .",
+    "format:check": "prettier --check \"packages/**/*.ts\" \"apps/*/worker/**/*.ts\""
+  },
+  "devDependencies": {
+    "prettier": "^3.9.4",
+    "vitest": "^3.2.4"
   },
   "engines": {
     "node": ">=22"

@@ -5,7 +5,7 @@
  *   POST /api/stripe/webhook   (raw body + `stripe-signature` header)
  */
 import { and, eq } from 'drizzle-orm';
-import { createStripe, verifyWebhook } from '@nemtus/billing';
+import { createStripe, STRIPE_WEBHOOK_EVENTS, verifyWebhook } from '@nemtus/billing';
 import type { OrderPaymentStatus } from '../schema/domain';
 import { createDb, schema } from '../db';
 import type { Env } from '../env';
@@ -57,18 +57,18 @@ export async function stripeWebhookRoute(request: Request, env: Env): Promise<Re
   }
 
   switch (event.type) {
-    case 'checkout.session.completed': {
+    case STRIPE_WEBHOOK_EVENTS.checkoutCompleted: {
       const s = event.data.object;
       const paymentIntentId = typeof s.payment_intent === 'string' ? s.payment_intent : s.payment_intent?.id;
       await setOrderStatus(env, { sessionId: s.id }, 'PENDING', 'PAID', paymentIntentId);
       break;
     }
-    case 'checkout.session.async_payment_failed': {
+    case STRIPE_WEBHOOK_EVENTS.checkoutAsyncPaymentFailed: {
       const s = event.data.object;
       await setOrderStatus(env, { sessionId: s.id }, 'PENDING', 'FAILED');
       break;
     }
-    case 'charge.refunded': {
+    case STRIPE_WEBHOOK_EVENTS.chargeRefunded: {
       const c = event.data.object;
       const paymentIntentId = typeof c.payment_intent === 'string' ? c.payment_intent : c.payment_intent?.id;
       await setOrderStatus(env, { paymentIntentId }, 'PAID', 'REFUNDED', paymentIntentId);

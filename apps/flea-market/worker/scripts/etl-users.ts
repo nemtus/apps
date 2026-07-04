@@ -79,9 +79,7 @@ function main(): void {
   const out: string[] = ['PRAGMA foreign_keys=OFF;'];
 
   for (const u of data.users) {
-    const attrs = (
-      u.customAttributes ? JSON.parse(u.customAttributes) : {}
-    ) as Record<string, unknown>;
+    const attrs = (u.customAttributes ? JSON.parse(u.customAttributes) : {}) as Record<string, unknown>;
     const created = toSeconds(u.createdAt);
     const updated = toSeconds(u.lastLoginAt ?? u.createdAt);
     const name = u.displayName ?? u.email ?? u.localId;

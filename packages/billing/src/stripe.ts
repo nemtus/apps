@@ -38,6 +38,21 @@ export function createCheckoutSession(
 }
 
 /**
+ * Refund a captured payment by its PaymentIntent id (full refund by default).
+ * The resulting `charge.refunded` webhook is what advances the order to REFUNDED.
+ */
+export function createRefund(
+  stripe: Stripe,
+  paymentIntentId: string,
+  params: { amount?: number } = {},
+): Promise<Stripe.Refund> {
+  return stripe.refunds.create({
+    payment_intent: paymentIntentId,
+    ...(params.amount != null ? { amount: params.amount } : {}),
+  });
+}
+
+/**
  * Verify a Stripe webhook signature on Workers (must be async — SubtleCrypto).
  * `payload` is the raw request body string.
  */

@@ -10,6 +10,16 @@
  *
  * Regenerate/verify against the live auth config with:
  *   npx @better-auth/cli generate
+ *
+ * Verified against `@better-auth/cli generate` (better-auth 1.x, 2026-07): all core
+ * tables/columns/field-names/types match. Known, intentional non-breaking diffs vs the
+ * CLI output:
+ *   - timestamps use `mode: 'timestamp'` (Unix seconds); the CLI now emits
+ *     `timestamp_ms`. Both round-trip correctly through the Drizzle adapter; we keep
+ *     seconds to match the ETL SQL. Revisit if sub-second precision is ever needed.
+ *   - createdAt/updatedAt are set by Better Auth in code (no SQL DEFAULT / $onUpdate).
+ *   - the CLI adds indexes on `account.user_id` and `verification.identifier`; add these
+ *     when regenerating the migration at provisioning time (performance only).
  */
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 

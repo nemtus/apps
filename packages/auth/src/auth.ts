@@ -6,17 +6,21 @@
  *    their passwords; new/rehashed ones use the native scrypt format)
  *  - social providers (Google/GitHub/Twitter/Microsoft/Apple), account-linking by email
  *  - KYC additionalFields + the admin plugin (replacing Firebase custom claims)
- *  - transactional email (verification / reset) via an injected @nemtus/email sender
- *
- * The exact Better Auth option names should be checked against the installed version;
- * see README for the rehash-on-login wiring TODO.
+ *  - transactional email (verification / reset) via an injected @nemtus/email sender,
+ *    with copy from @nemtus/email templates
+ *  - lazy re-hash wired via an after-hook on /sign-in/email (see `hooks` below)
  */
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { createAuthMiddleware } from 'better-auth/api';
 import { admin } from 'better-auth/plugins';
 import { createDb, schema } from '@nemtus/db';
-import type { EmailSender } from '@nemtus/email';
+import {
+  passwordResetEmail,
+  verificationEmail,
+  type EmailMessage,
+  type EmailSender,
+} from '@nemtus/email';
 import { hashPassword, verifyPassword } from './password';
 import { rehashLegacyPassword } from './rehash';
 import { kvSecondaryStorage } from './kv-secondary-storage';
@@ -50,6 +54,14 @@ export interface CreateAuthOptions {
   firebaseHashConfig?: FirebaseHashConfig;
   /** Transactional email sender (AWS SES). */
   email: EmailSender;
+  /**
+   * Cloudflare `ctx.waitUntil`. When provided, verification / reset emails are sent
+   * OFF the response path: the request returns immediately (uniform timing, so a
+   * reset request can't leak account existence via latency) while `waitUntil` keeps
+   * the Worker alive until the SES call settles. Without it (tests / non-Workers
+   * hosts) the send is awaited inline.
+   */
+  waitUntil?: (promise: Promise<unknown>) => void;
   appName?: string;
 }
 
@@ -64,8 +76,20 @@ export function createAuth(options: CreateAuthOptions) {
     emailAndPassword = false,
     firebaseHashConfig,
     email,
+    waitUntil,
     appName = 'nemtus',
   } = options;
+
+  // Send transactional email off the response path when a Workers `waitUntil` is
+  // available; otherwise await inline. Failures are logged, never surfaced to the
+  // caller (an emitted error would itself leak whether an account exists).
+  const dispatchEmail = async (msg: EmailMessage): Promise<void> => {
+    const pending = email.send(msg).catch((err: unknown) => {
+      console.error('transactional email failed to send', err);
+    });
+    if (waitUntil) waitUntil(pending);
+    else await pending;
+  };
 
   const additionalFields = Object.fromEntries(
     KYC_BOOLEAN_FIELDS.map((name) => [
@@ -91,22 +115,14 @@ export function createAuth(options: CreateAuthOptions) {
               verifyPassword({ hash, password, firebaseHashConfig }),
           },
           sendResetPassword: async ({ user, url }: { user: { email: string }; url: string }) => {
-            await email.send({
-              to: user.email,
-              subject: 'パスワードの再設定',
-              text: `パスワードを再設定するには次のリンクを開いてください:\n${url}`,
-            });
+            await dispatchEmail({ to: user.email, ...passwordResetEmail(url) });
           },
         }
       : { enabled: false },
     emailVerification: {
       sendOnSignUp: true,
       sendVerificationEmail: async ({ user, url }: { user: { email: string }; url: string }) => {
-        await email.send({
-          to: user.email,
-          subject: 'メールアドレスの確認',
-          text: `メールアドレスを確認するには次のリンクを開いてください:\n${url}`,
-        });
+        await dispatchEmail({ to: user.email, ...verificationEmail(url) });
       },
     },
     socialProviders: socialProviders ? buildSocialProviders(socialProviders) : {},
