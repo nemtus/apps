@@ -4,16 +4,17 @@
  * via WebCrypto. Node's `crypto.scrypt` is unavailable on Workers, so we avoid it.
  *
  * Firebase's algorithm (per `firebase auth:export` `hash_config`):
- *   dk     = scrypt(password, salt || saltSeparator, N=2^memCost, r=rounds, p=1, dkLen=64)
- *   cipher = AES-256-CTR(key = dk[0:32], iv = dk[32:48])
- *   hash   = cipher.encrypt(signerKey)
+ *   dk     = scrypt(password, salt || saltSeparator, N=2^memCost, r=rounds, p=1, dkLen=32)
+ *   cipher = AES-256-CTR(key = dk, iv = 0)   // 16-byte all-zero counter
+ *   hash   = cipher.encrypt(base64decode(signerKey))
  *   ok     = base64(hash) === storedPasswordHash
  *
  * The per-project params (`signerKey`, `saltSeparator`, `rounds`, `memCost`) come from
  * the project's `hash_config`; `passwordHash` + `salt` are per-user (from the export).
  *
- * NOTE: verify this against a real exported hash before relying on it in production —
- * Firebase's exact bit layout has bitten many ports.
+ * Verified against the reference `firebase-scrypt` implementation and the canonical
+ * Firebase export test vector (see firebase-scrypt.test.ts). Still worth a final smoke
+ * test against one real exported row from the project's own `firebase auth:export`.
  */
 import { scrypt } from '@noble/hashes/scrypt';
 
@@ -66,18 +67,18 @@ export async function firebaseScryptVerify(args: {
   saltFull.set(sepBytes, saltBytes.length);
 
   const passwordBytes = new TextEncoder().encode(password);
+  // Firebase derives a 32-byte AES-256 key from scrypt, then encrypts the signer key
+  // under AES-256-CTR with an all-zero 16-byte IV/counter.
   const dk = scrypt(passwordBytes, saltFull, {
     N: 2 ** config.memCost,
     r: config.rounds,
     p: 1,
-    dkLen: 64,
+    dkLen: 32,
   });
 
-  const aesKey = await crypto.subtle.importKey('raw', dk.slice(0, 32), { name: 'AES-CTR' }, false, [
-    'encrypt',
-  ]);
+  const aesKey = await crypto.subtle.importKey('raw', dk, { name: 'AES-CTR' }, false, ['encrypt']);
   const ctBuf = await crypto.subtle.encrypt(
-    { name: 'AES-CTR', counter: dk.slice(32, 48), length: 128 },
+    { name: 'AES-CTR', counter: new Uint8Array(16), length: 128 },
     aesKey,
     signerKey,
   );
@@ -94,9 +95,7 @@ export function firebaseCredentialMarker(passwordHash: string, salt: string): st
 }
 
 /** Parse a marker back into its `{ passwordHash, salt }`, or null if not a Firebase marker. */
-export function parseFirebaseMarker(
-  stored: string,
-): { passwordHash: string; salt: string } | null {
+export function parseFirebaseMarker(stored: string): { passwordHash: string; salt: string } | null {
   if (!stored.startsWith(`${FIREBASE_MARKER}$`)) return null;
   const parts = stored.split('$');
   if (parts.length !== 3) return null;

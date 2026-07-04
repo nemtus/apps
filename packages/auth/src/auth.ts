@@ -6,17 +6,16 @@
  *    their passwords; new/rehashed ones use the native scrypt format)
  *  - social providers (Google/GitHub/Twitter/Microsoft/Apple), account-linking by email
  *  - KYC additionalFields + the admin plugin (replacing Firebase custom claims)
- *  - transactional email (verification / reset) via an injected @nemtus/email sender
- *
- * The exact Better Auth option names should be checked against the installed version;
- * see README for the rehash-on-login wiring TODO.
+ *  - transactional email (verification / reset) via an injected @nemtus/email sender,
+ *    with copy from @nemtus/email templates
+ *  - lazy re-hash wired via an after-hook on /sign-in/email (see `hooks` below)
  */
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { createAuthMiddleware } from 'better-auth/api';
 import { admin } from 'better-auth/plugins';
 import { createDb, schema } from '@nemtus/db';
-import type { EmailSender } from '@nemtus/email';
+import { passwordResetEmail, verificationEmail, type EmailSender } from '@nemtus/email';
 import { hashPassword, verifyPassword } from './password';
 import { rehashLegacyPassword } from './rehash';
 import { kvSecondaryStorage } from './kv-secondary-storage';
@@ -91,22 +90,14 @@ export function createAuth(options: CreateAuthOptions) {
               verifyPassword({ hash, password, firebaseHashConfig }),
           },
           sendResetPassword: async ({ user, url }: { user: { email: string }; url: string }) => {
-            await email.send({
-              to: user.email,
-              subject: 'パスワードの再設定',
-              text: `パスワードを再設定するには次のリンクを開いてください:\n${url}`,
-            });
+            await email.send({ to: user.email, ...passwordResetEmail(url) });
           },
         }
       : { enabled: false },
     emailVerification: {
       sendOnSignUp: true,
       sendVerificationEmail: async ({ user, url }: { user: { email: string }; url: string }) => {
-        await email.send({
-          to: user.email,
-          subject: 'メールアドレスの確認',
-          text: `メールアドレスを確認するには次のリンクを開いてください:\n${url}`,
-        });
+        await email.send({ to: user.email, ...verificationEmail(url) });
       },
     },
     socialProviders: socialProviders ? buildSocialProviders(socialProviders) : {},

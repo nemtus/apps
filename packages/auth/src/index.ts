@@ -13,8 +13,5 @@ export {
 export type { FirebaseHashConfig } from './firebase-scrypt';
 export { kvSecondaryStorage } from './kv-secondary-storage';
 export type { SecondaryStorage } from './kv-secondary-storage';
-export {
-  buildSocialProviders,
-  socialProvidersFromEnv,
-} from './providers';
+export { buildSocialProviders, socialProvidersFromEnv } from './providers';
 export type { SocialProviderEnv, OAuthCredential } from './providers';
