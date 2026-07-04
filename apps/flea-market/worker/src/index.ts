@@ -1,50 +1,21 @@
 /**
- * flea-market auth Worker: mounts Better Auth (@nemtus/auth) on Cloudflare Workers,
- * backed by D1 + KV, with lazy Firebase-password migration and SES email.
+ * flea-market backend Worker: Better Auth (@nemtus/auth) on D1 + KV, the Stripe
+ * webhook, R2 file serving, and the domain REST API (stores/items/orders/profile
+ * + image upload) that replaces Firestore + the Cloud Functions fan-out.
  *
- * Routes:
- *   GET  /health          liveness
- *   ANY  /api/auth/*       Better Auth handler (sign-in/up, sessions, OAuth callbacks, ...)
- *
- * Runs alongside the existing Firebase app during coexistence; the SPA is pointed
- * here per-feature as flea-market migrates.
+ * Routing: three endpoints need special handling (raw body / wildcard / multi-
+ * segment key) and are matched first; everything else goes through the Router
+ * (see routes/domain.ts). Runs alongside Firebase during coexistence.
  */
-import { createAuth, socialProvidersFromEnv } from '@nemtus/auth';
-import { createSesSender } from '@nemtus/email';
+import { buildAuth } from './build-auth';
 import type { Env } from './env';
-import { createOrderRoute } from './routes/orders';
-import { stripeWebhookRoute } from './routes/stripe-webhook';
 import { filesRoute } from './routes/files';
+import { stripeWebhookRoute } from './routes/stripe-webhook';
+import { registerDomainRoutes } from './routes/domain';
+import { Router } from './router';
 
-function buildAuth(env: Env, ctx: ExecutionContext) {
-  return createAuth({
-    db: env.DB,
-    kv: env.SESSION_KV,
-    // Send verification/reset emails off the response path (uniform timing + guaranteed
-    // delivery on Workers).
-    waitUntil: ctx.waitUntil.bind(ctx),
-    secret: env.BETTER_AUTH_SECRET,
-    baseURL: env.AUTH_BASE_URL,
-    trustedOrigins: env.TRUSTED_ORIGINS?.split(',')
-      .map((o) => o.trim())
-      .filter(Boolean),
-    emailAndPassword: true, // flea-market is email/password + KYC
-    socialProviders: socialProvidersFromEnv(env as unknown as Record<string, string | undefined>),
-    firebaseHashConfig: {
-      signerKey: env.FIREBASE_SIGNER_KEY,
-      saltSeparator: env.FIREBASE_SALT_SEPARATOR,
-      rounds: env.FIREBASE_ROUNDS ? Number(env.FIREBASE_ROUNDS) : 8,
-      memCost: env.FIREBASE_MEM_COST ? Number(env.FIREBASE_MEM_COST) : 14,
-    },
-    email: createSesSender({
-      region: env.AWS_REGION,
-      accessKeyId: env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
-      defaultFrom: env.SES_FROM,
-    }),
-    appName: 'flea-market',
-  });
-}
+const router = new Router();
+registerDomainRoutes(router);
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -59,17 +30,18 @@ export default {
       return stripeWebhookRoute(request, env);
     }
 
+    // Better Auth owns its whole /api/auth/* subtree (sign-in/up, sessions, OAuth).
     if (url.pathname.startsWith('/api/auth')) {
       return buildAuth(env, ctx).handler(request);
     }
 
-    if (url.pathname === '/api/orders' && request.method === 'POST') {
-      return createOrderRoute(request, env, buildAuth(env, ctx));
-    }
-
+    // File keys contain slashes, so they can't be a single `:param` route.
     if (url.pathname.startsWith('/api/files/') && request.method === 'GET') {
       return filesRoute(request, env);
     }
+
+    const routed = await router.handle(request, env, ctx);
+    if (routed) return routed;
 
     return new Response('Not found', { status: 404 });
   },

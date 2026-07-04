@@ -14,6 +14,26 @@
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { user } from '@nemtus/db/schema';
 
+/**
+ * Buyer profile — the flea-market-specific fields the Firestore `users/{uid}` doc
+ * held (shipping contact + legacy Symbol address). Kept out of the shared auth
+ * `user` table (which only owns name/email/KYC). One row per user, sharing the
+ * user id as PK.
+ */
+export const userProfile = sqliteTable('user_profile', {
+  userId: text('user_id')
+    .primaryKey()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  phoneNumber: text('phone_number'),
+  zipCode: text('zip_code'),
+  address1: text('address1'),
+  address2: text('address2'),
+  /** legacy Symbol address from the buyer profile (kept for reference). */
+  symbolAddress: text('symbol_address'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+});
+
 export const store = sqliteTable('store', {
   id: text('id').primaryKey(), // === owner userId (one store per user)
   ownerUserId: text('owner_user_id')

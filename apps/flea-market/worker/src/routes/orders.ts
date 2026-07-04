@@ -54,6 +54,11 @@ export async function createOrderRoute(request: Request, env: Env, auth: Auth): 
   const orderId = crypto.randomUUID();
   const now = new Date();
 
+  // Snapshot the buyer's shipping details onto the order so it stays fulfillable
+  // even if the profile later changes.
+  const profiles = await db.select().from(schema.userProfile).where(eq(schema.userProfile.userId, buyer.id));
+  const profile = profiles[0];
+
   await db.insert(schema.order).values({
     id: orderId,
     buyerUserId: buyer.id,
@@ -63,6 +68,11 @@ export async function createOrderRoute(request: Request, env: Env, auth: Auth): 
     quantity,
     totalJpy: total,
     paymentStatus: 'PENDING',
+    shipName: (session.user as { name?: string }).name ?? null,
+    shipPhone: profile?.phoneNumber ?? null,
+    shipZip: profile?.zipCode ?? null,
+    shipAddress1: profile?.address1 ?? null,
+    shipAddress2: profile?.address2 ?? null,
     createdAt: now,
     updatedAt: now,
   });

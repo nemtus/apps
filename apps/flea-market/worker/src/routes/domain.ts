@@ -1,0 +1,323 @@
+/**
+ * flea-market domain API — replaces the Firestore reads/writes + Cloud Functions
+ * fan-out. In D1 the Firestore public/private + buyer/store dual copies collapse
+ * into single `store`/`item`/`order` tables, so "public" vs "owner" reads are just
+ * query filters (no fan-out). Public visibility = the owner is `storeKycVerified`
+ * (mirrors the old public `stores/*` copy that functions only published post-KYC).
+ *
+ * Deferred (tracked follow-ups): the KYC store-challenge verify callables
+ * (email/phone/address secrets + rate limiting) and syncing `userKycVerified` to
+ * Better Auth `emailVerified`. KYC flags are surfaced read-only here for now.
+ */
+import { and, eq } from 'drizzle-orm';
+import { putObject } from '@nemtus/storage';
+import { buildAuth } from '../build-auth';
+import { createDb, schema } from '../db';
+import { httpError, json, readJson, requireUser } from '../http';
+import type { RouteContext } from '../router';
+import type { Router } from '../router';
+import { toItemJson, toOrderJson, toStoreJson, toUserJson } from '../lib/mappers';
+import { createOrderRoute } from './orders';
+
+type Db = ReturnType<typeof createDb>;
+
+function flagEnabled(v: string | undefined): boolean {
+  return v !== 'false';
+}
+
+function optStr(v: unknown): string | null {
+  return typeof v === 'string' && v.length > 0 ? v : null;
+}
+
+function reqStr(v: unknown, field: string): string {
+  if (typeof v !== 'string' || v.length === 0) throw httpError(`${field}_required`, 400);
+  return v;
+}
+
+async function loadProfile(db: Db, userId: string) {
+  const rows = await db.select().from(schema.userProfile).where(eq(schema.userProfile.userId, userId));
+  return rows[0];
+}
+
+/** A store is publicly visible only when its owner has passed store KYC. */
+async function findPublishedStore(db: Db, storeId: string) {
+  const rows = await db
+    .select()
+    .from(schema.store)
+    .innerJoin(schema.user, eq(schema.store.ownerUserId, schema.user.id))
+    .where(and(eq(schema.store.id, storeId), eq(schema.user.storeKycVerified, true)));
+  return rows[0]?.store;
+}
+
+// ---------- public reads ----------
+
+function getConfig(ctx: RouteContext): Response {
+  const { env } = ctx;
+  return json({
+    enableCreateUser: flagEnabled(env.ENABLE_CREATE_USER),
+    enableCreateStore: flagEnabled(env.ENABLE_CREATE_STORE),
+    enableCreateItem: flagEnabled(env.ENABLE_CREATE_ITEM),
+    enableCreateOrder: flagEnabled(env.ENABLE_CREATE_ORDER),
+  });
+}
+
+async function listStores(ctx: RouteContext): Promise<Response> {
+  const db = createDb(ctx.env.DB);
+  const rows = await db
+    .select()
+    .from(schema.store)
+    .innerJoin(schema.user, eq(schema.store.ownerUserId, schema.user.id))
+    .where(eq(schema.user.storeKycVerified, true));
+  return json(rows.map((r) => toStoreJson(r.store)));
+}
+
+async function getStore(ctx: RouteContext): Promise<Response> {
+  const db = createDb(ctx.env.DB);
+  const store = await findPublishedStore(db, ctx.params.storeId!);
+  if (!store) throw httpError('not_found', 404);
+  return json(toStoreJson(store));
+}
+
+async function listStoreItems(ctx: RouteContext): Promise<Response> {
+  const db = createDb(ctx.env.DB);
+  const store = await findPublishedStore(db, ctx.params.storeId!);
+  if (!store) throw httpError('not_found', 404);
+  const items = await db.select().from(schema.item).where(eq(schema.item.storeId, store.id));
+  return json(items.map(toItemJson));
+}
+
+async function getStoreItem(ctx: RouteContext): Promise<Response> {
+  const db = createDb(ctx.env.DB);
+  const store = await findPublishedStore(db, ctx.params.storeId!);
+  if (!store) throw httpError('not_found', 404);
+  const rows = await db
+    .select()
+    .from(schema.item)
+    .where(and(eq(schema.item.id, ctx.params.itemId!), eq(schema.item.storeId, store.id)));
+  if (!rows[0]) throw httpError('not_found', 404);
+  return json(toItemJson(rows[0]));
+}
+
+// ---------- owner: profile ----------
+
+async function getMe(ctx: RouteContext): Promise<Response> {
+  const user = await requireUser(ctx);
+  const db = createDb(ctx.env.DB);
+  const profile = await loadProfile(db, user.id);
+  return json(toUserJson(user, profile));
+}
+
+async function putMe(ctx: RouteContext): Promise<Response> {
+  const user = await requireUser(ctx);
+  const db = createDb(ctx.env.DB);
+  const body = await readJson<Record<string, unknown>>(ctx.request);
+  const now = new Date();
+
+  if (typeof body.name === 'string' && body.name.length > 0) {
+    await db.update(schema.user).set({ name: body.name, updatedAt: now }).where(eq(schema.user.id, user.id));
+  }
+
+  const profileValues = {
+    phoneNumber: optStr(body.phoneNumber),
+    zipCode: optStr(body.zipCode),
+    address1: optStr(body.address1),
+    address2: optStr(body.address2),
+    symbolAddress: optStr(body.symbolAddress),
+    updatedAt: now,
+  };
+  await db
+    .insert(schema.userProfile)
+    .values({ userId: user.id, ...profileValues, createdAt: now })
+    .onConflictDoUpdate({ target: schema.userProfile.userId, set: profileValues });
+
+  const refreshed = await requireUser(ctx);
+  const profile = await loadProfile(db, user.id);
+  return json(toUserJson(refreshed, profile));
+}
+
+// ---------- owner: store ----------
+
+async function getMyStore(ctx: RouteContext): Promise<Response> {
+  const user = await requireUser(ctx);
+  const db = createDb(ctx.env.DB);
+  const rows = await db.select().from(schema.store).where(eq(schema.store.id, user.id));
+  if (!rows[0]) throw httpError('not_found', 404);
+  return json(toStoreJson(rows[0]));
+}
+
+async function putMyStore(ctx: RouteContext): Promise<Response> {
+  const user = await requireUser(ctx);
+  const db = createDb(ctx.env.DB);
+  const body = await readJson<Record<string, unknown>>(ctx.request);
+  const now = new Date();
+  const mutable = {
+    name: reqStr(body.storeName, 'storeName'),
+    email: optStr(body.storeEmail),
+    phoneNumber: optStr(body.storePhoneNumber),
+    zipCode: optStr(body.storeZipCode),
+    address1: optStr(body.storeAddress1),
+    address2: optStr(body.storeAddress2),
+    url: optStr(body.storeUrl),
+    symbolAddress: optStr(body.storeSymbolAddress),
+    description: optStr(body.storeDescription),
+    imageUrl: optStr(body.storeImageFile),
+    coverImageUrl: optStr(body.storeCoverImageFile),
+    updatedAt: now,
+  };
+  await db
+    .insert(schema.store)
+    .values({ id: user.id, ownerUserId: user.id, ...mutable, createdAt: now })
+    .onConflictDoUpdate({ target: schema.store.id, set: mutable });
+  const rows = await db.select().from(schema.store).where(eq(schema.store.id, user.id));
+  return json(toStoreJson(rows[0]!));
+}
+
+// ---------- owner: items ----------
+
+async function listMyItems(ctx: RouteContext): Promise<Response> {
+  const user = await requireUser(ctx);
+  const db = createDb(ctx.env.DB);
+  const items = await db.select().from(schema.item).where(eq(schema.item.storeId, user.id));
+  return json(items.map(toItemJson));
+}
+
+function readItemFields(body: Record<string, unknown>) {
+  const price = body.itemPrice;
+  if (typeof price !== 'number' || !Number.isInteger(price) || price < 0) {
+    throw httpError('invalid_itemPrice', 400);
+  }
+  const status = body.itemStatus === 'ON_SALE' ? 'ON_SALE' : 'SOLD_OUT';
+  return {
+    name: reqStr(body.itemName, 'itemName'),
+    priceJpy: price,
+    priceUnit: 'JPY',
+    description: optStr(body.itemDescription),
+    imageUrl: optStr(body.itemImageFile),
+    status: status as 'ON_SALE' | 'SOLD_OUT',
+  };
+}
+
+async function createMyItem(ctx: RouteContext): Promise<Response> {
+  const user = await requireUser(ctx);
+  const db = createDb(ctx.env.DB);
+  const store = await db.select().from(schema.store).where(eq(schema.store.id, user.id));
+  if (!store[0]) throw httpError('store_required', 409);
+  const body = await readJson<Record<string, unknown>>(ctx.request);
+  const fields = readItemFields(body);
+  const now = new Date();
+  const id = crypto.randomUUID();
+  await db.insert(schema.item).values({ id, storeId: user.id, ...fields, createdAt: now, updatedAt: now });
+  const rows = await db.select().from(schema.item).where(eq(schema.item.id, id));
+  return json(toItemJson(rows[0]!), 201);
+}
+
+async function updateMyItem(ctx: RouteContext): Promise<Response> {
+  const user = await requireUser(ctx);
+  const db = createDb(ctx.env.DB);
+  const rows = await db.select().from(schema.item).where(eq(schema.item.id, ctx.params.itemId!));
+  const existing = rows[0];
+  if (!existing) throw httpError('not_found', 404);
+  if (existing.storeId !== user.id) throw httpError('forbidden', 403);
+  const body = await readJson<Record<string, unknown>>(ctx.request);
+  const fields = readItemFields(body);
+  await db
+    .update(schema.item)
+    .set({ ...fields, updatedAt: new Date() })
+    .where(eq(schema.item.id, existing.id));
+  const updated = await db.select().from(schema.item).where(eq(schema.item.id, existing.id));
+  return json(toItemJson(updated[0]!));
+}
+
+// ---------- orders (reads) ----------
+
+async function listMyOrders(ctx: RouteContext): Promise<Response> {
+  const user = await requireUser(ctx);
+  const db = createDb(ctx.env.DB);
+  const orders = await db.select().from(schema.order).where(eq(schema.order.buyerUserId, user.id));
+  return json(orders.map(toOrderJson));
+}
+
+async function listMyStoreOrders(ctx: RouteContext): Promise<Response> {
+  const user = await requireUser(ctx);
+  const db = createDb(ctx.env.DB);
+  const orders = await db.select().from(schema.order).where(eq(schema.order.storeId, user.id));
+  return json(orders.map(toOrderJson));
+}
+
+async function getOrder(ctx: RouteContext): Promise<Response> {
+  const user = await requireUser(ctx);
+  const db = createDb(ctx.env.DB);
+  const rows = await db.select().from(schema.order).where(eq(schema.order.id, ctx.params.orderId!));
+  const order = rows[0];
+  if (!order) throw httpError('not_found', 404);
+  // Visible to the buyer or the selling store's owner (store.id === owner userId).
+  if (order.buyerUserId !== user.id && order.storeId !== user.id) {
+    throw httpError('forbidden', 403);
+  }
+  return json(toOrderJson(order));
+}
+
+// ---------- owner: image upload (R2) ----------
+
+const IMAGE_EXT: Record<string, string> = {
+  'image/png': '.png',
+  'image/jpeg': '.jpg',
+  'image/webp': '.webp',
+  'image/gif': '.gif',
+};
+const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
+
+async function uploadImage(ctx: RouteContext): Promise<Response> {
+  const user = await requireUser(ctx);
+  const contentType = ctx.request.headers.get('content-type')?.split(';')[0]?.trim() ?? '';
+  const ext = IMAGE_EXT[contentType];
+  if (!ext) throw httpError('unsupported_media_type', 415);
+
+  const body = await ctx.request.arrayBuffer();
+  if (body.byteLength === 0) throw httpError('empty_body', 400);
+  if (body.byteLength > MAX_UPLOAD_BYTES) throw httpError('payload_too_large', 413);
+
+  // Keys mirror the Firebase Storage convention and include `/images/` so the
+  // public GET /api/files/<key> route will serve them (store.id === owner userId).
+  const scope = ctx.url.searchParams.get('scope');
+  const name = `${crypto.randomUUID()}${ext}`;
+  let key: string;
+  if (scope === 'item') {
+    const itemId = ctx.url.searchParams.get('itemId');
+    if (!itemId) throw httpError('itemId_required', 400);
+    const db = createDb(ctx.env.DB);
+    const rows = await db.select().from(schema.item).where(eq(schema.item.id, itemId));
+    if (!rows[0]) throw httpError('not_found', 404);
+    if (rows[0].storeId !== user.id) throw httpError('forbidden', 403);
+    key = `users/${user.id}/stores/${user.id}/items/${itemId}/images/${name}`;
+  } else if (scope === 'store') {
+    key = `users/${user.id}/stores/${user.id}/images/${name}`;
+  } else {
+    throw httpError('invalid_scope', 400);
+  }
+
+  await putObject(ctx.env.BUCKET, key, body, { contentType, cacheControl: 'public, max-age=31536000' });
+  return json({ key, url: `/api/files/${key}` }, 201);
+}
+
+/** Register every domain-API route on the shared router. */
+export function registerDomainRoutes(router: Router): void {
+  router
+    .get('/api/config', getConfig)
+    .get('/api/stores', listStores)
+    .get('/api/stores/:storeId', getStore)
+    .get('/api/stores/:storeId/items', listStoreItems)
+    .get('/api/stores/:storeId/items/:itemId', getStoreItem)
+    .get('/api/me', getMe)
+    .put('/api/me', putMe)
+    .get('/api/me/store', getMyStore)
+    .put('/api/me/store', putMyStore)
+    .get('/api/me/store/items', listMyItems)
+    .post('/api/me/store/items', createMyItem)
+    .put('/api/me/store/items/:itemId', updateMyItem)
+    .get('/api/me/orders', listMyOrders)
+    .get('/api/me/store/orders', listMyStoreOrders)
+    .get('/api/orders/:orderId', getOrder)
+    .post('/api/orders', (ctx) => createOrderRoute(ctx.request, ctx.env, buildAuth(ctx.env, ctx.execCtx)))
+    .post('/api/me/uploads', uploadImage);
+}
