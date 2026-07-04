@@ -10,7 +10,7 @@ migrated it keeps running on its existing Firebase project; the monorepo current
 
 ## Layout
 
-```
+```text
 apps/
   hackathon/            HACK+ hackathon app. React 18 + Vite + Firebase + Symbol SDK. Own functions/.
   flea-market/          Marketplace, formerly symbol-fest-market. React 19 + Vite + Firebase +
