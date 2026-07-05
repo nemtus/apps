@@ -9,7 +9,7 @@
  * (email/phone/address secrets + rate limiting) and syncing `userKycVerified` to
  * Better Auth `emailVerified`. KYC flags are surfaced read-only here for now.
  */
-import { and, eq } from 'drizzle-orm';
+import { and, eq, getTableColumns } from 'drizzle-orm';
 import { putObject } from '@nemtus/storage';
 import { buildAuth } from '../build-auth';
 import { createDb, schema } from '../db';
@@ -42,10 +42,10 @@ async function loadProfile(db: Db, userId: string) {
 /** A store is publicly visible only when its owner has passed store KYC. */
 async function findPublishedStore(db: Db, storeId: string) {
   const rows = await db
-    .select()
+    .select({ store: getTableColumns(schema.store) })
     .from(schema.store)
-    .innerJoin(schema.user, eq(schema.store.ownerUserId, schema.user.id))
-    .where(and(eq(schema.store.id, storeId), eq(schema.user.storeKycVerified, true)));
+    .innerJoin(schema.userProfile, eq(schema.store.ownerUserId, schema.userProfile.userId))
+    .where(and(eq(schema.store.id, storeId), eq(schema.userProfile.storeKycVerified, true)));
   return rows[0]?.store;
 }
 
@@ -64,10 +64,10 @@ function getConfig(ctx: RouteContext): Response {
 async function listStores(ctx: RouteContext): Promise<Response> {
   const db = createDb(ctx.env.DB);
   const rows = await db
-    .select()
+    .select({ store: getTableColumns(schema.store) })
     .from(schema.store)
-    .innerJoin(schema.user, eq(schema.store.ownerUserId, schema.user.id))
-    .where(eq(schema.user.storeKycVerified, true));
+    .innerJoin(schema.userProfile, eq(schema.store.ownerUserId, schema.userProfile.userId))
+    .where(eq(schema.userProfile.storeKycVerified, true));
   return json(rows.map((r) => toStoreJson(r.store)));
 }
 
@@ -297,27 +297,30 @@ async function uploadImage(ctx: RouteContext): Promise<Response> {
   }
 
   await putObject(ctx.env.BUCKET, key, body, { contentType, cacheControl: 'public, max-age=31536000' });
-  return json({ key, url: `/api/files/${key}` }, 201);
+  return json({ key, url: `/api/flea-market/files/${key}` }, 201);
 }
 
-/** Register every domain-API route on the shared router. */
+/**
+ * Register every flea-market domain-API route on the shared router, namespaced
+ * under `/api/flea-market/*`. Core auth stays at `/api/auth/*` (handled in index.ts).
+ */
 export function registerDomainRoutes(router: Router): void {
   router
-    .get('/api/config', getConfig)
-    .get('/api/stores', listStores)
-    .get('/api/stores/:storeId', getStore)
-    .get('/api/stores/:storeId/items', listStoreItems)
-    .get('/api/stores/:storeId/items/:itemId', getStoreItem)
-    .get('/api/me', getMe)
-    .put('/api/me', putMe)
-    .get('/api/me/store', getMyStore)
-    .put('/api/me/store', putMyStore)
-    .get('/api/me/store/items', listMyItems)
-    .post('/api/me/store/items', createMyItem)
-    .put('/api/me/store/items/:itemId', updateMyItem)
-    .get('/api/me/orders', listMyOrders)
-    .get('/api/me/store/orders', listMyStoreOrders)
-    .get('/api/orders/:orderId', getOrder)
-    .post('/api/orders', (ctx) => createOrderRoute(ctx.request, ctx.env, buildAuth(ctx.env, ctx.execCtx)))
-    .post('/api/me/uploads', uploadImage);
+    .get('/api/flea-market/config', getConfig)
+    .get('/api/flea-market/stores', listStores)
+    .get('/api/flea-market/stores/:storeId', getStore)
+    .get('/api/flea-market/stores/:storeId/items', listStoreItems)
+    .get('/api/flea-market/stores/:storeId/items/:itemId', getStoreItem)
+    .get('/api/flea-market/me', getMe)
+    .put('/api/flea-market/me', putMe)
+    .get('/api/flea-market/me/store', getMyStore)
+    .put('/api/flea-market/me/store', putMyStore)
+    .get('/api/flea-market/me/store/items', listMyItems)
+    .post('/api/flea-market/me/store/items', createMyItem)
+    .put('/api/flea-market/me/store/items/:itemId', updateMyItem)
+    .get('/api/flea-market/me/orders', listMyOrders)
+    .get('/api/flea-market/me/store/orders', listMyStoreOrders)
+    .get('/api/flea-market/orders/:orderId', getOrder)
+    .post('/api/flea-market/orders', (ctx) => createOrderRoute(ctx.request, ctx.env, buildAuth(ctx.env, ctx.execCtx)))
+    .post('/api/flea-market/me/uploads', uploadImage);
 }

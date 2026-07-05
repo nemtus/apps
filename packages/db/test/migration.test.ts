@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 // Integration check: the drizzle-generated Better Auth migration must apply cleanly
 // to a real SQLite engine (D1 is SQLite) and produce the expected tables/constraints.
 const MIGRATION = readFileSync(
-  fileURLToPath(new URL('../migrations/0000_init_auth.sql', import.meta.url)),
+  fileURLToPath(new URL('../migrations/0000_init.sql', import.meta.url)),
   'utf8',
 );
 
@@ -21,7 +21,7 @@ describe('Better Auth D1 migration', () => {
     expect(tables).toEqual(expect.arrayContaining(['account', 'session', 'user', 'verification']));
   });
 
-  it('applies KYC defaults and enforces a unique email', () => {
+  it('applies the email_verified default and enforces a unique email', () => {
     const db = new DatabaseSync(':memory:');
     db.exec('PRAGMA foreign_keys = ON');
     db.exec(MIGRATION);
@@ -29,11 +29,11 @@ describe('Better Auth D1 migration', () => {
     db.exec(
       `INSERT INTO user (id, name, email, created_at, updated_at) VALUES ('u1','U','u@e.com',${t},${t})`,
     );
-    const row = db
-      .prepare("SELECT email_verified, user_kyc_verified FROM user WHERE id='u1'")
-      .get() as { email_verified: number; user_kyc_verified: number };
+    const row = db.prepare("SELECT email_verified FROM user WHERE id='u1'").get() as {
+      email_verified: number;
+    };
     expect(row.email_verified).toBe(0);
-    expect(row.user_kyc_verified).toBe(0);
+    // App-specific fields (e.g. flea-market KYC) are NOT on the shared core user table.
     expect(() =>
       db.exec(
         `INSERT INTO user (id,name,email,created_at,updated_at) VALUES ('u2','U2','u@e.com',${t},${t})`,

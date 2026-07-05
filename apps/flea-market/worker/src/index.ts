@@ -26,17 +26,19 @@ export default {
     }
 
     // Stripe webhook must bypass auth and read the raw body.
-    if (url.pathname === '/api/stripe/webhook' && request.method === 'POST') {
+    if (url.pathname === '/api/flea-market/stripe/webhook' && request.method === 'POST') {
       return stripeWebhookRoute(request, env);
     }
 
     // Better Auth owns its whole /api/auth/* subtree (sign-in/up, sessions, OAuth).
+    // This is the shared CORE namespace (same in every app worker), NOT under
+    // /api/flea-market, so one NEMTUS session works across apps.
     if (url.pathname.startsWith('/api/auth')) {
       return buildAuth(env, ctx).handler(request);
     }
 
     // File keys contain slashes, so they can't be a single `:param` route.
-    if (url.pathname.startsWith('/api/files/') && request.method === 'GET') {
+    if (url.pathname.startsWith('/api/flea-market/files/') && request.method === 'GET') {
       return filesRoute(request, env);
     }
 

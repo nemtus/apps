@@ -1,8 +1,8 @@
 /**
  * Shared HTTP helpers for the domain API: JSON responses, throwable error
- * responses (caught by the Router), and session/KYC guards. Better Auth's KYC
- * `additionalFields` aren't in its inferred session type, so we widen to
- * `SessionUser` at the boundary.
+ * responses (caught by the Router), and the session guard. The session carries
+ * only the shared CORE user (id/email/name/role); flea-market KYC lives in
+ * flea_market_user_profile, so KYC checks query that table (see routes).
  */
 import { buildAuth } from './build-auth';
 import type { RouteContext } from './router';
@@ -12,11 +12,6 @@ export interface SessionUser {
   email: string;
   name: string;
   role?: string | null;
-  userKycVerified?: boolean;
-  storeKycVerified?: boolean;
-  storeEmailVerified?: boolean;
-  storePhoneNumberVerified?: boolean;
-  storeAddressVerified?: boolean;
 }
 
 export function json(body: unknown, status = 200): Response {
@@ -37,13 +32,6 @@ export async function requireUser(ctx: RouteContext): Promise<SessionUser> {
   const session = await auth.api.getSession({ headers: ctx.request.headers });
   if (!session) throw httpError('unauthorized', 401);
   return session.user as unknown as SessionUser;
-}
-
-/** Require an authenticated, KYC-verified buyer. */
-export async function requireKycUser(ctx: RouteContext): Promise<SessionUser> {
-  const user = await requireUser(ctx);
-  if (!user.userKycVerified) throw httpError('kyc_required', 403);
-  return user;
 }
 
 /** Parse a JSON body, throwing a 400 on malformed input. */

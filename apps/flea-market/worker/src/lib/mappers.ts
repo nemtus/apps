@@ -43,20 +43,11 @@ export function toItemJson(item: ItemRow) {
   };
 }
 
-/** Buyer profile + KYC flags. `user` is the session user (auth table + KYC). */
-export function toUserJson(
-  user: {
-    id: string;
-    email: string;
-    name: string;
-    userKycVerified?: boolean;
-    storeKycVerified?: boolean;
-    storeEmailVerified?: boolean;
-    storePhoneNumberVerified?: boolean;
-    storeAddressVerified?: boolean;
-  },
-  profile: UserProfileRow | undefined,
-) {
+/**
+ * Buyer profile + KYC flags. `user` is the shared core session user (id/email/name);
+ * the flea-market shipping fields AND KYC flags come from flea_market_user_profile.
+ */
+export function toUserJson(user: { id: string; email: string; name: string }, profile: UserProfileRow | undefined) {
   return {
     userId: user.id,
     email: user.email,
@@ -66,11 +57,11 @@ export function toUserJson(
     address1: s(profile?.address1),
     address2: s(profile?.address2),
     symbolAddress: s(profile?.symbolAddress),
-    userKycVerified: !!user.userKycVerified,
-    storeKycVerified: !!user.storeKycVerified,
-    storeEmailVerified: !!user.storeEmailVerified,
-    storePhoneNumberVerified: !!user.storePhoneNumberVerified,
-    storeAddressVerified: !!user.storeAddressVerified,
+    userKycVerified: !!profile?.userKycVerified,
+    storeKycVerified: !!profile?.storeKycVerified,
+    storeEmailVerified: !!profile?.storeEmailVerified,
+    storePhoneNumberVerified: !!profile?.storePhoneNumberVerified,
+    storeAddressVerified: !!profile?.storeAddressVerified,
   };
 }
 

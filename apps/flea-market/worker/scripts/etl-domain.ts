@@ -88,7 +88,7 @@ function main(): void {
     const c = secs(s.createdAt);
     const u = secs(s.updatedAt);
     out.push(
-      'INSERT OR IGNORE INTO store ' +
+      'INSERT OR IGNORE INTO flea_market_store ' +
         '(id,owner_user_id,name,email,phone_number,zip_code,address1,address2,url,' +
         'description,symbol_address,image_url,cover_image_url,created_at,updated_at) VALUES (' +
         `${str(s.id)},${str(s.id)},${str(s.storeName)},${str(s.storeEmail)},` +
@@ -104,7 +104,7 @@ function main(): void {
     const u = secs(i.updatedAt);
     const status = i.itemStatus === 'ON_SALE' ? 'ON_SALE' : 'SOLD_OUT';
     out.push(
-      'INSERT OR IGNORE INTO item ' +
+      'INSERT OR IGNORE INTO flea_market_item ' +
         '(id,store_id,name,price_jpy,price_unit,description,image_url,status,created_at,updated_at) VALUES (' +
         `${str(i.id)},${str(i.storeId)},${str(i.itemName)},${num(i.itemPrice)},` +
         `${str(i.itemPriceUnit ?? 'JPY')},${str(i.itemDescription)},${imageStr(i.itemImageFile)},` +
@@ -120,7 +120,7 @@ function main(): void {
     const total = num(o.orderTotalPrice, num(o.itemPrice) * qty);
     if (!knownItemIds.has(String(o.itemId))) dangling += 1;
     out.push(
-      'INSERT OR IGNORE INTO "order" ' +
+      'INSERT OR IGNORE INTO flea_market_order ' +
         '(id,buyer_user_id,store_id,item_id,item_name_snapshot,quantity,total_jpy,' +
         'payment_status,legacy_symbol_tx_hash,ship_name,ship_phone,ship_zip,' +
         'ship_address1,ship_address2,created_at,updated_at) VALUES (' +

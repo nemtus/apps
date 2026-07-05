@@ -66,9 +66,9 @@ describe('toItemJson', () => {
 });
 
 describe('toUserJson', () => {
-  it('merges the session user + profile + KYC flags', () => {
+  it('merges the core session user with the profile (incl. KYC from the profile)', () => {
     const out = toUserJson(
-      { id: 'u1', email: 'e@x', name: 'N', userKycVerified: true },
+      { id: 'u1', email: 'e@x', name: 'N' },
       {
         userId: 'u1',
         phoneNumber: '090',
@@ -76,6 +76,11 @@ describe('toUserJson', () => {
         address1: 'A',
         address2: null,
         symbolAddress: null,
+        userKycVerified: true,
+        storeKycVerified: false,
+        storeEmailVerified: false,
+        storePhoneNumberVerified: false,
+        storeAddressVerified: false,
         createdAt: new Date(),
         updatedAt: new Date(),
       },

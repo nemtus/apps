@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "c6d7c03e-9cae-420b-b146-27b72e09e77f",
+  "id": "da6b0a0e-b041-401d-8ec4-4605a14eb6e1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "account": {
@@ -294,46 +294,6 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
-        },
-        "user_kyc_verified": {
-          "name": "user_kyc_verified",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": false
-        },
-        "store_kyc_verified": {
-          "name": "store_kyc_verified",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": false
-        },
-        "store_email_verified": {
-          "name": "store_email_verified",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": false
-        },
-        "store_phone_number_verified": {
-          "name": "store_phone_number_verified",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": false
-        },
-        "store_address_verified": {
-          "name": "store_address_verified",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": false
         }
       },
       "indexes": {
@@ -402,8 +362,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "item": {
-      "name": "item",
+    "flea_market_item": {
+      "name": "flea_market_item",
       "columns": {
         "id": {
           "name": "id",
@@ -480,10 +440,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "item_store_id_store_id_fk": {
-          "name": "item_store_id_store_id_fk",
-          "tableFrom": "item",
-          "tableTo": "store",
+        "flea_market_item_store_id_flea_market_store_id_fk": {
+          "name": "flea_market_item_store_id_flea_market_store_id_fk",
+          "tableFrom": "flea_market_item",
+          "tableTo": "flea_market_store",
           "columnsFrom": [
             "store_id"
           ],
@@ -498,8 +458,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "order": {
-      "name": "order",
+    "flea_market_order": {
+      "name": "flea_market_order",
       "columns": {
         "id": {
           "name": "id",
@@ -631,15 +591,15 @@
         }
       },
       "indexes": {
-        "order_stripe_session_id_unique": {
-          "name": "order_stripe_session_id_unique",
+        "flea_market_order_stripe_session_id_unique": {
+          "name": "flea_market_order_stripe_session_id_unique",
           "columns": [
             "stripe_session_id"
           ],
           "isUnique": true
         },
-        "order_stripe_payment_intent_id_unique": {
-          "name": "order_stripe_payment_intent_id_unique",
+        "flea_market_order_stripe_payment_intent_id_unique": {
+          "name": "flea_market_order_stripe_payment_intent_id_unique",
           "columns": [
             "stripe_payment_intent_id"
           ],
@@ -647,9 +607,9 @@
         }
       },
       "foreignKeys": {
-        "order_buyer_user_id_user_id_fk": {
-          "name": "order_buyer_user_id_user_id_fk",
-          "tableFrom": "order",
+        "flea_market_order_buyer_user_id_user_id_fk": {
+          "name": "flea_market_order_buyer_user_id_user_id_fk",
+          "tableFrom": "flea_market_order",
           "tableTo": "user",
           "columnsFrom": [
             "buyer_user_id"
@@ -660,10 +620,10 @@
           "onDelete": "restrict",
           "onUpdate": "no action"
         },
-        "order_store_id_store_id_fk": {
-          "name": "order_store_id_store_id_fk",
-          "tableFrom": "order",
-          "tableTo": "store",
+        "flea_market_order_store_id_flea_market_store_id_fk": {
+          "name": "flea_market_order_store_id_flea_market_store_id_fk",
+          "tableFrom": "flea_market_order",
+          "tableTo": "flea_market_store",
           "columnsFrom": [
             "store_id"
           ],
@@ -673,10 +633,10 @@
           "onDelete": "restrict",
           "onUpdate": "no action"
         },
-        "order_item_id_item_id_fk": {
-          "name": "order_item_id_item_id_fk",
-          "tableFrom": "order",
-          "tableTo": "item",
+        "flea_market_order_item_id_flea_market_item_id_fk": {
+          "name": "flea_market_order_item_id_flea_market_item_id_fk",
+          "tableFrom": "flea_market_order",
+          "tableTo": "flea_market_item",
           "columnsFrom": [
             "item_id"
           ],
@@ -691,8 +651,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "store": {
-      "name": "store",
+    "flea_market_store": {
+      "name": "flea_market_store",
       "columns": {
         "id": {
           "name": "id",
@@ -801,8 +761,8 @@
         }
       },
       "indexes": {
-        "store_owner_user_id_unique": {
-          "name": "store_owner_user_id_unique",
+        "flea_market_store_owner_user_id_unique": {
+          "name": "flea_market_store_owner_user_id_unique",
           "columns": [
             "owner_user_id"
           ],
@@ -810,12 +770,132 @@
         }
       },
       "foreignKeys": {
-        "store_owner_user_id_user_id_fk": {
-          "name": "store_owner_user_id_user_id_fk",
-          "tableFrom": "store",
+        "flea_market_store_owner_user_id_user_id_fk": {
+          "name": "flea_market_store_owner_user_id_user_id_fk",
+          "tableFrom": "flea_market_store",
           "tableTo": "user",
           "columnsFrom": [
             "owner_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "flea_market_user_profile": {
+      "name": "flea_market_user_profile",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "phone_number": {
+          "name": "phone_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "zip_code": {
+          "name": "zip_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "address1": {
+          "name": "address1",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "address2": {
+          "name": "address2",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "symbol_address": {
+          "name": "symbol_address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "user_kyc_verified": {
+          "name": "user_kyc_verified",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "store_kyc_verified": {
+          "name": "store_kyc_verified",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "store_email_verified": {
+          "name": "store_email_verified",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "store_phone_number_verified": {
+          "name": "store_phone_number_verified",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "store_address_verified": {
+          "name": "store_address_verified",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "flea_market_user_profile_user_id_user_id_fk": {
+          "name": "flea_market_user_profile_user_id_user_id_fk",
+          "tableFrom": "flea_market_user_profile",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
           ],
           "columnsTo": [
             "id"

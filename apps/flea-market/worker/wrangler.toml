@@ -16,9 +16,13 @@ SES_FROM = "NEMTUS <no-reply@nemtus.com>"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "flea-market"
+# SHARED "NEMTUS core" D1 (topology B: one account across all apps). Each app worker
+# binds this same database; core tables (user/session/...) are shared, app tables are
+# prefixed (flea_market_*). This worker owns the combined migration set for now — when
+# a second app worker is added, split the core migrations to a shared owner so
+# `d1 migrations apply` tracking doesn't collide on the shared DB.
+database_name = "nemtus-core"
 database_id = "TODO_D1_DATABASE_ID"
-# Combined auth (@nemtus/db) + flea-market domain schema, generated here:
 migrations_dir = "migrations"
 
 [[kv_namespaces]]

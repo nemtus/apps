@@ -29,9 +29,13 @@ export async function createOrderRoute(request: Request, env: Env, auth: Auth): 
   const session = await auth.api.getSession({ headers: request.headers });
   if (!session) return json({ error: 'unauthorized' }, 401);
 
-  // KYC gate (additionalFields may not be in Better Auth's inferred type).
-  const buyer = session.user as { id: string; userKycVerified?: boolean };
-  if (!buyer.userKycVerified) return json({ error: 'kyc_required' }, 403);
+  const buyer = session.user as { id: string; name?: string };
+  const db = createDb(env.DB);
+
+  // KYC gate — the flags live in flea_market_user_profile (not the shared user table).
+  const profiles = await db.select().from(schema.userProfile).where(eq(schema.userProfile.userId, buyer.id));
+  const profile = profiles[0];
+  if (!profile?.userKycVerified) return json({ error: 'kyc_required' }, 403);
 
   const body = (await request.json().catch(() => ({}))) as CreateOrderBody;
   if (!body.itemId) return json({ error: 'itemId required' }, 400);
@@ -45,7 +49,6 @@ export async function createOrderRoute(request: Request, env: Env, auth: Auth): 
     quantity = body.quantity;
   }
 
-  const db = createDb(env.DB);
   const items = await db.select().from(schema.item).where(eq(schema.item.id, body.itemId));
   const it = items[0];
   if (!it || it.status !== 'ON_SALE') return json({ error: 'item_unavailable' }, 404);
@@ -54,11 +57,8 @@ export async function createOrderRoute(request: Request, env: Env, auth: Auth): 
   const orderId = crypto.randomUUID();
   const now = new Date();
 
-  // Snapshot the buyer's shipping details onto the order so it stays fulfillable
-  // even if the profile later changes.
-  const profiles = await db.select().from(schema.userProfile).where(eq(schema.userProfile.userId, buyer.id));
-  const profile = profiles[0];
-
+  // Snapshot the buyer's shipping details (from the profile loaded above for the KYC
+  // gate) onto the order so it stays fulfillable even if the profile later changes.
   await db.insert(schema.order).values({
     id: orderId,
     buyerUserId: buyer.id,
@@ -68,7 +68,7 @@ export async function createOrderRoute(request: Request, env: Env, auth: Auth): 
     quantity,
     totalJpy: total,
     paymentStatus: 'PENDING',
-    shipName: (session.user as { name?: string }).name ?? null,
+    shipName: buyer.name ?? null,
     shipPhone: profile?.phoneNumber ?? null,
     shipZip: profile?.zipCode ?? null,
     shipAddress1: profile?.address1 ?? null,
