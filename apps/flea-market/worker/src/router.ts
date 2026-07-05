@@ -68,9 +68,18 @@ export class Router {
       matchedPath = true;
       if (route.method !== request.method) continue;
       const params: Record<string, string> = {};
-      route.keys.forEach((k, i) => {
-        params[k] = decodeURIComponent(m[i + 1]!);
-      });
+      try {
+        // Malformed percent-encoding (e.g. an invalid UTF-8 sequence) throws a
+        // URIError here — return a clean 400 instead of crashing dispatch.
+        route.keys.forEach((k, i) => {
+          params[k] = decodeURIComponent(m[i + 1]!);
+        });
+      } catch {
+        return new Response(JSON.stringify({ error: 'bad_request' }), {
+          status: 400,
+          headers: { 'content-type': 'application/json' },
+        });
+      }
       try {
         return await route.handler({ request, env, execCtx, url, params });
       } catch (err) {

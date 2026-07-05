@@ -41,6 +41,13 @@ describe('Router', () => {
     expect(await r.handle(req('GET', '/api/stores/a/b'), env, execCtx)).toBeNull();
   });
 
+  it('returns 400 (not a crash) for a malformed percent-encoded param', async () => {
+    const r = new Router();
+    r.get('/api/x/:id', () => new Response('ok'));
+    const res = await r.handle(req('GET', '/api/x/%E0%80%80'), env, execCtx);
+    expect(res!.status).toBe(400);
+  });
+
   it('surfaces a thrown Response (guard short-circuit) as the result', async () => {
     const r = new Router();
     r.get('/api/x', () => {
