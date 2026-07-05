@@ -11,7 +11,8 @@
  *  - Credential users get an `account` row whose password is a Firebase-scrypt marker
  *    (`firebase-scrypt$<hash>$<salt>`) that @nemtus/auth verifies and lazily re-hashes.
  *  - Each federated identity becomes one `account` row (provider mapped to Better Auth ids).
- *  - Custom claims map to the admin role + KYC boolean fields.
+ *  - Custom claims map to the admin role (shared `user` table) + the flea-market KYC
+ *    flags (relocated to `flea_market_user_profile`).
  *
  * The password marker prefix must match @nemtus/auth's FIREBASE_MARKER.
  */
@@ -85,16 +86,23 @@ function main(): void {
     const name = u.displayName ?? u.email ?? u.localId;
     const role = attrs.admin ? 'admin' : null;
 
+    // Core identity → the shared `user` table (app-agnostic).
     out.push(
       'INSERT OR IGNORE INTO user ' +
-        '(id,name,email,email_verified,image,created_at,updated_at,role,' +
-        'user_kyc_verified,store_kyc_verified,store_email_verified,' +
-        'store_phone_number_verified,store_address_verified) VALUES (' +
+        '(id,name,email,email_verified,image,created_at,updated_at,role) VALUES (' +
         `${sqlStr(u.localId)},${sqlStr(name)},${sqlStr(u.email)},${sqlBool(u.emailVerified)},` +
-        `${sqlStr(u.photoUrl)},${created},${updated},${sqlStr(role)},` +
-        `${sqlBool(attrs.userKycVerified)},${sqlBool(attrs.storeKycVerified)},` +
+        `${sqlStr(u.photoUrl)},${created},${updated},${sqlStr(role)});`,
+    );
+
+    // flea-market KYC flags (from Firebase custom claims) → the app's profile table.
+    // Buyer contact fields (phone/address) are backfilled by the domain ETL.
+    out.push(
+      'INSERT OR IGNORE INTO flea_market_user_profile ' +
+        '(user_id,user_kyc_verified,store_kyc_verified,store_email_verified,' +
+        'store_phone_number_verified,store_address_verified,created_at,updated_at) VALUES (' +
+        `${sqlStr(u.localId)},${sqlBool(attrs.userKycVerified)},${sqlBool(attrs.storeKycVerified)},` +
         `${sqlBool(attrs.storeEmailVerified)},${sqlBool(attrs.storePhoneNumberVerified)},` +
-        `${sqlBool(attrs.storeAddressVerified)});`,
+        `${sqlBool(attrs.storeAddressVerified)},${created},${updated});`,
     );
 
     if (u.passwordHash && u.salt) {

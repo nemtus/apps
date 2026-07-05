@@ -11,7 +11,7 @@
  * snapshotted onto the order. Loads with foreign_keys OFF so historical orders
  * that reference now-deleted items still import (dangling refs are reported).
  */
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 
 type Row = Record<string, unknown>;
 
@@ -39,11 +39,11 @@ function firebaseUrlToKey(url: string): string | null {
   }
 }
 
-/** Rewrite a Firebase Storage download URL to the R2-served /api/files/<key> path. */
+/** Rewrite a Firebase Storage download URL to the R2-served files path. */
 function imageStr(v: unknown): string {
   if (typeof v !== 'string' || v === '') return 'NULL';
   const key = firebaseUrlToKey(v);
-  return key ? str(`/api/files/${key}`) : str(v);
+  return key ? str(`/api/flea-market/files/${key}`) : str(v);
 }
 
 function num(v: unknown, fallback = 0): number {
@@ -73,22 +73,42 @@ function paymentStatus(orderStatus: unknown): 'PENDING' | 'PAID' | 'FAILED' {
 function main(): void {
   const dir = process.argv[2];
   if (!dir) {
-    console.error('usage: etl-domain <dump-dir>  > domain.sql   (dir has stores/items/orders.jsonl)');
+    console.error('usage: etl-domain <dump-dir>  > domain.sql   (dir has stores/items/orders/users.jsonl)');
     process.exit(1);
   }
 
   const stores = readJsonl(`${dir}/stores.jsonl`);
   const items = readJsonl(`${dir}/items.jsonl`);
   const orders = readJsonl(`${dir}/orders.jsonl`);
+  const usersPath = `${dir}/users.jsonl`;
+  const users = existsSync(usersPath) ? readJsonl(usersPath) : [];
 
   const knownItemIds = new Set(items.map((i) => String(i.id)));
   const out: string[] = ['PRAGMA foreign_keys=OFF;'];
+
+  // Backfill buyer contact/shipping onto flea_market_user_profile. The user ETL
+  // already created the row (with KYC from the auth export); this UPDATEs the
+  // contact fields it couldn't know, leaving the KYC flags + created_at intact.
+  for (const u of users) {
+    const c = secs(u.createdAt);
+    const up = secs(u.updatedAt);
+    out.push(
+      'INSERT INTO flea_market_user_profile ' +
+        '(user_id,phone_number,zip_code,address1,address2,symbol_address,created_at,updated_at) VALUES (' +
+        `${str(u.id)},${str(u.phoneNumber)},${str(u.zipCode)},${str(u.address1)},` +
+        `${str(u.address2)},${str(u.symbolAddress)},${c},${up}) ` +
+        'ON CONFLICT(user_id) DO UPDATE SET ' +
+        'phone_number=excluded.phone_number,zip_code=excluded.zip_code,' +
+        'address1=excluded.address1,address2=excluded.address2,' +
+        'symbol_address=excluded.symbol_address,updated_at=excluded.updated_at;',
+    );
+  }
 
   for (const s of stores) {
     const c = secs(s.createdAt);
     const u = secs(s.updatedAt);
     out.push(
-      'INSERT OR IGNORE INTO store ' +
+      'INSERT OR IGNORE INTO flea_market_store ' +
         '(id,owner_user_id,name,email,phone_number,zip_code,address1,address2,url,' +
         'description,symbol_address,image_url,cover_image_url,created_at,updated_at) VALUES (' +
         `${str(s.id)},${str(s.id)},${str(s.storeName)},${str(s.storeEmail)},` +
@@ -104,7 +124,7 @@ function main(): void {
     const u = secs(i.updatedAt);
     const status = i.itemStatus === 'ON_SALE' ? 'ON_SALE' : 'SOLD_OUT';
     out.push(
-      'INSERT OR IGNORE INTO item ' +
+      'INSERT OR IGNORE INTO flea_market_item ' +
         '(id,store_id,name,price_jpy,price_unit,description,image_url,status,created_at,updated_at) VALUES (' +
         `${str(i.id)},${str(i.storeId)},${str(i.itemName)},${num(i.itemPrice)},` +
         `${str(i.itemPriceUnit ?? 'JPY')},${str(i.itemDescription)},${imageStr(i.itemImageFile)},` +
@@ -120,7 +140,7 @@ function main(): void {
     const total = num(o.orderTotalPrice, num(o.itemPrice) * qty);
     if (!knownItemIds.has(String(o.itemId))) dangling += 1;
     out.push(
-      'INSERT OR IGNORE INTO "order" ' +
+      'INSERT OR IGNORE INTO flea_market_order ' +
         '(id,buyer_user_id,store_id,item_id,item_name_snapshot,quantity,total_jpy,' +
         'payment_status,legacy_symbol_tx_hash,ship_name,ship_phone,ship_zip,' +
         'ship_address1,ship_address2,created_at,updated_at) VALUES (' +
@@ -134,7 +154,7 @@ function main(): void {
   out.push('PRAGMA foreign_keys=ON;');
   process.stdout.write(`${out.join('\n')}\n`);
   console.error(
-    `-- ${stores.length} stores, ${items.length} items, ${orders.length} orders` +
+    `-- ${stores.length} stores, ${items.length} items, ${orders.length} orders, ${users.length} user profiles` +
       (dangling ? ` (WARNING: ${dangling} orders reference unknown item ids)` : ''),
   );
 }

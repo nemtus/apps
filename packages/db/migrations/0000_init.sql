@@ -40,12 +40,7 @@ CREATE TABLE `user` (
 	`role` text,
 	`banned` integer,
 	`ban_reason` text,
-	`ban_expires` integer,
-	`user_kyc_verified` integer DEFAULT false NOT NULL,
-	`store_kyc_verified` integer DEFAULT false NOT NULL,
-	`store_email_verified` integer DEFAULT false NOT NULL,
-	`store_phone_number_verified` integer DEFAULT false NOT NULL,
-	`store_address_verified` integer DEFAULT false NOT NULL
+	`ban_expires` integer
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `user_email_unique` ON `user` (`email`);--> statement-breakpoint

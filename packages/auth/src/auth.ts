@@ -5,7 +5,8 @@
  *  - email/password with lazy Firebase-scrypt verification (migrated users keep
  *    their passwords; new/rehashed ones use the native scrypt format)
  *  - social providers (Google/GitHub/Twitter/Microsoft/Apple), account-linking by email
- *  - KYC additionalFields + the admin plugin (replacing Firebase custom claims)
+ *  - the admin plugin (roles/ban). App-specific per-user data (e.g. flea-market KYC)
+ *    is NOT an additionalField here — it lives in the app's own domain table.
  *  - transactional email (verification / reset) via an injected @nemtus/email sender,
  *    with copy from @nemtus/email templates
  *  - lazy re-hash wired via an after-hook on /sign-in/email (see `hooks` below)
@@ -26,14 +27,6 @@ import { rehashLegacyPassword } from './rehash';
 import { kvSecondaryStorage } from './kv-secondary-storage';
 import { buildSocialProviders, type SocialProviderEnv } from './providers';
 import type { FirebaseHashConfig } from './firebase-scrypt';
-
-const KYC_BOOLEAN_FIELDS = [
-  'userKycVerified',
-  'storeKycVerified',
-  'storeEmailVerified',
-  'storePhoneNumberVerified',
-  'storeAddressVerified',
-] as const;
 
 export interface CreateAuthOptions {
   /** Cloudflare D1 binding (source of truth for user/account). */
@@ -91,13 +84,6 @@ export function createAuth(options: CreateAuthOptions) {
     else await pending;
   };
 
-  const additionalFields = Object.fromEntries(
-    KYC_BOOLEAN_FIELDS.map((name) => [
-      name,
-      { type: 'boolean' as const, required: false, defaultValue: false, input: false },
-    ]),
-  );
-
   return betterAuth({
     appName,
     secret,
@@ -132,7 +118,6 @@ export function createAuth(options: CreateAuthOptions) {
         trustedProviders: ['google', 'github', 'twitter', 'microsoft', 'apple'],
       },
     },
-    user: { additionalFields },
     plugins: [admin()],
     // Lazy re-hash: after a successful email/password sign-in, if the stored
     // credential is still a migrated Firebase hash, upgrade it to the native

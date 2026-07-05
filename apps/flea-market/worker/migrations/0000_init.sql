@@ -40,12 +40,7 @@ CREATE TABLE `user` (
 	`role` text,
 	`banned` integer,
 	`ban_reason` text,
-	`ban_expires` integer,
-	`user_kyc_verified` integer DEFAULT false NOT NULL,
-	`store_kyc_verified` integer DEFAULT false NOT NULL,
-	`store_email_verified` integer DEFAULT false NOT NULL,
-	`store_phone_number_verified` integer DEFAULT false NOT NULL,
-	`store_address_verified` integer DEFAULT false NOT NULL
+	`ban_expires` integer
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `user_email_unique` ON `user` (`email`);--> statement-breakpoint
@@ -58,7 +53,7 @@ CREATE TABLE `verification` (
 	`updated_at` integer NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE `item` (
+CREATE TABLE `flea_market_item` (
 	`id` text PRIMARY KEY NOT NULL,
 	`store_id` text NOT NULL,
 	`name` text NOT NULL,
@@ -69,10 +64,10 @@ CREATE TABLE `item` (
 	`status` text DEFAULT 'SOLD_OUT' NOT NULL,
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL,
-	FOREIGN KEY (`store_id`) REFERENCES `store`(`id`) ON UPDATE no action ON DELETE cascade
+	FOREIGN KEY (`store_id`) REFERENCES `flea_market_store`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE TABLE `order` (
+CREATE TABLE `flea_market_order` (
 	`id` text PRIMARY KEY NOT NULL,
 	`buyer_user_id` text NOT NULL,
 	`store_id` text NOT NULL,
@@ -92,13 +87,13 @@ CREATE TABLE `order` (
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL,
 	FOREIGN KEY (`buyer_user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE restrict,
-	FOREIGN KEY (`store_id`) REFERENCES `store`(`id`) ON UPDATE no action ON DELETE restrict,
-	FOREIGN KEY (`item_id`) REFERENCES `item`(`id`) ON UPDATE no action ON DELETE restrict
+	FOREIGN KEY (`store_id`) REFERENCES `flea_market_store`(`id`) ON UPDATE no action ON DELETE restrict,
+	FOREIGN KEY (`item_id`) REFERENCES `flea_market_item`(`id`) ON UPDATE no action ON DELETE restrict
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `order_stripe_session_id_unique` ON `order` (`stripe_session_id`);--> statement-breakpoint
-CREATE UNIQUE INDEX `order_stripe_payment_intent_id_unique` ON `order` (`stripe_payment_intent_id`);--> statement-breakpoint
-CREATE TABLE `store` (
+CREATE UNIQUE INDEX `flea_market_order_stripe_session_id_unique` ON `flea_market_order` (`stripe_session_id`);--> statement-breakpoint
+CREATE UNIQUE INDEX `flea_market_order_stripe_payment_intent_id_unique` ON `flea_market_order` (`stripe_payment_intent_id`);--> statement-breakpoint
+CREATE TABLE `flea_market_store` (
 	`id` text PRIMARY KEY NOT NULL,
 	`owner_user_id` text NOT NULL,
 	`name` text NOT NULL,
@@ -117,4 +112,20 @@ CREATE TABLE `store` (
 	FOREIGN KEY (`owner_user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `store_owner_user_id_unique` ON `store` (`owner_user_id`);
+CREATE UNIQUE INDEX `flea_market_store_owner_user_id_unique` ON `flea_market_store` (`owner_user_id`);--> statement-breakpoint
+CREATE TABLE `flea_market_user_profile` (
+	`user_id` text PRIMARY KEY NOT NULL,
+	`phone_number` text,
+	`zip_code` text,
+	`address1` text,
+	`address2` text,
+	`symbol_address` text,
+	`user_kyc_verified` integer DEFAULT false NOT NULL,
+	`store_kyc_verified` integer DEFAULT false NOT NULL,
+	`store_email_verified` integer DEFAULT false NOT NULL,
+	`store_phone_number_verified` integer DEFAULT false NOT NULL,
+	`store_address_verified` integer DEFAULT false NOT NULL,
+	`created_at` integer NOT NULL,
+	`updated_at` integer NOT NULL,
+	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
+);

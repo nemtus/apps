@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "6febfa73-82f5-436f-a9af-deed474358af",
+  "id": "5f6e34ec-939d-4848-9366-0312ac4ecb25",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "account": {
@@ -294,46 +294,6 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
-        },
-        "user_kyc_verified": {
-          "name": "user_kyc_verified",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": false
-        },
-        "store_kyc_verified": {
-          "name": "store_kyc_verified",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": false
-        },
-        "store_email_verified": {
-          "name": "store_email_verified",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": false
-        },
-        "store_phone_number_verified": {
-          "name": "store_phone_number_verified",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": false
-        },
-        "store_address_verified": {
-          "name": "store_address_verified",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": false
         }
       },
       "indexes": {

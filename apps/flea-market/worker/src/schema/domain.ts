@@ -14,7 +14,33 @@
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { user } from '@nemtus/db/schema';
 
-export const store = sqliteTable('store', {
+/**
+ * Per-user flea-market data — the fields the Firestore `users/{uid}` doc held
+ * (buyer shipping contact + legacy Symbol address) PLUS the KYC flags relocated
+ * off the shared core `user` table (which stays app-agnostic under the one-account
+ * NEMTUS identity). One row per user, sharing the user id as PK.
+ */
+export const userProfile = sqliteTable('flea_market_user_profile', {
+  userId: text('user_id')
+    .primaryKey()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  phoneNumber: text('phone_number'),
+  zipCode: text('zip_code'),
+  address1: text('address1'),
+  address2: text('address2'),
+  /** legacy Symbol address from the buyer profile (kept for reference). */
+  symbolAddress: text('symbol_address'),
+  // flea-market KYC flags (mirrored from the old Firebase custom claims).
+  userKycVerified: integer('user_kyc_verified', { mode: 'boolean' }).notNull().default(false),
+  storeKycVerified: integer('store_kyc_verified', { mode: 'boolean' }).notNull().default(false),
+  storeEmailVerified: integer('store_email_verified', { mode: 'boolean' }).notNull().default(false),
+  storePhoneNumberVerified: integer('store_phone_number_verified', { mode: 'boolean' }).notNull().default(false),
+  storeAddressVerified: integer('store_address_verified', { mode: 'boolean' }).notNull().default(false),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+});
+
+export const store = sqliteTable('flea_market_store', {
   id: text('id').primaryKey(), // === owner userId (one store per user)
   ownerUserId: text('owner_user_id')
     .notNull()
@@ -38,7 +64,7 @@ export const store = sqliteTable('store', {
 
 export type ItemStatus = 'ON_SALE' | 'SOLD_OUT';
 
-export const item = sqliteTable('item', {
+export const item = sqliteTable('flea_market_item', {
   id: text('id').primaryKey(),
   storeId: text('store_id')
     .notNull()
@@ -56,7 +82,7 @@ export const item = sqliteTable('item', {
 
 export type OrderPaymentStatus = 'PENDING' | 'PAID' | 'FAILED' | 'REFUNDED';
 
-export const order = sqliteTable('order', {
+export const order = sqliteTable('flea_market_order', {
   id: text('id').primaryKey(),
   // Orders are retained even if the buyer/store is removed, so late Stripe
   // completed/refunded events can still reconcile (no onDelete: 'cascade').

@@ -3,10 +3,10 @@
  *
  * Object keys are the Better Auth *model field* names (camelCase) — the Drizzle
  * adapter looks fields up by these keys — while the string arguments are the
- * snake_case SQL column names. Includes the `admin` plugin columns and the
- * project's KYC `additionalFields` (mirrored from the Firebase custom claims:
- * userKycVerified / storeKycVerified / storeEmailVerified / storePhoneNumberVerified
- * / storeAddressVerified).
+ * snake_case SQL column names. This is the shared CORE user model (Better Auth +
+ * the `admin` plugin). App-specific per-user fields (e.g. flea-market's KYC flags)
+ * live in that app's own domain table (`<app>_user_profile`), NOT here — so the
+ * shared user table stays app-agnostic across the one-account-per-NEMTUS identity.
  *
  * Regenerate/verify against the live auth config with:
  *   npx @better-auth/cli generate
@@ -37,17 +37,6 @@ export const user = sqliteTable('user', {
   banned: integer('banned', { mode: 'boolean' }),
   banReason: text('ban_reason'),
   banExpires: integer('ban_expires', { mode: 'timestamp' }),
-
-  // KYC additionalFields (from Firebase custom claims)
-  userKycVerified: integer('user_kyc_verified', { mode: 'boolean' }).notNull().default(false),
-  storeKycVerified: integer('store_kyc_verified', { mode: 'boolean' }).notNull().default(false),
-  storeEmailVerified: integer('store_email_verified', { mode: 'boolean' }).notNull().default(false),
-  storePhoneNumberVerified: integer('store_phone_number_verified', { mode: 'boolean' })
-    .notNull()
-    .default(false),
-  storeAddressVerified: integer('store_address_verified', { mode: 'boolean' })
-    .notNull()
-    .default(false),
 });
 
 export const session = sqliteTable('session', {

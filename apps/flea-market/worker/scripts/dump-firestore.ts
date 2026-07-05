@@ -23,6 +23,7 @@ async function main(): Promise<void> {
   const storeLines: string[] = [];
   const itemLines: string[] = [];
   const orderLines: string[] = [];
+  const userLines: string[] = [];
 
   // Public store copies + their items (verbatim copies of the private docs).
   const stores = await db.collection('stores').get();
@@ -49,9 +50,18 @@ async function main(): Promise<void> {
     }
   }
 
-  // Buyer orders are the source of truth (users/{userId}/orders).
+  // Private user profile (users/{userId}) — buyer contact/shipping + legacy Symbol
+  // address — and their orders (buyer view is the source of truth).
   const users = await db.collection('users').get();
   for (const u of users.docs) {
+    userLines.push(
+      JSON.stringify({
+        id: u.id,
+        createdAt: u.createTime?.toMillis(),
+        updatedAt: u.updateTime?.toMillis(),
+        ...u.data(),
+      }),
+    );
     const orders = await db.collection(`users/${u.id}/orders`).get();
     for (const o of orders.docs) {
       orderLines.push(
@@ -69,8 +79,9 @@ async function main(): Promise<void> {
   writeFileSync(`${outDir}/stores.jsonl`, `${storeLines.join('\n')}\n`);
   writeFileSync(`${outDir}/items.jsonl`, `${itemLines.join('\n')}\n`);
   writeFileSync(`${outDir}/orders.jsonl`, `${orderLines.join('\n')}\n`);
+  writeFileSync(`${outDir}/users.jsonl`, `${userLines.join('\n')}\n`);
   console.error(
-    `dumped ${storeLines.length} stores, ${itemLines.length} items, ${orderLines.length} orders → ${outDir}`,
+    `dumped ${storeLines.length} stores, ${itemLines.length} items, ${orderLines.length} orders, ${userLines.length} users → ${outDir}`,
   );
 }
 
