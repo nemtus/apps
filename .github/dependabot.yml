@@ -1,0 +1,45 @@
+version: 2
+
+updates:
+  # ----------------------------------------------------------------------------
+  # GitHub Actions (workflow `uses:` are SHA-pinned via pinact; Dependabot bumps
+  # both the SHA and the `# vX.Y.Z` comment).
+  # ----------------------------------------------------------------------------
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    # Supply-chain cooldown: wait 7 days after a release before proposing it.
+    cooldown:
+      default-days: 7
+    groups:
+      # minor + patch bundled into a single PR; majors open individual PRs.
+      github-actions-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+
+  # ----------------------------------------------------------------------------
+  # npm — the ROOT WORKSPACE lockfile only (packages/* + apps/*/worker).
+  # The apps/* frontends install standalone with their own lockfiles (React 18
+  # vs 19 isolation — see root package.json) and are deliberately NOT enumerated
+  # here to keep PR noise proportionate; add per-app entries later if wanted.
+  # ----------------------------------------------------------------------------
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    cooldown:
+      default-days: 7
+    groups:
+      npm-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # @types/node tracks the Node runtime major; hold the major.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
