@@ -1,7 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Noto_Sans_JP, Orbitron, Inter } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
 const notoSansJP = Noto_Sans_JP({
@@ -85,10 +84,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`font-sans antialiased`}>
-        {children}
-        <Analytics />
-      </body>
+      <body className={`font-sans antialiased`}>{children}</body>
     </html>
   )
 }
