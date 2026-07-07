@@ -1,24 +1,22 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Container, Stack, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { useAuthState, useUpdatePassword } from 'react-firebase-hooks/auth';
-import { auth } from '../../../configs/firebase';
+import { changePassword } from '../../../configs/auth';
+import { useAuthUser } from '../../../hooks/useAuthUser';
 import LoadingOverlay from '../../ui/LoadingOverlay';
 import ErrorDialog from '../../ui/ErrorDialog';
 
 interface PasswordUpdateFormInput {
+  currentPassword: string;
   password: string;
 }
 
 const schema = yup.object({
+  currentPassword: yup.string().required('必須です'),
   password: yup
     .string()
     .required('必須です')
@@ -42,9 +40,10 @@ const PasswordUpdate = () => {
   });
 
   const navigate = useNavigate();
-  const [user, loadingUser, errorUser] = useAuthState(auth);
+  const [user, loadingUser, errorUser] = useAuthUser();
   const [updatePasswordSuccess, setUpdatePasswordSuccess] = useState<boolean>(false);
-  const [updatePassword, loading, error] = useUpdatePassword(auth);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | undefined>(undefined);
 
   useEffect(() => {
     if (errorUser) {
@@ -53,16 +52,20 @@ const PasswordUpdate = () => {
     }
     if (!user && !loadingUser) {
       void navigate('/auth/sign-in/');
-      return;
-    }
-    if (!user?.uid) {
-      void navigate('/auth/sign-in/');
     }
   });
 
   const onSubmit: SubmitHandler<PasswordUpdateFormInput> = async (data) => {
-    await updatePassword(data.password);
-    if (error) {
+    setLoading(true);
+    setError(undefined);
+    const res = await changePassword({
+      currentPassword: data.currentPassword,
+      newPassword: data.password,
+      revokeOtherSessions: true,
+    });
+    setLoading(false);
+    if (res.error) {
+      setError(new Error(res.error.message ?? 'パスワードの変更に失敗しました。'));
       return;
     }
     setUpdatePasswordSuccess(true);
@@ -73,6 +76,14 @@ const PasswordUpdate = () => {
       <Container maxWidth="sm">
         <h2>パスワード変更</h2>
         <Stack spacing={3}>
+          <TextField
+            required
+            label="現在のパスワード"
+            type="password"
+            {...register('currentPassword')}
+            error={'currentPassword' in errors}
+            helperText={errors.currentPassword?.message}
+          />
           <TextField
             required
             label="新しいパスワード"

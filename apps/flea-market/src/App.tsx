@@ -9,6 +9,7 @@ const Home = loadable(() => import('./components/page/home'));
 const SignUp = loadable(() => import('./components/page/auth/sign-up'));
 const SignIn = loadable(() => import('./components/page/auth/sign-in'));
 const PasswordReset = loadable(() => import('./components/page/auth/password-reset'));
+const ResetPassword = loadable(() => import('./components/page/auth/reset-password'));
 const PasswordUpdate = loadable(() => import('./components/page/auth/password-update'));
 const User = loadable(() => import('./components/page/users/[userId]'));
 const UserCreate = loadable(() => import('./components/page/users/[userId]/create'));
@@ -48,6 +49,7 @@ const App = () => (
       <Route path="/auth/sign-up/" element={<SignUp />} />
       <Route path="/auth/sign-in/" element={<SignIn />} />
       <Route path="/auth/password-reset/" element={<PasswordReset />} />
+      <Route path="/auth/reset-password/" element={<ResetPassword />} />
       <Route path="/auth/password-update/" element={<PasswordUpdate />} />
       <Route path="/users/:userId/create" element={<UserCreate />} />
       <Route path="/users/:userId/update" element={<UserUpdate />} />
