@@ -1,111 +1,48 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useDocument } from 'react-firebase-hooks/firestore';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Box, Button, Container, Stack, IconButton } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { useEffect, useState } from 'react';
-import db, { auth, doc, httpsCallable, functions } from '../../../../configs/firebase';
+import { useEffect } from 'react';
 import { SYMBOL_NETWORK_NAME } from '../../../../configs/symbol';
+import { api, ApiError } from '../../../../configs/api';
+import { useApi } from '../../../../hooks/useApi';
+import { useAuthUser } from '../../../../hooks/useAuthUser';
 import LoadingOverlay from '../../../ui/LoadingOverlay';
 import ErrorDialog from '../../../ui/ErrorDialog';
-
-// interface UserInterface {
-//   userId: string;
-//   email: string;
-//   name: string;
-//   phoneNumber: string;
-//   zipCode: string;
-//   address1: string;
-//   address2: string;
-//   symbolAddress: string;
-// }
-
-interface VerifyKycRequest {
-  userId: string;
-  storeId: string;
-}
-
-interface VerifyKycResponse {
-  emailVerified: boolean;
-  userKycVerified: boolean;
-  storeEmailVerified: boolean;
-  storePhoneNumberVerified: boolean;
-  storeAddressVerified: boolean;
-  storeKycVerified: boolean;
-}
-
-const httpsOnCallVerifyKyc = httpsCallable<VerifyKycRequest, VerifyKycResponse>(functions, 'httpsOnCallVerifyKyc');
 
 const User = () => {
   const navigate = useNavigate();
   const { userId } = useParams();
-  const [user, loading, error] = useAuthState(auth);
-  const [userDoc, userDocLoading, userDocError] = useDocument(doc(db, 'users', userId || ''), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
-  const [storeDoc, storeDocLoading, storeDocError] = useDocument(
-    doc(db, 'users', userId ?? '', 'stores', userId ?? ''),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    },
+  const [user, loading, error] = useAuthUser();
+  const [me, meLoading, meError] = useApi(() => api.getMe(), [user?.uid]);
+  // getMyStore 404s when the owner hasn't created a store yet — treat that as "none".
+  const [store, storeLoading, storeError] = useApi(
+    () =>
+      api.getMyStore().catch((e) => {
+        if (e instanceof ApiError && e.status === 404) return null;
+        throw e;
+      }),
+    [user?.uid],
   );
-  const [storeExists, setStoreExists] = useState(false);
-  const [kycStatus, setKycStatus] = useState<VerifyKycResponse>({
-    emailVerified: false,
-    userKycVerified: false,
-    storeEmailVerified: false,
-    storePhoneNumberVerified: false,
-    storeAddressVerified: false,
-    storeKycVerified: false,
-  });
-  const [kycStatusLoading, setKycStatusLoading] = useState(false);
-  const [kycStatusError, setKycStatusError] = useState<Error | undefined>(undefined);
+  const storeExists = !!store;
 
   useEffect(() => {
-    if (loading && userDocLoading && storeDocLoading) {
+    if (loading) {
       return;
     }
     if (!(user && userId && userId === user.uid)) {
       void navigate('/auth/sign-in/');
       return;
     }
-    const isExists = !!storeDoc?.exists();
-    setStoreExists(isExists);
-    setKycStatusLoading(true);
-    httpsOnCallVerifyKyc({ userId, storeId: userId })
-      .then((res) => {
-        setKycStatus(res.data);
-        if (!res.data.userKycVerified) {
-          void navigate(`users/${userId}/verify-user-email`);
-        }
-      })
-      .catch((err) => {
-        setKycStatusError(err as Error);
-      })
-      .finally(() => {
-        setKycStatusLoading(false);
-      });
-  }, [
-    userId,
-    user,
-    loading,
-    userDocLoading,
-    storeDoc,
-    storeDocLoading,
-    setStoreExists,
-    setKycStatus,
-    setKycStatusLoading,
-    setKycStatusError,
-    navigate,
-  ]);
+    // Old userKycVerified === email-verified; keep the same gate.
+    if (!user.emailVerified) {
+      void navigate(`/users/${userId}/verify-user-email`);
+    }
+  }, [userId, user, loading, navigate]);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText((userDoc?.data()?.symbolAddress as string) || '');
+    await navigator.clipboard.writeText(me?.symbolAddress ?? '');
   };
 
   const handleClick = () => {
@@ -114,12 +51,12 @@ const User = () => {
     }
     void navigate(`/users/${userId}/update`, {
       state: {
-        name: userDoc?.data()?.name ?? '',
-        phoneNumber: userDoc?.data()?.phoneNumber ?? '',
-        zipCode: userDoc?.data()?.zipCode ?? '',
-        address1: userDoc?.data()?.address1 ?? '',
-        address2: userDoc?.data()?.address2 ?? '',
-        symbolAddress: userDoc?.data()?.symbolAddress ?? '',
+        name: me?.name ?? '',
+        phoneNumber: me?.phoneNumber ?? '',
+        zipCode: me?.zipCode ?? '',
+        address1: me?.address1 ?? '',
+        address2: me?.address2 ?? '',
+        symbolAddress: me?.symbolAddress ?? '',
       },
     });
   };
@@ -128,21 +65,15 @@ const User = () => {
     if (!userId) {
       throw Error('Invalid userId');
     }
-    const storeId = userId;
-    void navigate(`/users/${userId}/stores/${storeId}/create`);
+    void navigate(`/users/${userId}/stores/${userId}/create`);
   };
 
   const handleStore = () => {
     if (!userId) {
       throw Error('Invalid userId');
     }
-    const storeId = userId;
-    void navigate(`/users/${userId}/stores/${storeId}`);
+    void navigate(`/users/${userId}/stores/${userId}`);
   };
-
-  // if (!userId || !user?.uid || userId !== user?.uid) {
-  //   return null;
-  // }
 
   return (
     <>
@@ -152,7 +83,7 @@ const User = () => {
           <div>
             <Box sx={{ display: 'flex', alignItems: 'baseline' }}>
               <h3>メールアドレス</h3>
-              {kycStatus.emailVerified ? (
+              {user?.emailVerified ? (
                 <CheckIcon color="success" />
               ) : (
                 <Button
@@ -165,32 +96,32 @@ const User = () => {
                 </Button>
               )}
             </Box>
-            <div>{userDoc?.data()?.email}</div>
+            <div>{me?.email}</div>
           </div>
           <div>
             <h3>氏名</h3>
-            <div>{userDoc?.data()?.name}</div>
+            <div>{me?.name}</div>
           </div>
           <div>
             <h3>電話番号</h3>
-            <div>{userDoc?.data()?.phoneNumber}</div>
+            <div>{me?.phoneNumber}</div>
           </div>
           <div>
             <h3>郵便番号</h3>
-            <div>{userDoc?.data()?.zipCode}</div>
+            <div>{me?.zipCode}</div>
           </div>
           <div>
             <h3>住所(都道府県市区町村)</h3>
-            <div>{userDoc?.data()?.address1}</div>
+            <div>{me?.address1}</div>
           </div>
           <div>
             <h3>住所(番地・建物名・部屋番号)</h3>
-            <div>{userDoc?.data()?.address2}</div>
+            <div>{me?.address2}</div>
           </div>
           <div>
             <h3>{`Symbolアドレス(${SYMBOL_NETWORK_NAME})`}</h3>
             <div style={{ fontSize: 12 }}>
-              {userDoc?.data()?.symbolAddress}
+              {me?.symbolAddress}
               <IconButton
                 onClick={async () => {
                   await handleCopy();
@@ -217,11 +148,8 @@ const User = () => {
           </Stack>
         </Stack>
       </Container>
-      <LoadingOverlay open={loading || userDocLoading || storeDocLoading || kycStatusLoading} />
-      <ErrorDialog open={!!error} error={error} />
-      <ErrorDialog open={!!userDocError} error={userDocError} />
-      <ErrorDialog open={!!storeDocError} error={storeDocError} />
-      <ErrorDialog open={!!kycStatusError} error={kycStatusError} />
+      <LoadingOverlay open={loading || meLoading || storeLoading} />
+      <ErrorDialog open={!!(error ?? meError ?? storeError)} error={error ?? meError ?? storeError} />
     </>
   );
 };
