@@ -81,7 +81,7 @@ export function Navigation() {
       <nav className="container mx-auto flex items-center justify-between px-4 py-4">
         <div className="flex items-center gap-2">
           <Image
-            src="/images/design-mode/logo_hacktus_%EF%BD%82_2026S.png"
+            src="/images/logo-hacktus-nav.png"
             alt="NEMTUS Hackathon Logo"
             width={32}
             height={32}
