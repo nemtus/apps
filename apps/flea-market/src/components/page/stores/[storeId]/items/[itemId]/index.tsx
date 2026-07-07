@@ -1,8 +1,7 @@
-import { useDocument } from 'react-firebase-hooks/firestore';
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import { Container } from '@mui/material';
-import db, { doc } from '../../../../../../configs/firebase';
+import { api } from '../../../../../../configs/api';
+import { useApi } from '../../../../../../hooks/useApi';
 import ErrorDialog from '../../../../../ui/ErrorDialog';
 import LoadingOverlay from '../../../../../ui/LoadingOverlay';
 import { Item } from '../../../../../ui/ItemCard';
@@ -11,35 +10,18 @@ import ItemCardDetail from '../../../../../ui/ItemCardDetail';
 
 const PublicItem = () => {
   const { storeId, itemId } = useParams();
-  const [storeDoc, storeDocLoading, storeDocError] = useDocument(doc(db, `stores/${storeId ?? ''}`), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
-  const [itemDoc, itemDocLoading, itemDocError] = useDocument(
-    doc(db, `stores/${storeId ?? ''}/items/${itemId ?? ''}`),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    },
-  );
-  const [exists, setExists] = useState(false);
-
-  useEffect(() => {
-    setExists(!!storeDoc?.exists() && !!itemDoc?.exists());
-  }, [setExists, storeDoc, itemDoc]);
+  const [store, storeLoading, storeError] = useApi(() => api.getStore(storeId ?? ''), [storeId]);
+  const [item, itemLoading, itemError] = useApi(() => api.getStoreItem(storeId ?? '', itemId ?? ''), [storeId, itemId]);
+  const exists = !!store && !!item;
 
   return (
     <Container maxWidth="sm">
       <div>
         <h2>商品詳細</h2>
-        {exists ? (
-          <ItemCardDetail
-            store={storeDoc?.data() as Store}
-            item={itemDoc?.data() as Item}
-            key={(storeDoc?.data() as Store).storeId}
-          />
-        ) : null}
-        <LoadingOverlay open={storeDocLoading || itemDocLoading || !exists} />
-        <ErrorDialog open={!!storeDocError} error={storeDocError} />
-        <ErrorDialog open={!!itemDocError} error={itemDocError} />
+        {exists ? <ItemCardDetail store={store as Store} item={item as Item} key={store.storeId} /> : null}
+        <LoadingOverlay open={storeLoading || itemLoading} />
+        <ErrorDialog open={!!storeError} error={storeError} />
+        <ErrorDialog open={!!itemError} error={itemError} />
       </div>
     </Container>
   );
