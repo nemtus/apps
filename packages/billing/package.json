@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "stripe": "^18.0.0"
+    "stripe": "^22.3.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250620.0",
