@@ -1,8 +1,9 @@
 /**
- * Minimal data-fetching hook that mirrors react-firebase-hooks' `[data, loading,
- * error]` tuple, so Firestore reads can be swapped for `configs/api` calls with
- * little churn. Refetches when `deps` change; ignores stale responses on unmount.
- * (No caching/refetch-on-focus — the pages that need liveness poll explicitly.)
+ * react-firebase-hooks の `[data, loading, error]` タプルを模した最小のデータ取得フック。
+ * Firestore 読み取りを `configs/api` 呼び出しへ少ない差分で置き換えるためのもの。`deps` が
+ * 変わると再取得し、その際は前回の `data` をクリアする（古い店舗/商品を表示したり、失敗後に
+ * 前回値が残ったりしないようにするため）。アンマウント後の古いレスポンスは無視する。キャッシュ
+ * やフォーカス再取得は行わない（鮮度が必要なページは明示的にポーリングする）。
  */
 import { useEffect, useState, type DependencyList } from 'react';
 
@@ -16,6 +17,7 @@ export function useApi<T>(
 
   useEffect(() => {
     let active = true;
+    setData(undefined);
     setLoading(true);
     setError(undefined);
     fetcher()

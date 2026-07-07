@@ -20,8 +20,7 @@ const PublicItems = () => {
         <h2>商品一覧</h2>
         {itemsExist ? <ItemList store={store as Store} items={items as Item[]} /> : null}
         <LoadingOverlay open={storeLoading || itemsLoading} />
-        <ErrorDialog open={!!storeError} error={storeError} />
-        <ErrorDialog open={!!itemsError} error={itemsError} />
+        <ErrorDialog open={!!(storeError ?? itemsError)} error={storeError ?? itemsError} />
       </div>
     </Container>
   );
