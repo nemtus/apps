@@ -16,7 +16,7 @@
  * Firebase export test vector (see firebase-scrypt.test.ts). Still worth a final smoke
  * test against one real exported row from the project's own `firebase auth:export`.
  */
-import { scrypt } from '@noble/hashes/scrypt';
+import { scrypt } from '@noble/hashes/scrypt.js';
 
 export interface FirebaseHashConfig {
   /** base64 `hash_config.base64_signer_key` */
