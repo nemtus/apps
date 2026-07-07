@@ -1,17 +1,15 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Container, Stack, TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { useDocument } from 'react-firebase-hooks/firestore';
-import db, { auth, doc } from '../../../configs/firebase';
+import db, { doc } from '../../../configs/firebase';
+import { signUp } from '../../../configs/auth';
 import LoadingOverlay from '../../ui/LoadingOverlay';
 import ErrorDialog from '../../ui/ErrorDialog';
 
@@ -46,33 +44,32 @@ const SignUp = () => {
     criteriaMode: 'all',
   });
 
-  const [createUserWithEmailAndPassword, userCredential, loading, error] = useCreateUserWithEmailAndPassword(auth, {
-    sendEmailVerification: true,
-  });
+  // Feature flag still read from Firestore; migrates to api.getConfig() in the data PR.
   const [configDoc, configDocLoading, configDocError] = useDocument(doc(db, 'configs/1'), {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
-  const [submitError, setSubmitError] = useState<Error | undefined>(undefined);
-
-  useEffect(() => {
-    if (!userCredential) {
-      return;
-    }
-    if (!userCredential?.user) {
-      return;
-    }
-    if (!userCredential?.user?.uid) {
-      return;
-    }
-    void navigate(`/users/${userCredential?.user?.uid}/verify-user-email`);
-  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | undefined>(undefined);
 
   const onSubmit: SubmitHandler<SignUpFormInput> = async (data) => {
     if (!configDoc?.data()?.enableCreateUser) {
-      setSubmitError(Error('ユーザー登録を受け付けていません。'));
+      setError(Error('ユーザー登録を受け付けていません。'));
       return;
     }
-    await createUserWithEmailAndPassword(data.email, data.password);
+    setLoading(true);
+    setError(undefined);
+    // Better Auth requires a name; the profile name is set later, so seed it with
+    // the email (matches the user ETL's displayName ?? email fallback). Better Auth
+    // sends the verification email on sign-up (emailVerification.sendOnSignUp).
+    const res = await signUp.email({ email: data.email, password: data.password, name: data.email });
+    setLoading(false);
+    if (res.error) {
+      setError(new Error(res.error.message ?? '新規登録に失敗しました。'));
+      return;
+    }
+    if (res.data?.user?.id) {
+      void navigate(`/users/${res.data.user.id}/verify-user-email`);
+    }
   };
 
   return (
@@ -110,7 +107,6 @@ const SignUp = () => {
       <LoadingOverlay open={loading || configDocLoading} />
       <ErrorDialog open={!!error} error={error} />
       <ErrorDialog open={!!configDocError} error={configDocError} />
-      <ErrorDialog open={!!submitError} error={submitError} />
     </>
   );
 };

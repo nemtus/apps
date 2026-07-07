@@ -1,10 +1,9 @@
 import { Link } from 'react-router-dom';
 import { Box, Card, CardActions, CardContent, Button, Typography } from '@mui/material';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../../configs/firebase';
+import { useAuthUser } from '../../hooks/useAuthUser';
 
 const AuthCard = () => {
-  const [authUser] = useAuthState(auth);
+  const [authUser] = useAuthUser();
 
   if (authUser) {
     return null;

@@ -1,16 +1,11 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Container, Stack, TextField } from '@mui/material';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { useSendPasswordResetEmail } from 'react-firebase-hooks/auth';
-import { auth } from '../../../configs/firebase';
+import { requestPasswordReset } from '../../../configs/auth';
 import LoadingOverlay from '../../ui/LoadingOverlay';
 import ErrorDialog from '../../ui/ErrorDialog';
 
@@ -34,13 +29,20 @@ const PasswordReset = () => {
     criteriaMode: 'all',
   });
 
-  const [sendPasswordResetEmail, loading, error] = useSendPasswordResetEmail(auth);
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | undefined>(undefined);
   const [passwordResetEmailSent, setPasswordResetEmailSent] = useState<boolean>(false);
 
   const onSubmit: SubmitHandler<PasswordResetFormInput> = async (data) => {
-    await sendPasswordResetEmail(data.email);
-    if (error) {
+    setLoading(true);
+    setError(undefined);
+    const res = await requestPasswordReset({
+      email: data.email,
+      redirectTo: `${window.location.origin}/auth/reset-password/`,
+    });
+    setLoading(false);
+    if (res.error) {
+      setError(new Error(res.error.message ?? 'パスワードリセットメールの送信に失敗しました。'));
       return;
     }
     setPasswordResetEmailSent(true);

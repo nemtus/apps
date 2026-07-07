@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
 import { Divider, IconButton, Menu, MenuItem, MenuList, ListItemIcon, ListItemText } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -16,12 +15,12 @@ import StorefrontIcon from '@mui/icons-material/Storefront';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import React, { useState } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, signOut } from '../../configs/firebase';
+import { signOut } from '../../configs/auth';
+import { useAuthUser } from '../../hooks/useAuthUser';
 
 const ProfileMenu = () => {
   const navigate = useNavigate();
-  const [user] = useAuthState(auth);
+  const [user] = useAuthUser();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleClose = () => {
@@ -75,9 +74,7 @@ const ProfileMenu = () => {
 
   const handleSignOut = () => {
     handleClose();
-    signOut(auth)
-      .then(() => {})
-      .catch(() => {});
+    void signOut();
     void navigate('/');
   };
 
