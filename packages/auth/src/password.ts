@@ -7,7 +7,7 @@
  * on a successful legacy verify the caller should re-store a fresh `hashPassword()` value
  * (see packages/auth `rehashLegacyPassword` wiring note).
  */
-import { scrypt } from '@noble/hashes/scrypt';
+import { scrypt } from '@noble/hashes/scrypt.js';
 import {
   firebaseScryptVerify,
   parseFirebaseMarker,
