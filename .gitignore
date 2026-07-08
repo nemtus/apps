@@ -23,6 +23,12 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Cloudflare Workers local state: wrangler's dev cache + the local D1 sqlite created
+# by `wrangler d1 ... --local` / `wrangler dev`. Also local secret files.
+.wrangler/
+.dev.vars
+.dev.vars.*
+
 # OS / editor
 .DS_Store
 
