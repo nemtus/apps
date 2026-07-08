@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Container, Stack, TextField } from '@mui/material';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { useDocument } from 'react-firebase-hooks/firestore';
-import db, { doc } from '../../../configs/firebase';
 import { signUp } from '../../../configs/auth';
+import { api } from '../../../configs/api';
+import { useApi } from '../../../hooks/useApi';
 import LoadingOverlay from '../../ui/LoadingOverlay';
 import ErrorDialog from '../../ui/ErrorDialog';
 
@@ -44,15 +42,12 @@ const SignUp = () => {
     criteriaMode: 'all',
   });
 
-  // フィーチャーフラグは当面 Firestore から読む（データPRで api.getConfig() へ移行）。
-  const [configDoc, configDocLoading, configDocError] = useDocument(doc(db, 'configs/1'), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
+  const [config, configLoading, configError] = useApi(() => api.getConfig(), []);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | undefined>(undefined);
 
   const onSubmit: SubmitHandler<SignUpFormInput> = async (data) => {
-    if (!configDoc?.data()?.enableCreateUser) {
+    if (!config?.enableCreateUser) {
       setError(Error('ユーザー登録を受け付けていません。'));
       return;
     }
@@ -104,9 +99,9 @@ const SignUp = () => {
           </div>
         </Stack>
       </Container>
-      <LoadingOverlay open={loading || configDocLoading} />
+      <LoadingOverlay open={loading || configLoading} />
       <ErrorDialog open={!!error} error={error} />
-      <ErrorDialog open={!!configDocError} error={configDocError} />
+      <ErrorDialog open={!!configError} error={configError} />
     </>
   );
 };
