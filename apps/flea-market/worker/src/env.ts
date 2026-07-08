@@ -44,6 +44,10 @@ export interface Env {
   CHECKOUT_SUCCESS_URL: string;
   CHECKOUT_CANCEL_URL: string;
 
+  // --- XYM/JPY price (optional) ---
+  /** CoinMarketCap Pro API key; enables the CMC fallback for the XYM/JPY rate. */
+  COINMARKETCAP_API_KEY?: string;
+
   // --- feature flags (optional [vars]; enabled unless explicitly "false") ---
   ENABLE_CREATE_USER?: string;
   ENABLE_CREATE_STORE?: string;
