@@ -1,167 +1,40 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useDocument } from 'react-firebase-hooks/firestore';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Box, Button, Container, Stack } from '@mui/material';
-import { useState, useEffect } from 'react';
-import db, { auth, doc, httpsCallable, functions } from '../../../../../../../../configs/firebase';
+import { api } from '../../../../../../../../configs/api';
+import { useApi } from '../../../../../../../../hooks/useApi';
+import { useAuthUser } from '../../../../../../../../hooks/useAuthUser';
 import LoadingOverlay from '../../../../../../../ui/LoadingOverlay';
 import ErrorDialog from '../../../../../../../ui/ErrorDialog';
-
-// interface Item {
-//   itemId: string;
-//   itemName: string;
-//   itemPrice: number;
-//   itemPriceUnit: 'JPY';
-//   itemDescription: string;
-//   itemImageFile: string;
-//   itemStatus: 'ON_SALE' | 'SOLD_OUT';
-// }
-
-interface VerifyKycRequest {
-  userId: string;
-  storeId: string;
-}
-
-interface VerifyKycResponse {
-  emailVerified: boolean;
-  userKycVerified: boolean;
-  storeEmailVerified: boolean;
-  storePhoneNumberVerified: boolean;
-  storeAddressVerified: boolean;
-  storeKycVerified: boolean;
-}
-
-const httpsOnCallVerifyKyc = httpsCallable<VerifyKycRequest, VerifyKycResponse>(functions, 'httpsOnCallVerifyKyc');
 
 const Item = () => {
   const navigate = useNavigate();
   const { userId, storeId, itemId } = useParams();
-  const [user, loading, error] = useAuthState(auth);
-  const [userDoc, userDocLoading, userDocError] = useDocument(doc(db, 'users', userId ?? ''), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
-  const [storeDoc, storeDocLoading, storeDocError] = useDocument(
-    doc(db, 'users', userId ?? '', 'stores', storeId ?? ''),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    },
-  );
-  const [itemDoc, itemDocLoading, itemDocError] = useDocument(
-    doc(db, 'users', userId ?? '', 'stores', storeId ?? '', 'items', itemId ?? ''),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    },
-  );
-  const [itemExists, setItemExists] = useState(false);
-  const [kycStatus, setKycStatus] = useState<VerifyKycResponse>({
-    emailVerified: false,
-    userKycVerified: false,
-    storeEmailVerified: false,
-    storePhoneNumberVerified: false,
-    storeAddressVerified: false,
-    storeKycVerified: false,
-  });
-  const [kycStatusLoading, setKycStatusLoading] = useState(false);
-  const [kycStatusError, setKycStatusError] = useState<Error | undefined>(undefined);
-
-  useEffect(() => {
-    if (loading || userDocLoading || storeDocLoading || itemDocLoading) {
-      return;
-    }
-    if (!(user && userId && userId === user.uid)) {
-      void navigate('/auth/sign-in/');
-      return;
-    }
-    if (userId !== storeId) {
-      void navigate(`/users/${userId}`);
-      return;
-    }
-    const isItemExists = !!userDoc?.exists() && !!storeDoc?.exists() && !!itemDoc?.exists();
-    setItemExists(isItemExists);
-    setKycStatusLoading(true);
-    httpsOnCallVerifyKyc({ userId, storeId })
-      .then((res) => {
-        setKycStatus(res.data);
-        if (!res.data.userKycVerified) {
-          void navigate(`users/${userId}/verify-user-email`);
-        }
-        if (!res.data.storeKycVerified) {
-          void navigate(`users/${userId}/stores/${storeId}`);
-        }
-      })
-      .catch((err) => {
-        setKycStatusError(err as Error);
-      })
-      .finally(() => {
-        setKycStatusLoading(false);
-      });
-  }, [
-    userId,
-    storeId,
-    user,
-    loading,
-    userDocLoading,
-    storeDocLoading,
-    itemDocLoading,
-    navigate,
-    userDoc,
-    storeDoc,
-    itemDoc,
-    setItemExists,
-  ]);
+  const [user, loading, error] = useAuthUser();
+  const [me, meLoading, meError] = useApi(() => api.getMe(), [user?.uid]);
+  // 単一のオーナー商品エンドポイントは無いため、オーナーの商品一覧から該当商品を取り出す。
+  const [items, itemsLoading, itemsError] = useApi(() => api.listMyItems().catch(() => []), [user?.uid]);
+  const item = items?.find((i) => i.itemId === itemId);
+  const itemExists = !!item;
 
   const handleItems = () => {
-    if (!userId) {
-      throw Error('Invalid userId');
-    }
-    if (!storeId) {
-      throw Error('Invalid storeId');
-    }
-    void navigate(`/users/${userId}/stores/${storeId}/items`);
+    void navigate(`/users/${userId ?? ''}/stores/${storeId ?? ''}/items`);
   };
 
   const handleItemUpdate = () => {
-    if (!userId) {
-      throw Error('Invalid userId');
-    }
-    if (!storeId) {
-      throw Error('Invalid storeId');
-    }
-    if (!itemId) {
-      throw Error('Invalid itemId');
-    }
-    void navigate(`/users/${userId}/stores/${storeId}/items/${itemId}/update`, {
+    void navigate(`/users/${userId ?? ''}/stores/${storeId ?? ''}/items/${itemId ?? ''}/update`, {
       state: {
-        itemName: itemDoc?.data()?.itemName,
-        itemPrice: itemDoc?.data()?.itemPrice,
-        itemPriceUnit: itemDoc?.data()?.itemPriceUnit,
-        itemDescription: itemDoc?.data()?.itemDescription,
-        itemImageFile: itemDoc?.data()?.itemImageFile,
-        itemStatus: itemDoc?.data()?.itemStatus,
+        itemName: item?.itemName,
+        itemPrice: item?.itemPrice,
+        itemPriceUnit: item?.itemPriceUnit,
+        itemDescription: item?.itemDescription,
+        itemImageFile: item?.itemImageFile,
+        itemStatus: item?.itemStatus,
       },
     });
   };
 
-  if (!userId) {
-    return null;
-  }
-  if (!storeId) {
-    return null;
-  }
-  if (!itemId) {
-    return null;
-  }
-  if (!user?.uid) {
-    return null;
-  }
-  if (userId !== user?.uid) {
-    return null;
-  }
-  if (userId !== storeId) {
+  if (!userId || !storeId || !itemId || !user?.uid || userId !== user?.uid || userId !== storeId) {
     return null;
   }
 
@@ -173,27 +46,27 @@ const Item = () => {
           <Stack spacing={3}>
             <div>
               <h3>商品ID</h3>
-              <div>{itemDoc?.data()?.itemId}</div>
+              <div>{item?.itemId}</div>
             </div>
             <div>
               <h3>商品名</h3>
-              <div>{itemDoc?.data()?.itemName}</div>
+              <div>{item?.itemName}</div>
             </div>
             <div>
               <h3>商品価格</h3>
-              <div>{itemDoc?.data()?.itemPrice}</div>
+              <div>{item?.itemPrice}</div>
             </div>
             <div>
               <h3>商品価格通貨</h3>
-              <div>{itemDoc?.data()?.itemPriceUnit}</div>
+              <div>{item?.itemPriceUnit}</div>
             </div>
             <div>
               <h3>商品説明</h3>
-              <div>{itemDoc?.data()?.itemDescription}</div>
+              <div>{item?.itemDescription}</div>
             </div>
             <div>
               <h3>商品ステータス</h3>
-              <div>{itemDoc?.data()?.itemStatus}</div>
+              <div>{item?.itemStatus}</div>
             </div>
             <div>
               <Box sx={{ display: 'flex', alignItems: 'baseline' }}>
@@ -207,15 +80,15 @@ const Item = () => {
                   画像設定
                 </Button>
               </Box>
-              <a href={itemDoc?.data()?.itemImageFile}>{itemDoc?.data()?.itemImageFile}</a>
-              <img src={itemDoc?.data()?.itemImageFile} alt={itemDoc?.data()?.itemName} style={{ width: '100%' }} />
+              <a href={item?.itemImageFile}>{item?.itemImageFile}</a>
+              <img src={item?.itemImageFile} alt={item?.itemName} style={{ width: '100%' }} />
             </div>
             <Button
               color="primary"
               variant="contained"
               size="large"
               onClick={handleItemUpdate}
-              disabled={!(kycStatus.userKycVerified && kycStatus.storeKycVerified)}
+              disabled={!(user?.emailVerified && me?.storeKycVerified)}
             >
               商品編集
             </Button>
@@ -235,12 +108,8 @@ const Item = () => {
           </Stack>
         </Container>
       )}
-      <LoadingOverlay open={loading || userDocLoading || storeDocLoading || itemDocLoading || kycStatusLoading} />
-      <ErrorDialog open={!!error} error={error} />
-      <ErrorDialog open={!!userDocError} error={userDocError} />
-      <ErrorDialog open={!!storeDocError} error={storeDocError} />
-      <ErrorDialog open={!!itemDocError} error={itemDocError} />
-      <ErrorDialog open={!!kycStatusError} error={kycStatusError} />
+      <LoadingOverlay open={loading || meLoading || itemsLoading} />
+      <ErrorDialog open={!!(error ?? meError ?? itemsError)} error={error ?? meError ?? itemsError} />
     </>
   );
 };

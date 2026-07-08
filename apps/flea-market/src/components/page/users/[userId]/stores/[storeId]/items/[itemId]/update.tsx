@@ -1,16 +1,15 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useDocument } from 'react-firebase-hooks/firestore';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Button, Container, MenuItem, Stack, TextField } from '@mui/material';
 import * as yup from 'yup';
 import { useEffect, useState } from 'react';
-import db, { auth, doc, setDoc, httpsCallable, functions } from '../../../../../../../../configs/firebase';
+import { api } from '../../../../../../../../configs/api';
+import { useApi } from '../../../../../../../../hooks/useApi';
+import { useAuthUser } from '../../../../../../../../hooks/useAuthUser';
 import LoadingOverlay from '../../../../../../../ui/LoadingOverlay';
 import ErrorDialog from '../../../../../../../ui/ErrorDialog';
 
@@ -35,64 +34,22 @@ const schema = yup.object({
     .matches(/^(ON_SALE|SOLD_OUT)$/, '有効な値を選択してください'),
 });
 
-interface VerifyKycRequest {
-  userId: string;
-  storeId: string;
-}
-
-interface VerifyKycResponse {
-  emailVerified: boolean;
-  userKycVerified: boolean;
-  storeEmailVerified: boolean;
-  storePhoneNumberVerified: boolean;
-  storeAddressVerified: boolean;
-  storeKycVerified: boolean;
-}
-
-const httpsOnCallVerifyKyc = httpsCallable<VerifyKycRequest, VerifyKycResponse>(functions, 'httpsOnCallVerifyKyc');
-
 const ItemUpdate = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { userId, storeId, itemId } = useParams();
-  const [user, loading, error] = useAuthState(auth);
-  const [userDoc, userDocLoading, userDocError] = useDocument(doc(db, 'users', userId ?? ''), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
-  const [storeDoc, storeDocLoading, storeDocError] = useDocument(
-    doc(db, 'users', userId ?? '', 'stores', storeId ?? ''),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    },
-  );
-  const [itemDoc, itemDocLoading, itemDocError] = useDocument(
-    doc(db, 'users', userId ?? '', 'stores', storeId ?? '', 'items', itemId ?? ''),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    },
-  );
-  const [kycStatus, setKycStatus] = useState<VerifyKycResponse>({
-    emailVerified: false,
-    userKycVerified: false,
-    storeEmailVerified: false,
-    storePhoneNumberVerified: false,
-    storeAddressVerified: false,
-    storeKycVerified: false,
-  });
-  const [kycStatusLoading, setKycStatusLoading] = useState(false);
-  const [kycStatusError, setKycStatusError] = useState<Error | undefined>(undefined);
-  const [configDoc, configDocLoading, configDocError] = useDocument(doc(db, 'configs/1'), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
+  const [user, loading, error] = useAuthUser();
+  const [me, meLoading, meError] = useApi(() => api.getMe(), [user?.uid]);
+  const [config, configLoading, configError] = useApi(() => api.getConfig(), []);
   const [submitError, setSubmitError] = useState<Error | undefined>(undefined);
 
   const currentItemFormInput: ItemUpdateFormInput = {
-    itemName: location.state.itemName ?? '',
-    itemPrice: location.state.itemPrice ?? '',
-    itemPriceUnit: location.state.itemPriceUnit ?? '',
-    itemDescription: location.state.itemDescription ?? '',
-    itemImageFile: location.state.itemImageFile ?? '',
-    itemStatus: location.state.itemStatus ?? '',
+    itemName: location.state?.itemName ?? '',
+    itemPrice: location.state?.itemPrice ?? '',
+    itemPriceUnit: location.state?.itemPriceUnit ?? '',
+    itemDescription: location.state?.itemDescription ?? '',
+    itemImageFile: location.state?.itemImageFile ?? '',
+    itemStatus: location.state?.itemStatus ?? '',
   };
 
   const {
@@ -109,59 +66,32 @@ const ItemUpdate = () => {
   });
 
   const onSubmit: SubmitHandler<ItemUpdateFormInput> = async (data) => {
-    if (!configDoc?.data()?.enableCreateItem) {
+    if (!config?.enableCreateItem) {
       setSubmitError(Error('現在、商品登録を受け付けていません。'));
       return;
     }
-
-    if (!userId) {
-      setSubmitError(Error('Invalid userId'));
-      return;
-    }
-    if (userId !== user?.uid) {
+    if (!userId || userId !== user?.uid) {
       setSubmitError(Error('userId is not match with user.uid'));
-      return;
-    }
-    if (!user?.email) {
-      setSubmitError(Error('Invalid email'));
-      return;
-    }
-    const userDocRef = userDoc?.ref;
-    if (!userDocRef) {
-      setSubmitError(Error("Can't get user document reference"));
-      return;
-    }
-
-    if (!storeId) {
-      setSubmitError(Error('Invalid storeId'));
       return;
     }
     if (storeId !== userId) {
       setSubmitError(Error('storeId is not match with userId'));
       return;
     }
-    const storeDocRef = storeDoc?.ref;
-    if (!storeDocRef) {
-      setSubmitError(Error("Can't get store document reference"));
-      return;
-    }
-
     if (!itemId) {
       setSubmitError(Error('Invalid itemId'));
       return;
     }
-    const itemDocRef = itemDoc?.ref;
-    if (!itemDocRef) {
-      setSubmitError(Error("Can't get item document reference"));
-      return;
+    try {
+      await api.updateMyItem(itemId, data);
+      void navigate(`/users/${userId}/stores/${storeId}/items/${itemId}`);
+    } catch (e) {
+      setSubmitError(e instanceof Error ? e : new Error(String(e)));
     }
-
-    await setDoc(itemDocRef, { itemId, ...data }, { merge: true });
-    void navigate(`/users/${userId}/stores/${storeId}/items/${itemId}`);
   };
 
   useEffect(() => {
-    if (loading || userDocLoading || storeDocLoading || itemDocLoading || configDocLoading) {
+    if (loading || meLoading) {
       return;
     }
     if (!(user && userId && userId === user.uid)) {
@@ -172,37 +102,15 @@ const ItemUpdate = () => {
       void navigate(`/users/${userId}`);
       return;
     }
-    setKycStatusLoading(true);
-    httpsOnCallVerifyKyc({ userId, storeId })
-      .then((res) => {
-        setKycStatus(res.data);
-        if (!res.data.userKycVerified) {
-          void navigate(`users/${userId}/verify-user-email`);
-        }
-        if (!res.data.storeKycVerified) {
-          void navigate(`users/${userId}/stores/${storeId}`);
-        }
-      })
-      .catch((err) => {
-        setKycStatusError(err as Error);
-      })
-      .finally(() => {
-        setKycStatusLoading(false);
-      });
-  }, [
-    userId,
-    storeId,
-    user,
-    loading,
-    userDocLoading,
-    storeDocLoading,
-    itemDocLoading,
-    configDocLoading,
-    navigate,
-    setKycStatus,
-    setKycStatusError,
-    setKycStatusLoading,
-  ]);
+    // 旧 httpsOnCallVerifyKyc の userKycVerified/storeKycVerified ゲートの置き換え。
+    if (!user.emailVerified) {
+      void navigate(`/users/${userId}/verify-user-email`);
+      return;
+    }
+    if (me && !me.storeKycVerified) {
+      void navigate(`/users/${userId}/stores/${storeId}`);
+    }
+  }, [userId, storeId, user, loading, me, meLoading, navigate]);
 
   return (
     <>
@@ -271,22 +179,17 @@ const ItemUpdate = () => {
             variant="contained"
             size="large"
             onClick={handleSubmit(onSubmit)}
-            disabled={!(kycStatus.userKycVerified && kycStatus.storeKycVerified)}
+            disabled={!(user?.emailVerified && me?.storeKycVerified)}
           >
             編集して保存
           </Button>
         </Stack>
       </Container>
-      <LoadingOverlay
-        open={loading || userDocLoading || storeDocLoading || itemDocLoading || kycStatusLoading || configDocLoading}
+      <LoadingOverlay open={loading || meLoading || configLoading} />
+      <ErrorDialog
+        open={!!(error ?? meError ?? configError ?? submitError)}
+        error={error ?? meError ?? configError ?? submitError}
       />
-      <ErrorDialog open={!!error} error={error} />
-      <ErrorDialog open={!!userDocError} error={userDocError} />
-      <ErrorDialog open={!!storeDocError} error={storeDocError} />
-      <ErrorDialog open={!!itemDocError} error={itemDocError} />
-      <ErrorDialog open={!!kycStatusError} error={kycStatusError} />
-      <ErrorDialog open={!!configDocError} error={configDocError} />
-      <ErrorDialog open={!!submitError} error={submitError} />
     </>
   );
 };
