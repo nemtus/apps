@@ -16,10 +16,9 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { Item } from './ItemCard';
-import { Store } from './StoreCard';
 import LoadingOverlay from './LoadingOverlay';
 import ErrorDialog from './ErrorDialog';
+import { OrderJson } from '../../types/domain';
 import {
   convertFromTransactionPayloadToTransactionUri,
   createTransactionPayload,
@@ -27,27 +26,8 @@ import {
   TransactionQrInterface,
 } from '../../configs/symbol';
 
-export interface User {
-  userId: string;
-  email: string;
-  name: string;
-  phoneNumber: string;
-  zipCode: string;
-  address1: string;
-  address2: string;
-  symbolAddress: string;
-}
-
-export interface Order extends User, Store, Item {
-  orderId?: string;
-  orderAmount: number;
-  orderTotalPrice?: number;
-  orderTotalPriceUnit?: string;
-  orderTotalPriceCC?: number;
-  orderTotalPriceCCUnit?: string;
-  orderTxHash?: string;
-  orderStatus?: 'WAITING_PRICE_INFO' | 'PENDING' | 'UNCONFIRMED' | 'CONFIRMED' | 'SENT' | 'TIMEOUT' | 'ABORTED';
-}
+/** micro-XYM (the OrderJson unit) -> whole XYM for display + the transfer payload. */
+const MICRO_XYM = 1_000_000;
 
 export const convertOrderStatus = (orderStatus: string | undefined) => {
   switch (orderStatus) {
@@ -92,7 +72,7 @@ export const convertOrderStatusToMessage = (orderStatus: string | undefined) => 
 };
 
 export interface OrderProps {
-  order: Order;
+  order: OrderJson;
   key: string;
 }
 
@@ -120,8 +100,8 @@ const OrderCard = (orderProps: OrderProps) => {
       createTransactionPayload(
         order.symbolAddress,
         order.storeSymbolAddress,
-        order.orderTotalPriceCC ?? 0,
-        order.orderId ?? '',
+        (order.orderTotalPriceCC ?? 0) / MICRO_XYM,
+        order.orderId,
       )
         .then((payload) => {
           setTransactionPayload(payload);
@@ -227,7 +207,7 @@ const OrderCard = (orderProps: OrderProps) => {
               }`}
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              {`${order.orderTotalPriceCC ? order.orderTotalPriceCC.toString() : ''} ${
+              {`${order.orderTotalPriceCC ? (order.orderTotalPriceCC / MICRO_XYM).toString() : ''} ${
                 order.orderTotalPriceCCUnit ?? ''
               }`}
             </Typography>
