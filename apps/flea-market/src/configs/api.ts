@@ -77,9 +77,9 @@ export const api = {
   listMyOrders: () => req<OrderJson[]>('/me/orders'),
   listMyStoreOrders: () => req<OrderJson[]>('/me/store/orders'),
   getOrder: (orderId: string) => req<OrderJson>(`/orders/${encodeURIComponent(orderId)}`),
-  /** 注文＋Stripe Checkout セッションを作成し、購入者を `url` にリダイレクトする。 */
-  createOrder: (body: { itemId: string; quantity?: number }) =>
-    req<{ orderId: string; url: string }>('/orders', { method: 'POST', body: JSON.stringify(body) }),
+  /** 注文を作成。Stripe レールでは `url`（Checkout）を返す。XYM レールでは orderId のみ。 */
+  createOrder: (body: { itemId: string; quantity?: number; paymentMethod?: 'XYM' | 'STRIPE' }) =>
+    req<{ orderId: string; url?: string }>('/orders', { method: 'POST', body: JSON.stringify(body) }),
 
   /** 店舗/商品画像を R2 にアップロードし、`/api/flea-market/files/<key>` のURLを返す。 */
   async uploadImage(

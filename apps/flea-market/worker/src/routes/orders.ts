@@ -12,10 +12,22 @@ import { createCheckoutSession, createStripe } from '@nemtus/billing';
 import type { Auth } from '@nemtus/auth';
 import { createDb, schema } from '../db';
 import type { Env } from '../env';
+import { getXymJpyRate } from '../lib/price';
 
 interface CreateOrderBody {
   itemId?: string;
   quantity?: number;
+  /** Payment rail. Defaults to STRIPE (backward-compatible). */
+  paymentMethod?: 'XYM' | 'STRIPE';
+}
+
+/**
+ * XYM micro-amount (absolute 6-decimal units) for a JPY total at a JPY/XYM rate.
+ * Rounds UP so rate rounding never leaves the buyer underpaying the JPY value.
+ */
+export function computeXymMicros(totalJpy: number, xymJpyRate: number): number {
+  if (!(xymJpyRate > 0)) throw new Error('invalid_rate');
+  return Math.ceil((totalJpy / xymJpyRate) * 1_000_000);
 }
 
 function json(body: unknown, status = 200): Response {
@@ -56,6 +68,16 @@ export async function createOrderRoute(request: Request, env: Env, auth: Auth): 
   const total = it.priceJpy * quantity;
   const orderId = crypto.randomUUID();
   const now = new Date();
+
+  // XYM rail: settle on-chain. The buyer sends a transfer (rendered as QR/URI by the
+  // client) to the store's Symbol address with orderId as the message; the client
+  // then notifies the verify endpoint, which re-checks it via the Symbol REST API.
+  if (body.paymentMethod === 'XYM') {
+    return createXymOrder(
+      { db, buyerId: buyer.id, buyerName: buyer.name, profile, item: it, quantity, total, orderId, now },
+      env,
+    );
+  }
 
   // Snapshot the buyer's shipping details (from the profile loaded above for the KYC
   // gate) onto the order so it stays fulfillable even if the profile later changes.
@@ -104,4 +126,57 @@ export async function createOrderRoute(request: Request, env: Env, auth: Auth): 
     .where(eq(schema.order.id, orderId));
 
   return json({ orderId, url: checkout.url });
+}
+
+interface XymOrderContext {
+  db: ReturnType<typeof createDb>;
+  buyerId: string;
+  buyerName?: string;
+  profile: typeof schema.userProfile.$inferSelect;
+  item: typeof schema.item.$inferSelect;
+  quantity: number;
+  total: number;
+  orderId: string;
+  now: Date;
+}
+
+async function createXymOrder(c: XymOrderContext, env: Env): Promise<Response> {
+  const { db, buyerId, buyerName, profile, item, quantity, total, orderId, now } = c;
+
+  // The store's Symbol payout address is the transfer recipient — required.
+  const stores = await db.select().from(schema.store).where(eq(schema.store.id, item.storeId));
+  const store = stores[0];
+  if (!store?.symbolAddress) return json({ error: 'store_symbol_address_missing' }, 409);
+
+  let rate: number;
+  try {
+    rate = await getXymJpyRate(env);
+  } catch {
+    return json({ error: 'xym_jpy_rate_unavailable' }, 503);
+  }
+  const totalPriceCc = computeXymMicros(total, rate);
+
+  await db.insert(schema.order).values({
+    id: orderId,
+    buyerUserId: buyerId,
+    storeId: item.storeId,
+    itemId: item.id,
+    itemNameSnapshot: item.name,
+    quantity,
+    totalJpy: total,
+    paymentMethod: 'XYM',
+    orderStatus: 'PENDING',
+    totalPriceCc,
+    shipName: buyerName ?? null,
+    shipPhone: profile.phoneNumber ?? null,
+    shipZip: profile.zipCode ?? null,
+    shipAddress1: profile.address1 ?? null,
+    shipAddress2: profile.address2 ?? null,
+    createdAt: now,
+    updatedAt: now,
+  });
+
+  // The client navigates to the order page, which fetches the full (fat) order and
+  // renders the QR/URI + starts monitoring. No Stripe Checkout URL for this rail.
+  return json({ orderId }, 201);
 }
