@@ -1,8 +1,8 @@
 /**
- * Typed client for the flea-market Worker domain API (`/api/flea-market/*`),
- * replacing the direct Firestore reads/writes + Firebase Storage uploads. Sends
- * cookies (`credentials: 'include'`) so the Better Auth session rides along; set
- * `REACT_APP_API_BASE_URL` to the Worker origin when the SPA is served elsewhere.
+ * flea-market Worker のドメインAPI（`/api/flea-market/*`）用の型付きクライアント。
+ * Firestore の直接読み書き＋Firebase Storage アップロードを置き換える。Cookie を送る
+ * （`credentials: 'include'`）ので Better Auth のセッションが同送される。SPA を別オリジンで
+ * 配信する場合は `REACT_APP_API_BASE_URL` に Worker のオリジンを設定する。
  */
 import type {
   ConfigJson,
@@ -40,7 +40,7 @@ async function req<T>(path: string, init?: RequestInit): Promise<T> {
       const body = (await res.json()) as { error?: string };
       if (body?.error) error = body.error;
     } catch {
-      /* non-JSON error body */
+      /* JSON 以外のエラーボディ */
     }
     throw new ApiError(res.status, error);
   }
@@ -51,18 +51,18 @@ async function req<T>(path: string, init?: RequestInit): Promise<T> {
 export const api = {
   getConfig: () => req<ConfigJson>('/config'),
 
-  // public browse
+  // 公開ブラウズ
   listStores: () => req<StoreJson[]>('/stores'),
   getStore: (storeId: string) => req<StoreJson>(`/stores/${encodeURIComponent(storeId)}`),
   listStoreItems: (storeId: string) => req<ItemJson[]>(`/stores/${encodeURIComponent(storeId)}/items`),
   getStoreItem: (storeId: string, itemId: string) =>
     req<ItemJson>(`/stores/${encodeURIComponent(storeId)}/items/${encodeURIComponent(itemId)}`),
 
-  // current user (profile + KYC)
+  // ログイン中ユーザー（プロフィール＋KYC）
   getMe: () => req<UserJson>('/me'),
   updateMe: (body: UpdateProfileInput) => req<UserJson>('/me', { method: 'PUT', body: JSON.stringify(body) }),
 
-  // owner store + items
+  // オーナーの店舗・商品
   getMyStore: () => req<StoreJson>('/me/store'),
   upsertMyStore: (body: UpsertStoreInput) => req<StoreJson>('/me/store', { method: 'PUT', body: JSON.stringify(body) }),
   listMyItems: () => req<ItemJson[]>('/me/store/items'),
@@ -73,15 +73,15 @@ export const api = {
       body: JSON.stringify(body),
     }),
 
-  // orders
+  // 注文
   listMyOrders: () => req<OrderJson[]>('/me/orders'),
   listMyStoreOrders: () => req<OrderJson[]>('/me/store/orders'),
   getOrder: (orderId: string) => req<OrderJson>(`/orders/${encodeURIComponent(orderId)}`),
-  /** Create an order + Stripe Checkout session; redirect the buyer to `url`. */
+  /** 注文＋Stripe Checkout セッションを作成し、購入者を `url` にリダイレクトする。 */
   createOrder: (body: { itemId: string; quantity?: number }) =>
     req<{ orderId: string; url: string }>('/orders', { method: 'POST', body: JSON.stringify(body) }),
 
-  /** Upload a store or item image to R2; returns the `/api/flea-market/files/<key>` URL. */
+  /** 店舗/商品画像を R2 にアップロードし、`/api/flea-market/files/<key>` のURLを返す。 */
   async uploadImage(
     target: { scope: 'store' } | { scope: 'item'; itemId: string },
     file: Blob,

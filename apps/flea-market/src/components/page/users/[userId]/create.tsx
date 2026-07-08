@@ -1,17 +1,14 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useDocument } from 'react-firebase-hooks/firestore';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import { Button, Container, Stack, TextField } from '@mui/material';
 import * as yup from 'yup';
-import db, { auth, doc, setDoc, httpsCallable, functions } from '../../../../configs/firebase';
 import { SYMBOL_NETWORK_NAME, SYMBOL_ADDRESS_REG_EXP, SYMBOL_PREFIX } from '../../../../configs/symbol';
+import { api } from '../../../../configs/api';
+import { useApi } from '../../../../hooks/useApi';
+import { useAuthUser } from '../../../../hooks/useAuthUser';
 import LoadingOverlay from '../../../ui/LoadingOverlay';
 import ErrorDialog from '../../../ui/ErrorDialog';
 
@@ -48,40 +45,11 @@ const schema = yup.object({
     ),
 });
 
-interface VerifyKycRequest {
-  userId: string;
-  storeId: string;
-}
-
-interface VerifyKycResponse {
-  emailVerified: boolean;
-  userKycVerified: boolean;
-  storeEmailVerified: boolean;
-  storePhoneNumberVerified: boolean;
-  storeAddressVerified: boolean;
-  storeKycVerified: boolean;
-}
-
-const httpsOnCallVerifyKyc = httpsCallable<VerifyKycRequest, VerifyKycResponse>(functions, 'httpsOnCallVerifyKyc');
-
 const UserCreate = () => {
   const navigate = useNavigate();
   const { userId } = useParams();
-  const [user, loading, error] = useAuthState(auth);
-  const [userDoc, userDocLoading, userDocError] = useDocument(doc(db, 'users', userId || ''), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
-  const [kyc, setKyc] = useState<VerifyKycResponse>({
-    emailVerified: false,
-    userKycVerified: false,
-    storeEmailVerified: false,
-    storePhoneNumberVerified: false,
-    storeAddressVerified: false,
-    storeKycVerified: false,
-  });
-  const [configDoc, configDocLoading, configDocError] = useDocument(doc(db, 'configs/1'), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
+  const [user, loading, error] = useAuthUser();
+  const [config, configLoading, configError] = useApi(() => api.getConfig(), []);
   const [submitError, setSubmitError] = useState<Error | undefined>(undefined);
 
   const {
@@ -96,7 +64,7 @@ const UserCreate = () => {
   });
 
   const onSubmit: SubmitHandler<UserCreateFormInput> = async (data) => {
-    if (!configDoc?.data()?.enableCreateUser) {
+    if (!config?.enableCreateUser) {
       setSubmitError(Error('現在、ユーザー登録を受け付けていません。'));
       return;
     }
@@ -108,33 +76,27 @@ const UserCreate = () => {
       setSubmitError(Error('userId is not match with user.uid'));
       return;
     }
-    if (!user?.email) {
-      setSubmitError(Error('Invalid email'));
-      return;
+    try {
+      await api.updateMe(data);
+      void navigate(`/users/${userId}`);
+    } catch (e) {
+      setSubmitError(e instanceof Error ? e : new Error(String(e)));
     }
-    const userDocRef = userDoc?.ref;
-    if (!userDocRef) {
-      setSubmitError(Error("Can't get user document reference"));
-      return;
-    }
-    await setDoc(userDocRef, { userId, email: user.email, ...data }, { merge: true });
-    void navigate(`/users/${userId}`);
   };
 
   useEffect(() => {
-    if (!(!loading && user && userId && userId === user.uid)) {
+    if (loading) {
+      return;
+    }
+    if (!(user && userId && userId === user.uid)) {
       void navigate('/auth/sign-in/');
       return;
     }
-    httpsOnCallVerifyKyc({ userId, storeId: userId })
-      .then((res) => {
-        if (!res.data.emailVerified) {
-          void navigate(`/users/${userId}/verify-user-email`);
-        }
-        setKyc(res.data);
-      })
-      .catch(() => {});
-  }, [userId, user, loading, navigate, setKyc]);
+    // メール確認は旧 httpsOnCallVerifyKyc の emailVerified ゲートの置き換え。
+    if (!user.emailVerified) {
+      void navigate(`/users/${userId}/verify-user-email`);
+    }
+  }, [userId, user, loading, navigate]);
 
   return (
     <>
@@ -194,16 +156,15 @@ const UserCreate = () => {
             variant="contained"
             size="large"
             onClick={handleSubmit(onSubmit)}
-            disabled={!kyc.userKycVerified}
+            disabled={!user?.emailVerified}
           >
             登録して保存
           </Button>
         </Stack>
       </Container>
-      <LoadingOverlay open={loading || userDocLoading || configDocLoading} />
+      <LoadingOverlay open={loading || configLoading} />
       <ErrorDialog open={!!error} error={error} />
-      <ErrorDialog open={!!userDocError} error={userDocError} />
-      <ErrorDialog open={!!configDocError} error={configDocError} />
+      <ErrorDialog open={!!configError} error={configError} />
       <ErrorDialog open={!!submitError} error={submitError} />
     </>
   );

@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useDocument } from 'react-firebase-hooks/firestore';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button, Container, Stack, TextField } from '@mui/material';
 import * as yup from 'yup';
 import { useEffect, useState } from 'react';
-import db, { auth, doc, setDoc } from '../../../../configs/firebase';
 import { SYMBOL_NETWORK_NAME, SYMBOL_ADDRESS_REG_EXP, SYMBOL_PREFIX } from '../../../../configs/symbol';
+import { api } from '../../../../configs/api';
+import { useApi } from '../../../../hooks/useApi';
+import { useAuthUser } from '../../../../hooks/useAuthUser';
 import LoadingOverlay from '../../../ui/LoadingOverlay';
 import ErrorDialog from '../../../ui/ErrorDialog';
 
@@ -52,22 +51,17 @@ const UserUpdate = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { userId } = useParams();
-  const [user, loading, error] = useAuthState(auth);
-  const [userDoc, userDocLoading, userDocError] = useDocument(doc(db, 'users', userId || ''), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
-  const [configDoc, configDocLoading, configDocError] = useDocument(doc(db, 'configs/1'), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
+  const [user, loading, error] = useAuthUser();
+  const [config, configLoading, configError] = useApi(() => api.getConfig(), []);
   const [submitError, setSubmitError] = useState<Error | undefined>(undefined);
 
   const currentUserFormInput: UserUpdateFormInput = {
-    name: location.state.name ?? '',
-    phoneNumber: location.state.phoneNumber ?? '',
-    zipCode: location.state.zipCode ?? '',
-    address1: location.state.address1 ?? '',
-    address2: location.state.address2 ?? '',
-    symbolAddress: location.state.symbolAddress ?? '',
+    name: location.state?.name ?? '',
+    phoneNumber: location.state?.phoneNumber ?? '',
+    zipCode: location.state?.zipCode ?? '',
+    address1: location.state?.address1 ?? '',
+    address2: location.state?.address2 ?? '',
+    symbolAddress: location.state?.symbolAddress ?? '',
   };
 
   const {
@@ -83,7 +77,7 @@ const UserUpdate = () => {
   });
 
   const onSubmit: SubmitHandler<UserUpdateFormInput> = async (data) => {
-    if (!configDoc?.data()?.enableCreateStore) {
+    if (!config?.enableCreateUser) {
       setSubmitError(Error('現在、ユーザー登録を受け付けていません。'));
       return;
     }
@@ -93,15 +87,12 @@ const UserUpdate = () => {
     if (userId !== user?.uid) {
       throw Error('userId is not match with user.uid');
     }
-    if (!user?.email) {
-      throw Error('Invalid email');
+    try {
+      await api.updateMe(data);
+      void navigate(`/users/${userId}`);
+    } catch (e) {
+      setSubmitError(e instanceof Error ? e : new Error(String(e)));
     }
-    const userDocRef = userDoc?.ref;
-    if (!userDocRef) {
-      throw Error("Can't get user document reference");
-    }
-    await setDoc(userDocRef, { userId, email: user.email, ...data }, { merge: true });
-    void navigate(`/users/${userId}`);
   };
 
   const handleCancel = () => {
@@ -112,13 +103,13 @@ const UserUpdate = () => {
   };
 
   useEffect(() => {
-    if (loading || userDocLoading) {
+    if (loading) {
       return;
     }
     if (!(user && userId && userId === user.uid)) {
       void navigate('/auth/sign-in/');
     }
-  }, [userId, user, loading, userDocLoading, navigate]);
+  }, [userId, user, loading, navigate]);
 
   return (
     <>
@@ -188,11 +179,8 @@ const UserUpdate = () => {
           </Button>
         </Stack>
       </Container>
-      <LoadingOverlay open={loading || userDocLoading || configDocLoading} />
-      <ErrorDialog open={!!error} error={error} />
-      <ErrorDialog open={!!userDocError} error={userDocError} />
-      <ErrorDialog open={!!configDocError} error={configDocError} />
-      <ErrorDialog open={!!submitError} error={submitError} />
+      <LoadingOverlay open={loading || configLoading} />
+      <ErrorDialog open={!!(error ?? configError ?? submitError)} error={error ?? configError ?? submitError} />
     </>
   );
 };
