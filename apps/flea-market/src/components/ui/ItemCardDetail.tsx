@@ -1,4 +1,4 @@
-import { Box, Card, IconButton } from '@mui/material';
+import { Box, Card, IconButton, Stack } from '@mui/material';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -8,87 +8,28 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useNavigate } from 'react-router-dom';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useEffect, useState } from 'react';
-import { useDocument } from 'react-firebase-hooks/firestore';
-import { ItemProps, Item } from './ItemCard';
-import { Store } from './StoreCard';
-import db, { auth, collection, addDoc, doc, getDoc } from '../../configs/firebase';
+import { useState } from 'react';
+import { ItemProps } from './ItemCard';
+import { api } from '../../configs/api';
+import { useApi } from '../../hooks/useApi';
+import { useAuthUser } from '../../hooks/useAuthUser';
 import LoadingOverlay from './LoadingOverlay';
 import ConfirmationDialog, { ConfirmationDialogProps } from './ConfirmationDialog';
 import ErrorDialog from './ErrorDialog';
 
-// Local order/user shapes for the (still Firestore-based) order-creation flow;
-// removed when this component is rewired to api.createOrder.
-interface User {
-  userId: string;
-  email: string;
-  name: string;
-  phoneNumber: string;
-  zipCode: string;
-  address1: string;
-  address2: string;
-  symbolAddress: string;
-}
-
-interface Order extends User, Store, Item {
-  orderId?: string;
-  orderAmount: number;
-  orderTotalPrice?: number;
-  orderTotalPriceUnit?: string;
-  orderTotalPriceCC?: number;
-  orderTotalPriceCCUnit?: string;
-  orderTxHash?: string;
-  orderStatus?: 'WAITING_PRICE_INFO' | 'PENDING' | 'UNCONFIRMED' | 'CONFIRMED' | 'SENT' | 'TIMEOUT' | 'ABORTED';
-}
+type PaymentMethod = 'XYM' | 'STRIPE';
 
 const ItemCardDetail = (itemProps: ItemProps) => {
   const navigate = useNavigate();
   const { store, item } = itemProps;
   const { itemId, itemName, itemPrice, itemPriceUnit, itemDescription, itemImageFile, itemStatus } = item;
-  const {
-    storeId,
-    storeName,
-    // storeEmail,
-    // storePhoneNumber,
-    // storeZipCode,
-    // storeAddress1,
-    // storeAddress2,
-    // storeUrl,
-    // storeSymbolAddress,
-    storeDescription,
-    storeImageFile,
-    // storeCoverImageFile,
-  } = store;
-  const [authUser, authUserLoading, authUserError] = useAuthState(auth);
-  const [userDocLoading, setUserDocLoading] = useState(false);
-  const [userDocError, setUserDocError] = useState<Error | undefined>(undefined);
-  const [user, setUser] = useState<User | undefined>(undefined);
+  const { storeId, storeName, storeDescription, storeImageFile } = store;
+  const [authUser, authUserLoading, authUserError] = useAuthUser();
+  const [me, meLoading, meError] = useApi(() => api.getMe().catch(() => undefined), [authUser?.uid]);
+  const [config, configLoading, configError] = useApi(() => api.getConfig(), []);
   const [purchaseLoading, setPurchaseLoading] = useState(false);
   const [purchaseError, setPurchaseError] = useState<Error | undefined>(undefined);
   const [confirmationDialogState, setConfirmationDialogState] = useState<ConfirmationDialogProps | undefined>();
-  const [confirmationError, setConfirmationError] = useState<Error | undefined>(undefined);
-  const [configDoc, configDocLoading, configDocError] = useDocument(doc(db, 'configs/1'), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
-
-  useEffect(() => {
-    if (!authUser) {
-      return;
-    }
-    setUserDocLoading(true);
-    const userDocRef = doc(db, `/users/${authUser.uid}`);
-    getDoc(userDocRef)
-      .then((userDoc) => {
-        setUser(userDoc.data() as User);
-      })
-      .catch((error) => {
-        setUserDocError(error as Error);
-      })
-      .finally(() => {
-        setUserDocLoading(false);
-      });
-  }, [authUser, setUserDocLoading, setUser, setUserDocError]);
 
   const handleStoreAvatarClick = () => {
     void navigate(`/stores/${storeId}`);
@@ -98,8 +39,8 @@ const ItemCardDetail = (itemProps: ItemProps) => {
     void navigate(`/stores/${storeId}/items/${itemId}`);
   };
 
-  const handlePurchaseClick = () => {
-    if (!configDoc?.data()?.enableCreateOrder) {
+  const handlePurchaseClick = (paymentMethod: PaymentMethod) => {
+    if (!config?.enableCreateOrder) {
       setPurchaseError(Error('現在、注文を受け付けていません。'));
       return;
     }
@@ -107,65 +48,56 @@ const ItemCardDetail = (itemProps: ItemProps) => {
       setPurchaseError(Error('買い物をするにはログインしてください'));
       return;
     }
-    if (!user) {
+    if (!me) {
       setPurchaseError(Error('買い物に必要なユーザー情報を取得できません'));
       return;
     }
-    if (!(authUser.uid === user.userId)) {
-      setPurchaseError(Error('認証ユーザーとユーザーの情報が一致しません'));
-      return;
-    }
-    if (
-      !user.userId ||
-      !user.name ||
-      !user.phoneNumber ||
-      !user.zipCode ||
-      !user.address1 ||
-      !user.address2 ||
-      !user.symbolAddress
-    ) {
+    if (!me.name || !me.phoneNumber || !me.zipCode || !me.address1 || !me.address2) {
       setPurchaseError(
         Error('買い物に必要なユーザー情報が不足しています。まず最初に必要なユーザー情報を入力してください。'),
       );
       return;
     }
-    new Promise<string>((resolve) => {
-      setConfirmationDialogState({
-        title: '購入確認',
-        message: 'この商品を購入しますか？OKすると購入先店舗に商品発送先情報が共有されSymbol決済のページに進みます。',
-        onClose: resolve,
-      });
-    })
-      .then((confirmationResult) => {
+    if (paymentMethod === 'XYM' && !me.symbolAddress) {
+      setPurchaseError(Error('XYM決済にはSymbolアドレスの登録が必要です。プロフィールから登録してください。'));
+      return;
+    }
+    const { uid } = authUser;
+    const message =
+      paymentMethod === 'XYM'
+        ? 'この商品を購入しますか？OKすると購入先店舗に発送先情報が共有され、Symbol(XYM)決済のページに進みます。'
+        : 'この商品を購入しますか？OKすると購入先店舗に発送先情報が共有され、クレジットカード決済(Stripe)のページに進みます。';
+    setConfirmationDialogState({
+      title: '購入確認',
+      message,
+      onClose: (result: string) => {
         setConfirmationDialogState(undefined);
-        if (confirmationResult !== 'ok') {
-          throw Error('購入をキャンセルしました');
+        if (result !== 'ok') {
+          return;
         }
-        const orderAmount = 1;
-        const order: Order = {
-          ...user,
-          ...store,
-          ...item,
-          orderAmount,
-        };
-        const orderCollection = collection(db, `/users/${authUser.uid}/orders`);
         setPurchaseLoading(true);
-        addDoc(orderCollection, order)
-          .then((orderDocRef) => {
-            void navigate(`/users/${user.userId}/orders/${orderDocRef.id}`);
+        api
+          .createOrder({ itemId, paymentMethod })
+          .then((res) => {
+            if (res.url) {
+              // Stripe Checkout: hand off to the hosted payment page.
+              window.location.href = res.url;
+            } else {
+              // XYM: go to the order page, which renders the transfer QR + polls.
+              void navigate(`/users/${uid}/orders/${res.orderId}`);
+            }
           })
-          .catch((err) => {
-            setPurchaseError(err as Error);
+          .catch((err: unknown) => {
+            setPurchaseError(err instanceof Error ? err : new Error(String(err)));
           })
           .finally(() => {
             setPurchaseLoading(false);
           });
-      })
-      .catch((error) => {
-        setConfirmationDialogState(undefined);
-        setConfirmationError(error as Error);
-      });
+      },
+    });
   };
+
+  const purchaseDisabled = !storeId || !itemId || itemStatus === 'SOLD_OUT';
 
   return (
     <>
@@ -194,23 +126,23 @@ const ItemCardDetail = (itemProps: ItemProps) => {
             </Typography>
           </CardContent>
           <CardActions>
-            <Button
-              size="large"
-              disabled={!storeId || !itemId || itemStatus === 'SOLD_OUT'}
-              onClick={handlePurchaseClick}
-            >
-              購入
-            </Button>
+            <Stack spacing={1} sx={{ width: '100%' }}>
+              <Button size="large" disabled={purchaseDisabled} onClick={() => handlePurchaseClick('XYM')}>
+                XYM(Symbol)で購入
+              </Button>
+              <Button size="large" disabled={purchaseDisabled} onClick={() => handlePurchaseClick('STRIPE')}>
+                クレジットカードで購入
+              </Button>
+            </Stack>
           </CardActions>
         </Card>
       </Box>
-      <LoadingOverlay open={configDocLoading || authUserLoading || userDocLoading || purchaseLoading} />
+      <LoadingOverlay open={configLoading || authUserLoading || meLoading || purchaseLoading} />
       {confirmationDialogState ? <ConfirmationDialog {...confirmationDialogState} /> : null}
-      <ErrorDialog open={!!configDocError} error={configDocError} />
+      <ErrorDialog open={!!configError} error={configError} />
       <ErrorDialog open={!!authUserError} error={authUserError} />
-      <ErrorDialog open={!!userDocError} error={userDocError} />
+      <ErrorDialog open={!!meError} error={meError} />
       <ErrorDialog open={!!purchaseError} error={purchaseError} />
-      <ErrorDialog open={!!confirmationError} error={confirmationError} />
     </>
   );
 };
