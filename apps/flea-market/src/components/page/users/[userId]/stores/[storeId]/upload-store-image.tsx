@@ -2,51 +2,36 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@mui/material';
-import { useDocument } from 'react-firebase-hooks/firestore';
-import db, { storage, ref, uploadBytes, getDownloadURL, doc, setDoc } from '../../../../../../configs/firebase';
+import { api } from '../../../../../../configs/api';
+import { useApi } from '../../../../../../hooks/useApi';
 import LoadingOverlay from '../../../../../ui/LoadingOverlay';
 import ErrorDialog from '../../../../../ui/ErrorDialog';
 
 const UploadStoreImage = () => {
   const navigate = useNavigate();
   const { userId, storeId } = useParams();
-  const [storageUploading, setStorageUploading] = useState<boolean>(false);
-  const [setDocLoading, setSetDocLoading] = useState<boolean>(false);
+  const [uploading, setUploading] = useState<boolean>(false);
   const [error, setError] = useState<Error | undefined>(undefined);
-  const [configDoc, configDocLoading, configDocError] = useDocument(doc(db, 'configs/1'), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
+  const [config, configLoading, configError] = useApi(() => api.getConfig(), []);
 
   const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!configDoc?.data()?.enableCreateStore) {
+    if (!config?.enableCreateStore) {
       setError(Error('現在、店舗登録を受け付けていません。'));
       return;
     }
     const { files } = e.target;
-    if (!files?.length) {
+    if (!files?.length || !userId || !storeId) {
       return;
     }
-    if (!userId) {
-      return;
-    }
-    if (!storeId) {
-      return;
-    }
-    const storageRef = ref(storage, `users/${userId}/stores/${storeId}/images/${files[0].name}`);
-    const storeDocRef = doc(db, `users/${userId}/stores/${storeId}`);
     try {
-      setStorageUploading(true);
-      const snapshot = await uploadBytes(storageRef, files[0]);
-      const storeImageFile = await getDownloadURL(snapshot.ref);
-      setStorageUploading(false);
-      setSetDocLoading(true);
-      await setDoc(storeDocRef, { storeImageFile }, { merge: true });
-      setSetDocLoading(false);
+      setUploading(true);
+      // uploadImage で R2 に保存し、worker が店舗レコードの画像URLも更新する。
+      await api.uploadImage({ scope: 'store' }, files[0]);
+      setUploading(false);
       void navigate(`/users/${userId}/stores/${storeId}`);
     } catch (err) {
-      setError(err as Error);
-      setStorageUploading(false);
-      setSetDocLoading(false);
+      setError(err instanceof Error ? err : new Error(String(err)));
+      setUploading(false);
     }
   };
 
@@ -65,9 +50,8 @@ const UploadStoreImage = () => {
           アップロード
         </Button>
       </label>
-      <LoadingOverlay open={storageUploading || setDocLoading || configDocLoading} />
-      <ErrorDialog open={!!error} error={error} />
-      <ErrorDialog open={!!configDocError} error={configDocError} />
+      <LoadingOverlay open={uploading || configLoading} />
+      <ErrorDialog open={!!(error ?? configError)} error={error ?? configError} />
     </>
   );
 };
