@@ -1,6 +1,7 @@
-import { SymbolFacade } from '@nemtus/symbol-sdk-typescript/esm/facade/SymbolFacade';
-import { Signature } from '@nemtus/symbol-sdk-typescript/esm/symbol/models';
-import { Configuration, NetworkRoutesApi, NodeRoutesApi } from '@nemtus/symbol-sdk-openapi-generator-typescript-axios';
+// eslint-disable-next-line import/no-unresolved -- resolver doesn't follow @nemtus/symbol-sdk's "exports" subpaths (tsc does)
+import { SymbolFacade, SymbolTransactionFactory } from '@nemtus/symbol-sdk/symbol';
+import { Signature } from '@nemtus/symbol-sdk';
+import { Configuration, NetworkRoutesApi, NodeRoutesApi } from '@nemtus/symbol-rest-api-client-fetch';
 
 export const SYMBOL_NETWORK_NAME = import.meta.env.REACT_APP_SYMBOL_PREFIX === 'N' ? 'メインネット' : 'テストネット';
 export const SYMBOL_PREFIX = import.meta.env.REACT_APP_SYMBOL_PREFIX ?? 'T';
@@ -33,7 +34,7 @@ export const createTransactionPayload = async (
   };
   const configuration = new Configuration(configurationParameters);
   const networkRoutesApi = new NetworkRoutesApi(configuration);
-  const networkPropertiesDTO = (await networkRoutesApi.getNetworkProperties()).data;
+  const networkPropertiesDTO = await networkRoutesApi.getNetworkProperties();
 
   // epochAdjustmentのレスポンス値は文字列でsが末尾に含まれるため除去してnumberに変換する
   const epochAdjustmentOriginal = networkPropertiesDTO.network.epochAdjustment;
@@ -50,8 +51,7 @@ export const createTransactionPayload = async (
   const networkCurrencyMosaicId = BigInt(networkCurrencyMosaicIdOriginal.replace(/'/g, ''));
 
   // facadeの中に指定するtestnet等のネットワーク名を取得するためNetworkRoutesApi.getNetworkTypeを呼び出す
-  const networkTypeResponse = await networkRoutesApi.getNetworkType();
-  const networkTypeDTO = networkTypeResponse.data;
+  const networkTypeDTO = await networkRoutesApi.getNetworkType();
   if (!networkTypeDTO) {
     return undefined;
   }
@@ -83,13 +83,11 @@ export const createTransactionPayload = async (
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
   (transaction as any).fee.value = BigInt((transaction as any).size * feeMultiplier);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-  const signature = new Signature(undefined);
+  // 未署名ペイロードのテンプレートを作るためゼロ埋めの署名を添付する（ウォレット側で署名される）。
+  const signature = new Signature(new Uint8Array(Signature.SIZE));
+  const transactionPayload = SymbolTransactionFactory.attachSignature(transaction, signature);
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any
-  const transactionPayload = (facade.transactionFactory.constructor as any).attachSignature(transaction, signature);
-
-  return transactionPayload as string;
+  return transactionPayload;
 };
 
 export const convertFromTransactionPayloadToTransactionUri = (
@@ -119,7 +117,7 @@ export const createTransactionQrData = async (transactionPayload: string): Promi
   };
   const configuration = new Configuration(configurationParameters);
   const nodeRoutesApi = new NodeRoutesApi(configuration);
-  const nodeInfoDTO = (await nodeRoutesApi.getNodeInfo()).data;
+  const nodeInfoDTO = await nodeRoutesApi.getNodeInfo();
   const networkId = nodeInfoDTO.networkIdentifier;
   const chainId = nodeInfoDTO.networkGenerationHashSeed;
   const json = JSON.parse(transactionPayload) as { payload: string };
