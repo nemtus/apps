@@ -64,6 +64,12 @@ export const api = {
 
   // オーナーの店舗・商品
   getMyStore: () => req<StoreJson>('/me/store'),
+  /** 店舗メール確認コードを店舗メール宛に送信（SES）。 */
+  requestStoreEmailVerification: () =>
+    req<{ ok: boolean }>('/me/store/verify-email/challenge', { method: 'POST', body: JSON.stringify({}) }),
+  /** 店舗メール確認コードを照合し、storeEmailVerified/storeKycVerified を更新した UserJson を返す。 */
+  verifyStoreEmail: (code: string) =>
+    req<UserJson>('/me/store/verify-email', { method: 'POST', body: JSON.stringify({ code }) }),
   upsertMyStore: (body: UpsertStoreInput) => req<StoreJson>('/me/store', { method: 'PUT', body: JSON.stringify(body) }),
   listMyItems: () => req<ItemJson[]>('/me/store/items'),
   createMyItem: (body: ItemInput) => req<ItemJson>('/me/store/items', { method: 'POST', body: JSON.stringify(body) }),
