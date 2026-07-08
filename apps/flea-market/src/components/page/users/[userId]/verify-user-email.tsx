@@ -1,97 +1,65 @@
-import { Button, Container, Stack } from '@mui/material';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useDocument } from 'react-firebase-hooks/firestore';
+import { Button, Container, Stack, Typography } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import db, { auth, functions, httpsCallable, doc } from '../../../../configs/firebase';
+import { sendVerificationEmail } from '../../../../configs/auth';
+import { api } from '../../../../configs/api';
+import { useApi } from '../../../../hooks/useApi';
+import { useAuthUser } from '../../../../hooks/useAuthUser';
 import LoadingOverlay from '../../../ui/LoadingOverlay';
 import ErrorDialog from '../../../ui/ErrorDialog';
-
-interface VerifyKycRequest {
-  userId: string;
-  storeId: string;
-}
-
-interface VerifyKycResponse {
-  emailVerified: boolean;
-  userKycVerified: boolean;
-  storeEmailVerified: boolean;
-  storePhoneNumberVerified: boolean;
-  storeAddressVerified: boolean;
-  storeKycVerified: boolean;
-}
-
-const httpsOnCallVerifyKyc = httpsCallable<VerifyKycRequest, VerifyKycResponse>(functions, 'httpsOnCallVerifyKyc');
 
 const VerifyUserEmail = () => {
   const navigate = useNavigate();
   const { userId } = useParams();
-  const [userDoc, userDocLoading, userDocError] = useDocument(doc(db, 'users', userId ?? ''), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
-  const [emailVerified, setEmailVerified] = useState<boolean>(false);
-  const [emailVerifiedLoading, setEmailVerifiedLoading] = useState<boolean>(false);
-  const [emailVerifiedError, setEmailVerifiedError] = useState<Error | undefined>(undefined);
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading, error] = useAuthUser();
+  const [me, meLoading] = useApi(() => api.getMe().catch(() => undefined), [user?.uid]);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [actionError, setActionError] = useState<Error | undefined>(undefined);
+  const [resent, setResent] = useState(false);
 
   useEffect(() => {
-    if (!(!loading && user && userId && userId === user.uid)) {
+    if (loading) {
+      return;
+    }
+    if (!(user && userId && userId === user.uid)) {
       void navigate('/auth/sign-in/');
       return;
     }
-    setEmailVerifiedLoading(true);
-    httpsOnCallVerifyKyc({ userId, storeId: userId })
-      .then((res) => {
-        const emailVerifiedResult = res.data.emailVerified;
-        setEmailVerified(emailVerifiedResult);
-        if (!emailVerifiedResult) {
-          throw Error('ご登録のメールアドレス宛に届いている認証メールのリンクをクリックした後、再度お試しください。');
-        }
-        if (userDoc === undefined) {
-          return;
-        }
-        if (emailVerifiedResult && userDoc.exists()) {
-          void navigate(`/users/${userId}`);
-        } else {
-          void navigate(`/users/${userId}/create`);
-        }
-      })
-      .catch((err) => {
-        setEmailVerifiedError(err as Error);
-      })
-      .finally(() => {
-        setEmailVerifiedLoading(false);
-      });
-  }, [user, loading, userDoc, userId, setEmailVerified, navigate]);
+    // Better Auth のメール確認が済んでいれば先へ。プロフィール未作成なら作成ページへ。
+    if (user.emailVerified) {
+      void navigate(me?.name ? `/users/${userId}` : `/users/${userId}/create`);
+    }
+  }, [user, loading, userId, me, navigate]);
 
-  const handleEmailVerify = () => {
-    setEmailVerifiedLoading(true);
-    if (!user?.uid) {
-      setEmailVerifiedError(Error("Can't get user id"));
+  const handleResend = () => {
+    if (!user?.email) {
       return;
     }
-    httpsOnCallVerifyKyc({ userId: user.uid, storeId: user.uid })
+    setActionLoading(true);
+    setActionError(undefined);
+    // Better Auth が SES 経由で確認メールを再送する。
+    sendVerificationEmail({
+      email: user.email,
+      callbackURL: `${window.location.origin}/users/${user.uid}/verify-user-email`,
+    })
       .then((res) => {
-        const emailVerifiedResult = res.data.emailVerified;
-        setEmailVerified(emailVerifiedResult);
-        if (!emailVerifiedResult) {
-          throw Error('ご登録のメールアドレス宛に届いている認証メールのリンクをクリックした後、再度お試しください。');
-        }
-        if (userDoc === undefined) {
+        if (res.error) {
+          setActionError(new Error(res.error.message ?? '認証メールの再送に失敗しました。'));
           return;
         }
-        if (emailVerifiedResult && userDoc.exists()) {
-          void navigate(`/users/${user.uid}`);
-        } else {
-          void navigate(`/users/${user.uid}/create`);
-        }
+        setResent(true);
       })
-      .catch((err) => {
-        setEmailVerifiedError(err as Error);
+      .catch((e: unknown) => {
+        setActionError(e instanceof Error ? e : new Error(String(e)));
       })
       .finally(() => {
-        setEmailVerifiedLoading(false);
+        setActionLoading(false);
       });
+  };
+
+  const handleCheck = () => {
+    // セッションを取り直して emailVerified を反映する。
+    window.location.reload();
   };
 
   return (
@@ -99,15 +67,21 @@ const VerifyUserEmail = () => {
       <Container maxWidth="sm">
         <h2>メールアドレス確認</h2>
         <Stack spacing={3}>
-          <Button color="primary" variant="contained" size="large" onClick={handleEmailVerify} disabled={emailVerified}>
-            メールアドレス確認
+          <Typography>
+            ご登録のメールアドレス宛に届いている認証メールのリンクをクリックしてください。クリック後、「確認」を押すと次へ進めます。
+          </Typography>
+          {resent ? <Typography color="success.main">認証メールを再送しました。</Typography> : null}
+          <Button color="primary" variant="contained" size="large" onClick={handleCheck}>
+            確認
+          </Button>
+          <Button color="secondary" variant="outlined" size="large" onClick={handleResend}>
+            認証メールを再送
           </Button>
         </Stack>
       </Container>
-      <LoadingOverlay open={loading || userDocLoading || emailVerifiedLoading} />
+      <LoadingOverlay open={loading || meLoading || actionLoading} />
       <ErrorDialog open={!!error} error={error} />
-      <ErrorDialog open={!!userDocError} error={userDocError} />
-      <ErrorDialog open={!!emailVerifiedError} error={emailVerifiedError} />
+      <ErrorDialog open={!!actionError} error={actionError} />
     </>
   );
 };
