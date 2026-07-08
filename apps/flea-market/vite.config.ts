@@ -48,6 +48,10 @@ export default defineConfig({
     port: 3000,
   },
   test: {
+    // The backend Worker (apps/flea-market/worker) has its own node-environment
+    // vitest (run by ci-core); its node:sqlite tests must not be pulled into this
+    // app's jsdom run.
+    exclude: ['**/node_modules/**', '**/dist/**', '**/build/**', 'worker/**'],
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/setupTests.ts',
