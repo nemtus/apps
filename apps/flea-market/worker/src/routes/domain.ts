@@ -9,7 +9,7 @@
  * (email/phone/address secrets + rate limiting) and syncing `userKycVerified` to
  * Better Auth `emailVerified`. KYC flags are surfaced read-only here for now.
  */
-import { and, eq, getTableColumns } from 'drizzle-orm';
+import { and, eq, getTableColumns, inArray } from 'drizzle-orm';
 import { putObject } from '@nemtus/storage';
 import { buildAuth } from '../build-auth';
 import { createDb, schema } from '../db';
@@ -230,18 +230,49 @@ async function updateMyItem(ctx: RouteContext): Promise<Response> {
 
 // ---------- orders (reads) ----------
 
+/**
+ * Batch-load the buyer (core user + profile), store, and item rows for a set of
+ * orders and map to the denormalized OrderJson the SPA reads. Batched (one query
+ * per related table) rather than per-order to avoid N+1.
+ */
+async function loadOrderJsons(db: Db, orders: (typeof schema.order.$inferSelect)[]) {
+  if (orders.length === 0) return [];
+  const buyerIds = [...new Set(orders.map((o) => o.buyerUserId))];
+  const storeIds = [...new Set(orders.map((o) => o.storeId))];
+  const itemIds = [...new Set(orders.map((o) => o.itemId))];
+  const [users, profiles, stores, items] = await Promise.all([
+    db.select().from(schema.user).where(inArray(schema.user.id, buyerIds)),
+    db.select().from(schema.userProfile).where(inArray(schema.userProfile.userId, buyerIds)),
+    db.select().from(schema.store).where(inArray(schema.store.id, storeIds)),
+    db.select().from(schema.item).where(inArray(schema.item.id, itemIds)),
+  ]);
+  const userById = new Map(users.map((u) => [u.id, u]));
+  const profileById = new Map(profiles.map((p) => [p.userId, p]));
+  const storeById = new Map(stores.map((st) => [st.id, st]));
+  const itemById = new Map(items.map((it) => [it.id, it]));
+  return orders.map((o) =>
+    toOrderJson(
+      o,
+      userById.get(o.buyerUserId),
+      profileById.get(o.buyerUserId),
+      storeById.get(o.storeId),
+      itemById.get(o.itemId),
+    ),
+  );
+}
+
 async function listMyOrders(ctx: RouteContext): Promise<Response> {
   const user = await requireUser(ctx);
   const db = createDb(ctx.env.DB);
   const orders = await db.select().from(schema.order).where(eq(schema.order.buyerUserId, user.id));
-  return json(orders.map(toOrderJson));
+  return json(await loadOrderJsons(db, orders));
 }
 
 async function listMyStoreOrders(ctx: RouteContext): Promise<Response> {
   const user = await requireUser(ctx);
   const db = createDb(ctx.env.DB);
   const orders = await db.select().from(schema.order).where(eq(schema.order.storeId, user.id));
-  return json(orders.map(toOrderJson));
+  return json(await loadOrderJsons(db, orders));
 }
 
 async function getOrder(ctx: RouteContext): Promise<Response> {
@@ -254,7 +285,8 @@ async function getOrder(ctx: RouteContext): Promise<Response> {
   if (order.buyerUserId !== user.id && order.storeId !== user.id) {
     throw httpError('forbidden', 403);
   }
-  return json(toOrderJson(order));
+  const [orderJson] = await loadOrderJsons(db, [order]);
+  return json(orderJson);
 }
 
 // ---------- owner: image upload (R2) ----------
