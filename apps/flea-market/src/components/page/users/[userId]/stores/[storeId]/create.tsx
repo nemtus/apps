@@ -1,17 +1,14 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useDocument } from 'react-firebase-hooks/firestore';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button, Container, Stack, TextField } from '@mui/material';
 import * as yup from 'yup';
 import { useEffect, useState } from 'react';
-import db, { auth, doc, setDoc } from '../../../../../../configs/firebase';
 import { SYMBOL_NETWORK_NAME, SYMBOL_ADDRESS_REG_EXP, SYMBOL_PREFIX } from '../../../../../../configs/symbol';
+import { api } from '../../../../../../configs/api';
+import { useApi } from '../../../../../../hooks/useApi';
+import { useAuthUser } from '../../../../../../hooks/useAuthUser';
 import LoadingOverlay from '../../../../../ui/LoadingOverlay';
 import ErrorDialog from '../../../../../ui/ErrorDialog';
 
@@ -61,19 +58,8 @@ const schema = yup.object({
 const StoreCreate = () => {
   const navigate = useNavigate();
   const { userId, storeId } = useParams();
-  const [user, loading, error] = useAuthState(auth);
-  const [userDoc, userDocLoading, userDocError] = useDocument(doc(db, 'users', userId ?? ''), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
-  const [storeDoc, storeDocLoading, storeDocError] = useDocument(
-    doc(db, 'users', userId ?? '', 'stores', storeId ?? ''),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    },
-  );
-  const [configDoc, configDocLoading, configDocError] = useDocument(doc(db, 'configs/1'), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
+  const [user, loading, error] = useAuthUser();
+  const [config, configLoading, configError] = useApi(() => api.getConfig(), []);
   const [submitError, setSubmitError] = useState<Error | undefined>(undefined);
 
   const {
@@ -88,49 +74,28 @@ const StoreCreate = () => {
   });
 
   const onSubmit: SubmitHandler<StoreCreateFormInput> = async (data) => {
-    if (!configDoc?.data()?.enableCreateStore) {
+    if (!config?.enableCreateStore) {
       setSubmitError(Error('現在、店舗登録を受け付けていません。'));
       return;
     }
-
-    if (!userId) {
-      setSubmitError(Error('Invalid userId'));
-      return;
-    }
-    if (userId !== user?.uid) {
+    if (!userId || userId !== user?.uid) {
       setSubmitError(Error('userId is not match with user.uid'));
-      return;
-    }
-    if (!user?.email) {
-      setSubmitError(Error('Invalid email'));
-      return;
-    }
-    const userDocRef = userDoc?.ref;
-    if (!userDocRef) {
-      setSubmitError(Error("Can't get user document reference"));
-      return;
-    }
-
-    if (!storeId) {
-      setSubmitError(Error('Invalid userId'));
       return;
     }
     if (storeId !== userId) {
       setSubmitError(Error('storeId is not match with userId'));
       return;
     }
-    const storeDocRef = storeDoc?.ref;
-    if (!storeDocRef) {
-      setSubmitError(Error("Can't get user document reference"));
-      return;
+    try {
+      await api.upsertMyStore(data);
+      void navigate(`/users/${userId}/stores/${storeId}`);
+    } catch (e) {
+      setSubmitError(e instanceof Error ? e : new Error(String(e)));
     }
-
-    await setDoc(storeDocRef, { storeId, ...data }, { merge: true });
-    void navigate(`/users/${userId}/stores/${storeId}`);
   };
 
   useEffect(() => {
-    if (loading || userDocLoading) {
+    if (loading) {
       return;
     }
     if (!(user && userId && userId === user.uid)) {
@@ -140,7 +105,7 @@ const StoreCreate = () => {
     if (userId !== storeId) {
       void navigate(`/users/${userId}`);
     }
-  }, [userId, storeId, user, loading, userDocLoading, navigate]);
+  }, [userId, storeId, user, loading, navigate]);
 
   if (userId !== storeId) {
     return null;
@@ -220,20 +185,16 @@ const StoreCreate = () => {
             label="店舗説明"
             type="text"
             {...register('storeDescription')}
-            error={'storeSymbolAddress' in errors}
-            helperText={errors.storeSymbolAddress?.message}
+            error={'storeDescription' in errors}
+            helperText={errors.storeDescription?.message}
           />
           <Button color="primary" variant="contained" size="large" onClick={handleSubmit(onSubmit)}>
             登録して保存
           </Button>
         </Stack>
       </Container>
-      <LoadingOverlay open={loading || userDocLoading || storeDocLoading || configDocLoading} />
-      <ErrorDialog open={!!error} error={error} />
-      <ErrorDialog open={!!userDocError} error={userDocError} />
-      <ErrorDialog open={!!storeDocError} error={storeDocError} />
-      <ErrorDialog open={!!configDocError} error={configDocError} />
-      <ErrorDialog open={!!submitError} error={submitError} />
+      <LoadingOverlay open={loading || configLoading} />
+      <ErrorDialog open={!!(error ?? configError ?? submitError)} error={error ?? configError ?? submitError} />
     </>
   );
 };
