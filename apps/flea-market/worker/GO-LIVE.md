@@ -39,7 +39,7 @@ wrangler d1 create nemtus-core
 wrangler kv namespace create SESSION_KV
 
 # R2 (store/item images)
-wrangler r2 bucket create flea-market
+wrangler r2 bucket create nemtus-flea-market
 ```
 
 Then edit `wrangler.toml`: replace `TODO_D1_DATABASE_ID` / `TODO_KV_NAMESPACE_ID`, and set
