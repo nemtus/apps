@@ -1,139 +1,27 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Container, Stack, TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Button, Container, Stack, Typography } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, functions, httpsCallable } from '../../../../../../configs/firebase';
-import LoadingOverlay from '../../../../../ui/LoadingOverlay';
-import ErrorDialog from '../../../../../ui/ErrorDialog';
 
-interface VerifyStorePhoneNumberFormInput {
-  storePhoneNumberSecret: string;
-}
-
-interface ChallengeToVerifyStorePhoneNumberRequest {
-  userId: string;
-  storeId: string;
-  storePhoneNumberSecret: string;
-}
-
-interface ChallengeToVerifyStorePhoneNumberResponse {
-  storePhoneNumberVerified: boolean;
-}
-
-const httpsOnCallChallengeToVerifyStorePhoneNumber = httpsCallable<
-  ChallengeToVerifyStorePhoneNumberRequest,
-  ChallengeToVerifyStorePhoneNumberResponse
->(functions, 'httpsOnCallChallengeToVerifyStorePhoneNumber');
-
-const schema = yup.object({
-  storePhoneNumberSecret: yup
-    .string()
-    .required('必須です')
-    .matches(/^[0-9]{6}$/, '数字6桁で入力してください'),
-});
-
+// 店舗電話番号の確認は当面スキップ（env ENABLE_STORE_PHONE_VERIFICATION が既定 off）。
+// Twilio 等の連携が整い次第、チャレンジ実装を追加してフラグで有効化する。
 const VerifyStorePhoneNumber = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<VerifyStorePhoneNumberFormInput>({
-    resolver: yupResolver(schema),
-    mode: 'onChange',
-    reValidateMode: 'onChange',
-    criteriaMode: 'all',
-  });
-
   const { userId, storeId } = useParams();
   const navigate = useNavigate();
-  const [user, loadingUser, errorUser] = useAuthState(auth);
-  const [loadingChallenge, setLoadingChallenge] = useState(false);
-  const [error, setError] = useState<Error | undefined>(undefined);
-
-  useEffect(() => {
-    if (loadingUser) {
-      return;
-    }
-    if (loadingChallenge) {
-      return;
-    }
-    if (!(user && userId && userId === user.uid)) {
-      void navigate('/auth/sign-in/');
-      return;
-    }
-    if (userId !== storeId) {
-      void navigate(`/users/${userId}`);
-    }
-  });
-
-  const onSubmit: SubmitHandler<VerifyStorePhoneNumberFormInput> = (data) => {
-    const { storePhoneNumberSecret } = data;
-    if (!userId) {
-      return;
-    }
-    if (!storeId) {
-      return;
-    }
-    const challengeToVerifyStorePhoneNumberRequest: ChallengeToVerifyStorePhoneNumberRequest = {
-      userId,
-      storeId,
-      storePhoneNumberSecret,
-    };
-    setLoadingChallenge(true);
-    httpsOnCallChallengeToVerifyStorePhoneNumber(challengeToVerifyStorePhoneNumberRequest)
-      .then((res) => {
-        if (res.data.storePhoneNumberVerified) {
-          void navigate(`/users/${userId}/stores/${storeId}/`);
-        }
-      })
-      .catch((err) => {
-        setError(err as Error);
-      })
-      .finally(() => {
-        setLoadingChallenge(false);
-      });
+  const handleBack = () => {
+    void navigate(`/users/${userId ?? ''}/stores/${storeId ?? ''}/`);
   };
-
-  const handleCancel = () => {
-    if (!userId) {
-      return;
-    }
-    if (!storeId) {
-      return;
-    }
-    void navigate(`/users/${userId}/stores/${storeId}/`);
-  };
-
   return (
-    <>
-      <Container maxWidth="sm">
-        <h2>店舗電話番号確認</h2>
-        <Stack spacing={3}>
-          <TextField
-            required
-            label="確認コード"
-            type="text"
-            {...register('storePhoneNumberSecret')}
-            error={'storePhoneNumberSecret' in errors}
-            helperText={errors.storePhoneNumberSecret?.message}
-          />
-          <Button color="primary" variant="contained" size="large" onClick={handleSubmit(onSubmit)}>
-            確認
-          </Button>
-          <Button color="primary" variant="contained" size="large" onClick={handleCancel}>
-            キャンセル
-          </Button>
-        </Stack>
-      </Container>
-      <LoadingOverlay open={loadingUser} />
-      <LoadingOverlay open={loadingChallenge} />
-      <ErrorDialog open={!!errorUser} error={errorUser} />
-      <ErrorDialog open={!!error} error={error} />
-    </>
+    <Container maxWidth="sm">
+      <h2>店舗電話番号確認</h2>
+      <Stack spacing={3}>
+        <Typography>
+          店舗電話番号の確認は現在準備中です。店舗KYCはメールアドレスの確認のみで完了します（電話番号の確認は連携準備が整い次第ご案内します）。
+        </Typography>
+        <Button color="primary" variant="contained" size="large" onClick={handleBack}>
+          店舗ページに戻る
+        </Button>
+      </Stack>
+    </Container>
   );
 };
 

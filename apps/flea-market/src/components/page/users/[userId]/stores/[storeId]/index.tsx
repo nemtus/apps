@@ -25,6 +25,8 @@ const Store = () => {
   );
   // 店舗KYCフラグは api.getMe() から取得する（旧 httpsOnCallVerifyKyc の置き換え）。
   const [me, meLoading, meError] = useApi(() => api.getMe(), [user?.uid]);
+  // 店舗の電話/住所KYCは env で opt-in。無効なら確認リンクを出さない（不要扱い）。
+  const [config] = useApi(() => api.getConfig(), []);
   const storeExists = !!store;
 
   useEffect(() => {
@@ -97,7 +99,7 @@ const Store = () => {
             <div>
               <Box sx={{ display: 'flex', alignItems: 'baseline' }}>
                 <h3>店舗電話番号</h3>
-                {me?.storePhoneNumberVerified ? (
+                {me?.storePhoneNumberVerified || !config?.enableStorePhoneVerification ? (
                   <CheckIcon color="success" />
                 ) : (
                   <Button
@@ -123,7 +125,7 @@ const Store = () => {
             <div>
               <Box sx={{ display: 'flex', alignItems: 'baseline' }}>
                 <h3>店舗住所(番地・建物名・部屋番号)</h3>
-                {me?.storeAddressVerified ? (
+                {me?.storeAddressVerified || !config?.enableStoreAddressVerification ? (
                   <CheckIcon color="success" />
                 ) : (
                   <Button

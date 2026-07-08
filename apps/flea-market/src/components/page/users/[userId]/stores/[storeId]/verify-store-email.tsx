@@ -1,33 +1,18 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Container, Stack, TextField } from '@mui/material';
+import { Button, Container, Stack, TextField, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, functions, httpsCallable } from '../../../../../../configs/firebase';
+import { api } from '../../../../../../configs/api';
+import { useAuthUser } from '../../../../../../hooks/useAuthUser';
 import LoadingOverlay from '../../../../../ui/LoadingOverlay';
 import ErrorDialog from '../../../../../ui/ErrorDialog';
 
 interface VerifyStoreEmailFormInput {
   storeEmailSecret: string;
 }
-
-interface ChallengeToVerifyStoreEmailRequest {
-  userId: string;
-  storeId: string;
-  storeEmailSecret: string;
-}
-
-interface ChallengeToVerifyStoreEmailResponse {
-  storeEmailVerified: boolean;
-}
-
-const httpsOnCallChallengeToVerifyStoreEmail = httpsCallable<
-  ChallengeToVerifyStoreEmailRequest,
-  ChallengeToVerifyStoreEmailResponse
->(functions, 'httpsOnCallChallengeToVerifyStoreEmail');
 
 const schema = yup.object({
   storeEmailSecret: yup
@@ -50,15 +35,13 @@ const VerifyStoreEmail = () => {
 
   const { userId, storeId } = useParams();
   const navigate = useNavigate();
-  const [user, loadingUser, errorUser] = useAuthState(auth);
-  const [loadingChallenge, setLoadingChallenge] = useState(false);
+  const [user, loadingUser, errorUser] = useAuthUser();
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | undefined>(undefined);
+  const [sent, setSent] = useState(false);
 
   useEffect(() => {
     if (loadingUser) {
-      return;
-    }
-    if (loadingChallenge) {
       return;
     }
     if (!(user && userId && userId === user.uid)) {
@@ -68,44 +51,43 @@ const VerifyStoreEmail = () => {
     if (userId !== storeId) {
       void navigate(`/users/${userId}`);
     }
-  });
+  }, [user, loadingUser, userId, storeId, navigate]);
 
-  const onSubmit: SubmitHandler<VerifyStoreEmailFormInput> = (data) => {
-    const { storeEmailSecret } = data;
-    if (!userId) {
-      return;
-    }
-    if (!storeId) {
-      return;
-    }
-    const challengeToVerifyStoreEmailRequest: ChallengeToVerifyStoreEmailRequest = {
-      userId,
-      storeId,
-      storeEmailSecret,
-    };
-    setLoadingChallenge(true);
-    httpsOnCallChallengeToVerifyStoreEmail(challengeToVerifyStoreEmailRequest)
-      .then((res) => {
-        if (res.data.storeEmailVerified) {
-          void navigate(`/users/${userId}/stores/${storeId}/`);
-        }
+  const handleSendCode = () => {
+    setLoading(true);
+    setError(undefined);
+    // worker が店舗メール宛に確認コードを SES で送信する。
+    api
+      .requestStoreEmailVerification()
+      .then(() => {
+        setSent(true);
       })
-      .catch((err) => {
-        setError(err as Error);
+      .catch((e: unknown) => {
+        setError(e instanceof Error ? e : new Error(String(e)));
       })
       .finally(() => {
-        setLoadingChallenge(false);
+        setLoading(false);
+      });
+  };
+
+  const onSubmit: SubmitHandler<VerifyStoreEmailFormInput> = (data) => {
+    setLoading(true);
+    setError(undefined);
+    api
+      .verifyStoreEmail(data.storeEmailSecret)
+      .then(() => {
+        void navigate(`/users/${userId}/stores/${storeId}/`);
+      })
+      .catch((e: unknown) => {
+        setError(e instanceof Error ? e : new Error(String(e)));
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
   const handleCancel = () => {
-    if (!userId) {
-      return;
-    }
-    if (!storeId) {
-      return;
-    }
-    void navigate(`/users/${userId}/stores/${storeId}/`);
+    void navigate(`/users/${userId ?? ''}/stores/${storeId ?? ''}/`);
   };
 
   return (
@@ -113,6 +95,13 @@ const VerifyStoreEmail = () => {
       <Container maxWidth="sm">
         <h2>店舗メールアドレス確認</h2>
         <Stack spacing={3}>
+          <Typography>
+            登録した店舗メールアドレス宛に確認コードを送信し、届いた6桁のコードを入力してください。
+          </Typography>
+          <Button color="secondary" variant="outlined" size="large" onClick={handleSendCode}>
+            確認コードを送信
+          </Button>
+          {sent ? <Typography color="success.main">確認コードを送信しました。</Typography> : null}
           <TextField
             required
             label="確認コード"
@@ -129,8 +118,7 @@ const VerifyStoreEmail = () => {
           </Button>
         </Stack>
       </Container>
-      <LoadingOverlay open={loadingUser} />
-      <LoadingOverlay open={loadingChallenge} />
+      <LoadingOverlay open={loadingUser || loading} />
       <ErrorDialog open={!!errorUser} error={errorUser} />
       <ErrorDialog open={!!error} error={error} />
     </>
