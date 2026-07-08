@@ -1,71 +1,50 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { Container } from '@mui/material';
-import OrderCardDetail, { Order } from '../../../../../ui/OrderCardDetails';
-import db, { doc, onSnapshot, auth } from '../../../../../../configs/firebase';
+import OrderCardDetail from '../../../../../ui/OrderCardDetails';
+import { api } from '../../../../../../configs/api';
+import { useApi } from '../../../../../../hooks/useApi';
+import { useAuthUser } from '../../../../../../hooks/useAuthUser';
 import LoadingOverlay from '../../../../../ui/LoadingOverlay';
 import ErrorDialog from '../../../../../ui/ErrorDialog';
 
 const OrderForUser = () => {
   const { userId, orderId } = useParams();
-  const [authUser, authUserLoading, authUserError] = useAuthState(auth);
-  const [orderDocData, setOrderDocData] = useState<Order | undefined>(undefined);
-  const [orderDocLoading, setOrderDocLoading] = useState(false);
-  const [orderDocError, setOrderDocError] = useState<Error | undefined>(undefined);
-  const [orderExists, setOrderExists] = useState(false);
+  const [authUser, authUserLoading, authUserError] = useAuthUser();
+  const [tick, setTick] = useState(0);
+  const [order, orderLoading, orderError] = useApi(() => api.getOrder(orderId ?? ''), [orderId, tick]);
 
+  // XYM 注文が PENDING/UNCONFIRMED の間は着金確認をポーリングし、確定したら再取得する。worker が
+  // Symbol REST で orderId 宛の送金を照合するため、クライアントは txHash を知る必要がない。
   useEffect(() => {
-    if (!userId) {
+    if (!orderId || !order || order.paymentMethod !== 'XYM') {
       return undefined;
     }
-    if (!orderId) {
+    if (order.orderStatus !== 'PENDING' && order.orderStatus !== 'UNCONFIRMED') {
       return undefined;
     }
-    const orderDocRef = doc(db, `/users/${userId}/orders/${orderId}`);
-    setOrderDocLoading(true);
-    const unsubscribe = onSnapshot(
-      orderDocRef,
-      { includeMetadataChanges: true },
-      (res) => {
-        setOrderExists(res.exists());
-        setOrderDocData(res.data() as Order);
-        setOrderDocLoading(false);
-      },
-      (error) => {
-        setOrderDocError(error as Error);
-        setOrderDocLoading(false);
-      },
-    );
-    return function cleanup() {
-      if (unsubscribe) {
-        unsubscribe();
-      }
-    };
-  }, [userId, orderId, setOrderDocLoading, setOrderExists, setOrderDocData, setOrderDocError]);
+    const interval = setInterval(() => {
+      api
+        .verifyOrderPayment(orderId)
+        .then((updated) => {
+          if (updated.orderStatus === 'CONFIRMED') setTick((t) => t + 1);
+        })
+        .catch(() => {
+          // まだ着金していない/一時的なノードエラー。次のポーリングで再試行する。
+        });
+    }, 12_000);
+    return () => clearInterval(interval);
+  }, [orderId, order]);
 
-  if (!authUser) {
-    return null;
-  }
-
-  if (!(authUser.uid === userId)) {
-    return null;
-  }
-
-  if (!orderId) {
-    return null;
-  }
-
-  if (!orderExists) {
+  if (!authUser || authUser.uid !== userId || !orderId) {
     return null;
   }
 
   return (
     <Container maxWidth="sm">
-      {orderExists && orderDocData && orderId ? <OrderCardDetail order={orderDocData} key={orderId} /> : null}
-      <LoadingOverlay open={orderDocLoading || authUserLoading} />
-      <ErrorDialog open={!!orderDocError} error={orderDocError} />
-      <ErrorDialog open={!!authUserError} error={authUserError} />
+      {order ? <OrderCardDetail order={order} key={orderId} /> : null}
+      <LoadingOverlay open={orderLoading || authUserLoading} />
+      <ErrorDialog open={!!(orderError ?? authUserError)} error={orderError ?? authUserError} />
     </Container>
   );
 };
