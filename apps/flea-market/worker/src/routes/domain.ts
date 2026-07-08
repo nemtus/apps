@@ -281,11 +281,12 @@ async function uploadImage(ctx: RouteContext): Promise<Response> {
   // public GET /api/files/<key> route will serve them (store.id === owner userId).
   const scope = ctx.url.searchParams.get('scope');
   const name = `${crypto.randomUUID()}${ext}`;
+  const db = createDb(ctx.env.DB);
   let key: string;
+  let itemId: string | null = null;
   if (scope === 'item') {
-    const itemId = ctx.url.searchParams.get('itemId');
+    itemId = ctx.url.searchParams.get('itemId');
     if (!itemId) throw httpError('itemId_required', 400);
-    const db = createDb(ctx.env.DB);
     const rows = await db.select().from(schema.item).where(eq(schema.item.id, itemId));
     if (!rows[0]) throw httpError('not_found', 404);
     if (rows[0].storeId !== user.id) throw httpError('forbidden', 403);
@@ -297,7 +298,15 @@ async function uploadImage(ctx: RouteContext): Promise<Response> {
   }
 
   await putObject(ctx.env.BUCKET, key, body, { contentType, cacheControl: 'public, max-age=31536000' });
-  return json({ key, url: `/api/flea-market/files/${key}` }, 201);
+  const url = `/api/flea-market/files/${key}`;
+  // Persist the URL onto the record, mirroring the old client-side setDoc after upload.
+  const now = new Date();
+  if (scope === 'item' && itemId) {
+    await db.update(schema.item).set({ imageUrl: url, updatedAt: now }).where(eq(schema.item.id, itemId));
+  } else {
+    await db.update(schema.store).set({ imageUrl: url, updatedAt: now }).where(eq(schema.store.id, user.id));
+  }
+  return json({ key, url }, 201);
 }
 
 /**
