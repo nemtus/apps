@@ -65,26 +65,66 @@ export function toUserJson(user: { id: string; email: string; name: string }, pr
   };
 }
 
+type CoreUser = { id: string; email: string; name: string | null };
+
 /**
- * Normalized (Stripe-era) order shape. The XYM-era `orderStatus`/QR/CC fields are
- * gone; the SPA's order pages are rewired to `paymentStatus`. `orderAmount` keeps
- * the frontend's quantity field name.
+ * Dual-rail, denormalized order shape matching the SPA's OrderCard `Order`
+ * (which extends User + Store + Item). XYM orders carry `orderStatus` + the CC/tx
+ * fields; Stripe orders carry `paymentStatus` + `totalJpy`. The buyer / store /
+ * item rows are joined in so the buyer's order cards and the store's orders table
+ * render without extra round-trips.
  */
-export function toOrderJson(order: OrderRow) {
+export function toOrderJson(
+  order: OrderRow,
+  buyer: CoreUser | undefined,
+  buyerProfile: UserProfileRow | undefined,
+  store: StoreRow | undefined,
+  item: ItemRow | undefined,
+) {
   return {
     orderId: order.id,
     buyerUserId: order.buyerUserId,
+    userId: order.buyerUserId,
     storeId: order.storeId,
     itemId: order.itemId,
-    itemName: s(order.itemNameSnapshot),
     orderAmount: order.quantity,
-    totalJpy: order.totalJpy,
+    paymentMethod: order.paymentMethod,
+    // Stripe rail
     paymentStatus: order.paymentStatus,
+    totalJpy: order.totalJpy,
+    // XYM rail (undefined for Stripe orders)
+    orderStatus: order.orderStatus ?? undefined,
+    orderTotalPrice: order.totalJpy,
+    orderTotalPriceUnit: 'JPY',
+    orderTotalPriceCC: order.totalPriceCc ?? undefined,
+    orderTotalPriceCCUnit: 'XYM',
+    orderTxHash: s(order.symbolTxHash),
+    // shipping snapshot
     shipName: s(order.shipName),
     shipPhone: s(order.shipPhone),
     shipZip: s(order.shipZip),
     shipAddress1: s(order.shipAddress1),
     shipAddress2: s(order.shipAddress2),
+    // buyer (denormalized: OrderCard User fields + the store view's contact columns)
+    email: s(buyer?.email),
+    name: s(buyer?.name),
+    phoneNumber: s(buyerProfile?.phoneNumber),
+    zipCode: s(buyerProfile?.zipCode),
+    address1: s(buyerProfile?.address1),
+    address2: s(buyerProfile?.address2),
+    symbolAddress: s(buyerProfile?.symbolAddress),
+    // store (denormalized: OrderCard Store fields; storeSymbolAddress is the "to")
+    storeName: s(store?.name),
+    storeDescription: s(store?.description),
+    storeImageFile: s(store?.imageUrl),
+    storeSymbolAddress: s(store?.symbolAddress),
+    // item (denormalized: OrderCard Item fields)
+    itemName: s(item?.name ?? order.itemNameSnapshot),
+    itemPrice: item?.priceJpy ?? 0,
+    itemPriceUnit: item?.priceUnit ?? 'JPY',
+    itemDescription: s(item?.description),
+    itemImageFile: s(item?.imageUrl),
+    itemStatus: item?.status ?? 'SOLD_OUT',
     createdAt: order.createdAt,
     updatedAt: order.updatedAt,
   };

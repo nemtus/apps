@@ -108,35 +108,119 @@ describe('toUserJson', () => {
 });
 
 describe('toOrderJson', () => {
-  it('maps to the normalized (Stripe-era) shape using orderAmount for quantity', () => {
-    const row = {
-      id: 'o1',
-      buyerUserId: 'u1',
-      storeId: 's1',
-      itemId: 'i1',
-      itemNameSnapshot: 'Item',
-      quantity: 2,
-      totalJpy: 2000,
-      paymentStatus: 'PAID' as const,
-      stripeSessionId: null,
-      stripePaymentIntentId: null,
-      legacySymbolTxHash: null,
-      shipName: 'N',
-      shipPhone: null,
-      shipZip: null,
-      shipAddress1: null,
-      shipAddress2: null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    expect(toOrderJson(row)).toMatchObject({
+  const baseOrder = {
+    id: 'o1',
+    buyerUserId: 'u1',
+    storeId: 's1',
+    itemId: 'i1',
+    itemNameSnapshot: 'Snapshot',
+    quantity: 2,
+    totalJpy: 2000,
+    paymentStatus: 'PAID' as const,
+    paymentMethod: 'STRIPE' as const,
+    orderStatus: null,
+    totalPriceCc: null,
+    symbolTxHash: null,
+    stripeSessionId: null,
+    stripePaymentIntentId: null,
+    legacySymbolTxHash: null,
+    shipName: 'N',
+    shipPhone: null,
+    shipZip: null,
+    shipAddress1: null,
+    shipAddress2: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+  const buyer = { id: 'u1', email: 'b@x', name: 'Buyer' };
+  const profile = {
+    userId: 'u1',
+    phoneNumber: '090',
+    zipCode: '1234567',
+    address1: 'A1',
+    address2: 'A2',
+    symbolAddress: 'NBUYER',
+    userKycVerified: true,
+    storeKycVerified: true,
+    storeEmailVerified: true,
+    storePhoneNumberVerified: true,
+    storeAddressVerified: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+  const store = {
+    id: 's1',
+    ownerUserId: 'u1',
+    name: 'Store',
+    email: null,
+    phoneNumber: null,
+    zipCode: null,
+    address1: null,
+    address2: null,
+    url: null,
+    description: 'D',
+    symbolAddress: 'NSTORE',
+    imageUrl: 'store.png',
+    coverImageUrl: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+  const item = {
+    id: 'i1',
+    storeId: 's1',
+    name: 'Item',
+    priceJpy: 1000,
+    priceUnit: 'JPY',
+    description: null,
+    imageUrl: 'item.png',
+    status: 'ON_SALE' as const,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
+  it('maps a Stripe order + denormalized buyer/store/item (OrderCard shape)', () => {
+    expect(toOrderJson(baseOrder, buyer, profile, store, item)).toMatchObject({
       orderId: 'o1',
-      itemName: 'Item',
+      buyerUserId: 'u1',
+      userId: 'u1',
       orderAmount: 2,
-      totalJpy: 2000,
+      paymentMethod: 'STRIPE',
       paymentStatus: 'PAID',
+      totalJpy: 2000,
+      orderStatus: undefined,
       shipName: 'N',
       shipPhone: '',
+      email: 'b@x',
+      symbolAddress: 'NBUYER',
+      storeName: 'Store',
+      storeSymbolAddress: 'NSTORE',
+      itemName: 'Item',
+      itemPrice: 1000,
+      itemImageFile: 'item.png',
+    });
+  });
+
+  it('maps a XYM order rail (orderStatus + CC + tx hash)', () => {
+    const xym = {
+      ...baseOrder,
+      paymentMethod: 'XYM' as const,
+      orderStatus: 'PENDING' as const,
+      totalPriceCc: 5_000_000,
+      symbolTxHash: 'ABCDEF',
+    };
+    expect(toOrderJson(xym, buyer, profile, store, item)).toMatchObject({
+      paymentMethod: 'XYM',
+      orderStatus: 'PENDING',
+      orderTotalPriceCC: 5_000_000,
+      orderTotalPriceCCUnit: 'XYM',
+      orderTxHash: 'ABCDEF',
+    });
+  });
+
+  it('falls back to itemNameSnapshot when the item row is missing', () => {
+    expect(toOrderJson(baseOrder, buyer, profile, store, undefined)).toMatchObject({
+      itemName: 'Snapshot',
+      itemPrice: 0,
     });
   });
 });

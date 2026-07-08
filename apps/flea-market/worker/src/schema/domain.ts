@@ -28,7 +28,7 @@ export const userProfile = sqliteTable('flea_market_user_profile', {
   zipCode: text('zip_code'),
   address1: text('address1'),
   address2: text('address2'),
-  /** legacy Symbol address from the buyer profile (kept for reference). */
+  /** buyer's Symbol address — the "from" for live XYM orders (dual-rail). */
   symbolAddress: text('symbol_address'),
   // flea-market KYC flags (mirrored from the old Firebase custom claims).
   userKycVerified: integer('user_kyc_verified', { mode: 'boolean' }).notNull().default(false),
@@ -54,7 +54,7 @@ export const store = sqliteTable('flea_market_store', {
   address2: text('address2'),
   url: text('url'),
   description: text('description'),
-  /** legacy Symbol payout address (kept for reference; payments move to Stripe) */
+  /** store's Symbol payout address — the "to" for live XYM orders (dual-rail). */
   symbolAddress: text('symbol_address'),
   imageUrl: text('image_url'), // storeImageFile (download URL)
   coverImageUrl: text('cover_image_url'), // storeCoverImageFile
@@ -81,6 +81,11 @@ export const item = sqliteTable('flea_market_item', {
 });
 
 export type OrderPaymentStatus = 'PENDING' | 'PAID' | 'FAILED' | 'REFUNDED';
+/** Payment rail. XYM = on-chain Symbol transfer; STRIPE = Stripe Checkout. */
+export type PaymentMethod = 'XYM' | 'STRIPE';
+/** XYM order lifecycle (mirrors the old Firestore orderStatus). Null for Stripe orders. */
+export type OrderStatus =
+  'WAITING_PRICE_INFO' | 'PENDING' | 'UNCONFIRMED' | 'CONFIRMED' | 'SENT' | 'TIMEOUT' | 'ABORTED';
 
 export const order = sqliteTable('flea_market_order', {
   id: text('id').primaryKey(),
@@ -100,6 +105,13 @@ export const order = sqliteTable('flea_market_order', {
   /** total charged in JPY (yen) — orderTotalPrice */
   totalJpy: integer('total_jpy').notNull(),
   paymentStatus: text('payment_status').notNull().$type<OrderPaymentStatus>().default('PENDING'),
+  // Payment rail. STRIPE orders drive off paymentStatus + the stripe_* ids; XYM
+  // orders drive off orderStatus + the symbol fields below (dual-rail marketplace).
+  paymentMethod: text('payment_method').notNull().$type<PaymentMethod>().default('STRIPE'),
+  // XYM order lifecycle + on-chain settlement fields (null for Stripe orders).
+  orderStatus: text('order_status').$type<OrderStatus>(),
+  totalPriceCc: integer('total_price_cc'), // XYM amount in micro-XYM (old orderTotalPriceCC)
+  symbolTxHash: text('symbol_tx_hash'), // confirming transfer hash for live XYM orders
   // Unique so a single Stripe event can only ever match one order row.
   stripeSessionId: text('stripe_session_id').unique(),
   stripePaymentIntentId: text('stripe_payment_intent_id').unique(),
