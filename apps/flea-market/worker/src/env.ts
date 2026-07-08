@@ -48,6 +48,12 @@ export interface Env {
   /** CoinMarketCap Pro API key; enables the CMC fallback for the XYM/JPY rate. */
   COINMARKETCAP_API_KEY?: string;
 
+  // --- Symbol (XYM order settlement verification; required for the XYM rail) ---
+  /** Symbol node REST base URL, e.g. https://node.example.com:3001 (no trailing slash). */
+  SYMBOL_NODE_URL?: string;
+  /** Network currency mosaic id (hex), e.g. mainnet 6BED913FA20223F8. Per-network. */
+  SYMBOL_CURRENCY_MOSAIC_ID?: string;
+
   // --- feature flags (optional [vars]; enabled unless explicitly "false") ---
   ENABLE_CREATE_USER?: string;
   ENABLE_CREATE_STORE?: string;
