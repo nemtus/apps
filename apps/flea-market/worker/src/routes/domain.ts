@@ -17,6 +17,7 @@ import { httpError, json, readJson, requireUser } from '../http';
 import type { RouteContext } from '../router';
 import type { Router } from '../router';
 import { toItemJson, toOrderJson, toStoreJson, toUserJson } from '../lib/mappers';
+import { verifyXymTransfer } from '../lib/symbol';
 import { createOrderRoute } from './orders';
 
 type Db = ReturnType<typeof createDb>;
@@ -289,6 +290,59 @@ async function getOrder(ctx: RouteContext): Promise<Response> {
   return json(orderJson);
 }
 
+/**
+ * XYM payment verification. The buyer's client detects its on-chain transfer
+ * (websocket + REST) and POSTs the txHash here; the worker independently RE-VERIFIES
+ * it against the Symbol node REST (never trusting the client) and, on a confirmed
+ * matching transfer, advances the order to CONFIRMED + records the tx hash.
+ */
+async function verifyOrderPayment(ctx: RouteContext): Promise<Response> {
+  const user = await requireUser(ctx);
+  const db = createDb(ctx.env.DB);
+  const rows = await db.select().from(schema.order).where(eq(schema.order.id, ctx.params.orderId!));
+  const order = rows[0];
+  if (!order) throw httpError('not_found', 404);
+  if (order.buyerUserId !== user.id) throw httpError('forbidden', 403);
+  if (order.paymentMethod !== 'XYM') throw httpError('not_xym_order', 400);
+
+  // Idempotent: already-confirmed orders just return their current state.
+  if (order.orderStatus === 'CONFIRMED') {
+    const [orderJson] = await loadOrderJsons(db, [order]);
+    return json(orderJson);
+  }
+  if (order.orderStatus !== 'PENDING' && order.orderStatus !== 'UNCONFIRMED') {
+    throw httpError('order_not_payable', 409);
+  }
+
+  const body = await readJson<{ txHash?: string }>(ctx.request);
+  if (!body.txHash) throw httpError('txHash_required', 400);
+  if (!ctx.env.SYMBOL_NODE_URL || !ctx.env.SYMBOL_CURRENCY_MOSAIC_ID) {
+    throw httpError('symbol_not_configured', 503);
+  }
+
+  const stores = await db.select().from(schema.store).where(eq(schema.store.id, order.storeId));
+  const store = stores[0];
+  if (!store?.symbolAddress) throw httpError('store_symbol_address_missing', 409);
+
+  const result = await verifyXymTransfer({
+    nodeUrl: ctx.env.SYMBOL_NODE_URL,
+    storeAddress: store.symbolAddress,
+    orderId: order.id,
+    txHash: body.txHash,
+    minMicros: BigInt(order.totalPriceCc ?? 0),
+    currencyMosaicId: ctx.env.SYMBOL_CURRENCY_MOSAIC_ID,
+  });
+  if (!result.ok) throw httpError(result.reason ?? 'verification_failed', 422);
+
+  await db
+    .update(schema.order)
+    .set({ orderStatus: 'CONFIRMED', symbolTxHash: body.txHash, updatedAt: new Date() })
+    .where(eq(schema.order.id, order.id));
+  const updated = await db.select().from(schema.order).where(eq(schema.order.id, order.id));
+  const [orderJson] = await loadOrderJsons(db, [updated[0]!]);
+  return json(orderJson);
+}
+
 // ---------- owner: image upload (R2) ----------
 
 const IMAGE_EXT: Record<string, string> = {
@@ -362,6 +416,7 @@ export function registerDomainRoutes(router: Router): void {
     .get('/api/flea-market/me/orders', listMyOrders)
     .get('/api/flea-market/me/store/orders', listMyStoreOrders)
     .get('/api/flea-market/orders/:orderId', getOrder)
+    .post('/api/flea-market/orders/:orderId/verify-payment', verifyOrderPayment)
     .post('/api/flea-market/orders', (ctx) => createOrderRoute(ctx.request, ctx.env, buildAuth(ctx.env, ctx.execCtx)))
     .post('/api/flea-market/me/uploads', uploadImage);
 }

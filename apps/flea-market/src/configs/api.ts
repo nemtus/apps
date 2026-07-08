@@ -81,6 +81,13 @@ export const api = {
   createOrder: (body: { itemId: string; quantity?: number; paymentMethod?: 'XYM' | 'STRIPE' }) =>
     req<{ orderId: string; url?: string }>('/orders', { method: 'POST', body: JSON.stringify(body) }),
 
+  /** XYM注文の着金確認。クライアントが検知した txHash を渡し、worker が Symbol REST で再照合して確定する。 */
+  verifyOrderPayment: (orderId: string, txHash: string) =>
+    req<OrderJson>(`/orders/${encodeURIComponent(orderId)}/verify-payment`, {
+      method: 'POST',
+      body: JSON.stringify({ txHash }),
+    }),
+
   /** 店舗/商品画像を R2 にアップロードし、`/api/flea-market/files/<key>` のURLを返す。 */
   async uploadImage(
     target: { scope: 'store' } | { scope: 'item'; itemId: string },
