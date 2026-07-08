@@ -43,7 +43,7 @@ wrangler r2 bucket create flea-market
 ```
 
 Then edit `wrangler.toml`: replace `TODO_D1_DATABASE_ID` / `TODO_KV_NAMESPACE_ID`, and set
-`[vars] AUTH_BASE_URL` to the deployed Worker origin (e.g. `https://flea-market-auth.<subdomain>.workers.dev`
+`[vars] AUTH_BASE_URL` to the deployed Worker origin (e.g. `https://nemtus-flea-market-api.<subdomain>.workers.dev`
 or the custom domain).
 
 ## 2. Apply migrations
