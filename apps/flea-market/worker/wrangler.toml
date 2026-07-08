@@ -22,12 +22,12 @@ binding = "DB"
 # a second app worker is added, split the core migrations to a shared owner so
 # `d1 migrations apply` tracking doesn't collide on the shared DB.
 database_name = "nemtus-core"
-database_id = "TODO_D1_DATABASE_ID"
+database_id = "f927fa40-aa0c-4257-aca0-1817dec78e5f"
 migrations_dir = "migrations"
 
 [[kv_namespaces]]
 binding = "SESSION_KV"
-id = "TODO_KV_NAMESPACE_ID"
+id = "33129b2218bf410ca73cec42efe90865"
 
 [[r2_buckets]]
 binding = "BUCKET"
