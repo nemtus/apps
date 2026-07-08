@@ -31,7 +31,7 @@ id = "33129b2218bf410ca73cec42efe90865"
 
 [[r2_buckets]]
 binding = "BUCKET"
-bucket_name = "flea-market"
+bucket_name = "nemtus-flea-market"
 
 # Per-environment overrides (testnet/mainnet analogues) can be added as
 # [env.production] blocks with their own binding ids and AUTH_BASE_URL.

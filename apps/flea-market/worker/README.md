@@ -27,9 +27,9 @@ generated here (`npm run db:generate`, `migrations_dir → migrations`).
 ## Provisioning (fill the `TODO_*` ids in wrangler.toml)
 
 ```bash
-wrangler d1 create flea-market
+wrangler d1 create nemtus-core
 wrangler kv namespace create SESSION_KV
-wrangler r2 bucket create flea-market
+wrangler r2 bucket create nemtus-flea-market
 
 # apply the shared auth schema to D1:
 wrangler d1 migrations apply DB --remote      # migrations_dir → packages/db/migrations
