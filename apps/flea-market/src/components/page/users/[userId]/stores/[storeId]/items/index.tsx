@@ -1,9 +1,4 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useCollectionData, useDocument } from 'react-firebase-hooks/firestore';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   Button,
@@ -19,7 +14,9 @@ import {
   TableRow,
 } from '@mui/material';
 import { useState, useEffect } from 'react';
-import db, { auth, collection, doc, httpsCallable, functions } from '../../../../../../../configs/firebase';
+import { api, ApiError } from '../../../../../../../configs/api';
+import { useApi } from '../../../../../../../hooks/useApi';
+import { useAuthUser } from '../../../../../../../hooks/useAuthUser';
 import LoadingOverlay from '../../../../../../ui/LoadingOverlay';
 import ErrorDialog from '../../../../../../ui/ErrorDialog';
 
@@ -58,54 +55,24 @@ const columns: Column[] = [
   },
 ];
 
-interface VerifyKycRequest {
-  userId: string;
-  storeId: string;
-}
-
-interface VerifyKycResponse {
-  emailVerified: boolean;
-  userKycVerified: boolean;
-  storeEmailVerified: boolean;
-  storePhoneNumberVerified: boolean;
-  storeAddressVerified: boolean;
-  storeKycVerified: boolean;
-}
-
-const httpsOnCallVerifyKyc = httpsCallable<VerifyKycRequest, VerifyKycResponse>(functions, 'httpsOnCallVerifyKyc');
-
 const Items = () => {
   const navigate = useNavigate();
   const { userId, storeId } = useParams();
-  const [user, loading, error] = useAuthState(auth);
-  const [userDoc, userDocLoading, userDocError] = useDocument(doc(db, 'users', userId ?? ''), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
-  const [storeDoc, storeDocLoading, storeDocError] = useDocument(
-    doc(db, 'users', userId ?? '', 'stores', storeId ?? ''),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    },
+  const [user, loading, error] = useAuthUser();
+  const [me, meLoading, meError] = useApi(() => api.getMe(), [user?.uid]);
+  // getMyStore 404s until a store is created — treat that as "no store yet".
+  const [store, storeLoading, storeError] = useApi(
+    () =>
+      api.getMyStore().catch((e) => {
+        if (e instanceof ApiError && e.status === 404) return null;
+        throw e;
+      }),
+    [user?.uid],
   );
-  const [itemCollectionData, itemCollectionDataLoading, itemCollectionDataError] = useCollectionData(
-    collection(db, 'users', userId ?? '', 'stores', storeId ?? '', 'items'),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    },
-  );
-  const [storeExists, setStoreExists] = useState(false);
+  const [items, itemsLoading, itemsError] = useApi(() => api.listMyItems().catch(() => []), [user?.uid]);
+  const storeExists = !!store;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(-1);
-  const [kycStatus, setKycStatus] = useState<VerifyKycResponse>({
-    emailVerified: false,
-    userKycVerified: false,
-    storeEmailVerified: false,
-    storePhoneNumberVerified: false,
-    storeAddressVerified: false,
-    storeKycVerified: false,
-  });
-  const [kycStatusLoading, setKycStatusLoading] = useState(false);
-  const [kycStatusError, setKycStatusError] = useState<Error | undefined>(undefined);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -117,7 +84,7 @@ const Items = () => {
   };
 
   useEffect(() => {
-    if (loading || userDocLoading || storeDocLoading || itemCollectionDataLoading || kycStatusLoading) {
+    if (loading || meLoading) {
       return;
     }
     if (!(user && userId && userId === user.uid)) {
@@ -128,60 +95,22 @@ const Items = () => {
       void navigate(`/users/${userId}`);
       return;
     }
-    const isExists = !!userDoc?.exists() && !!storeDoc?.exists();
-    setStoreExists(isExists);
-    httpsOnCallVerifyKyc({ userId, storeId })
-      .then((res) => {
-        setKycStatus(res.data);
-        if (!res.data.userKycVerified) {
-          void navigate(`users/${userId}/verify-user-email`);
-        }
-        if (!res.data.storeKycVerified) {
-          void navigate(`users/${userId}/stores/${storeId}`);
-        }
-      })
-      .catch((err) => {
-        setKycStatusError(err as Error);
-      })
-      .finally(() => {
-        setKycStatusLoading(false);
-      });
-  }, [
-    userId,
-    storeId,
-    user,
-    loading,
-    navigate,
-    userDoc,
-    storeDoc,
-    setStoreExists,
-    setKycStatusLoading,
-    setKycStatus,
-    setKycStatusError,
-    itemCollectionDataLoading,
-    kycStatusLoading,
-    storeDocLoading,
-    userDocLoading,
-  ]);
+    // 旧 httpsOnCallVerifyKyc の userKycVerified/storeKycVerified ゲートの置き換え。
+    if (!user.emailVerified) {
+      void navigate(`/users/${userId}/verify-user-email`);
+      return;
+    }
+    if (me && !me.storeKycVerified) {
+      void navigate(`/users/${userId}/stores/${storeId}`);
+    }
+  }, [userId, storeId, user, loading, me, meLoading, navigate]);
 
   const handleStoreCreate = () => {
-    if (!userId) {
-      throw Error('Invalid userId');
-    }
-    if (!storeId) {
-      throw Error('Invalid storeId');
-    }
-    void navigate(`/users/${userId}/stores/${storeId}/create`);
+    void navigate(`/users/${userId ?? ''}/stores/${storeId ?? ''}/create`);
   };
 
   const handleItemCreate = () => {
-    if (!userId) {
-      throw Error('Invalid userId');
-    }
-    if (!storeId) {
-      throw Error('Invalid storeId');
-    }
-    void navigate(`/users/${userId}/stores/${storeId}/items/create`);
+    void navigate(`/users/${userId ?? ''}/stores/${storeId ?? ''}/items/create`);
   };
 
   return (
@@ -202,35 +131,34 @@ const Items = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {(rowsPerPage > 0
-                    ? itemCollectionData?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    : itemCollectionData
-                  )?.map((document) => (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={document.itemId}>
-                      {columns.map((column) => {
-                        const value = document[column.id];
-                        if (column.id === 'itemId' && userId && storeId) {
+                  {(rowsPerPage > 0 ? items?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : items)?.map(
+                    (document) => (
+                      <TableRow hover role="checkbox" tabIndex={-1} key={document.itemId}>
+                        {columns.map((column) => {
+                          const value = document[column.id];
+                          if (column.id === 'itemId' && userId && storeId) {
+                            return (
+                              <TableCell key={column.id} align={column.align} sx={{ wordBreak: 'break-all' }}>
+                                <Link to={`/users/${userId}/stores/${storeId}/items/${value as string}`}>{value}</Link>
+                              </TableCell>
+                            );
+                          }
                           return (
                             <TableCell key={column.id} align={column.align} sx={{ wordBreak: 'break-all' }}>
-                              <Link to={`/users/${userId}/stores/${storeId}/items/${value as string}`}>{value}</Link>
+                              {column.format && typeof value === 'number' ? column.format(value) : value}
                             </TableCell>
                           );
-                        }
-                        return (
-                          <TableCell key={column.id} align={column.align} sx={{ wordBreak: 'break-all' }}>
-                            {column.format && typeof value === 'number' ? column.format(value) : value}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  ))}
+                        })}
+                      </TableRow>
+                    ),
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
             <TablePagination
               rowsPerPageOptions={[10, 25, 100, { label: 'All', value: -1 }]}
               component="div"
-              count={itemCollectionData ? itemCollectionData.length : 0}
+              count={items ? items.length : 0}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
@@ -242,7 +170,7 @@ const Items = () => {
             variant="contained"
             size="large"
             onClick={handleItemCreate}
-            disabled={!(kycStatus.storeKycVerified && kycStatus.userKycVerified)}
+            disabled={!(user?.emailVerified && me?.storeKycVerified)}
           >
             + 商品追加
           </Button>
@@ -261,14 +189,11 @@ const Items = () => {
           </Stack>
         </Container>
       )}
-      <LoadingOverlay
-        open={loading || userDocLoading || storeDocLoading || itemCollectionDataLoading || kycStatusLoading}
+      <LoadingOverlay open={loading || meLoading || storeLoading || itemsLoading} />
+      <ErrorDialog
+        open={!!(error ?? meError ?? storeError ?? itemsError)}
+        error={error ?? meError ?? storeError ?? itemsError}
       />
-      <ErrorDialog open={!!error} error={error} />
-      <ErrorDialog open={!!userDocError} error={userDocError} />
-      <ErrorDialog open={!!storeDocError} error={storeDocError} />
-      <ErrorDialog open={!!itemCollectionDataError} error={itemCollectionDataError} />
-      <ErrorDialog open={!!kycStatusError} error={kycStatusError} />
     </>
   );
 };
