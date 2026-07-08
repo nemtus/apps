@@ -18,12 +18,19 @@ import type { RouteContext } from '../router';
 import type { Router } from '../router';
 import { toItemJson, toOrderJson, toStoreJson, toUserJson } from '../lib/mappers';
 import { verifyXymTransfer } from '../lib/symbol';
+import { computeStoreKyc } from '../lib/kyc';
 import { createOrderRoute } from './orders';
+import { createSesSender, storeEmailVerificationEmail } from '@nemtus/email';
 
 type Db = ReturnType<typeof createDb>;
 
 function flagEnabled(v: string | undefined): boolean {
   return v !== 'false';
+}
+
+/** Opt-in flag: enabled only when explicitly "true" (default off). */
+function flagEnabledStrict(v: string | undefined): boolean {
+  return v === 'true';
 }
 
 function optStr(v: unknown): string | null {
@@ -59,6 +66,8 @@ function getConfig(ctx: RouteContext): Response {
     enableCreateStore: flagEnabled(env.ENABLE_CREATE_STORE),
     enableCreateItem: flagEnabled(env.ENABLE_CREATE_ITEM),
     enableCreateOrder: flagEnabled(env.ENABLE_CREATE_ORDER),
+    enableStorePhoneVerification: flagEnabledStrict(env.ENABLE_STORE_PHONE_VERIFICATION),
+    enableStoreAddressVerification: flagEnabledStrict(env.ENABLE_STORE_ADDRESS_VERIFICATION),
   });
 }
 
@@ -345,6 +354,65 @@ async function verifyOrderPayment(ctx: RouteContext): Promise<Response> {
   return json(orderJson);
 }
 
+// ---------- store email KYC (challenge via SES) ----------
+
+async function requestStoreEmailVerification(ctx: RouteContext): Promise<Response> {
+  const user = await requireUser(ctx);
+  const db = createDb(ctx.env.DB);
+  const stores = await db.select().from(schema.store).where(eq(schema.store.id, user.id));
+  const store = stores[0];
+  if (!store?.email) throw httpError('store_email_missing', 409);
+
+  // 6-digit code, kept in KV for 15 min, emailed to the store address via SES.
+  const rand = crypto.getRandomValues(new Uint32Array(1))[0] ?? 0;
+  const code = String(rand % 1_000_000).padStart(6, '0');
+  await ctx.env.SESSION_KV.put(`store-email-verify:${user.id}`, code, { expirationTtl: 900 });
+
+  const sender = createSesSender({
+    region: ctx.env.AWS_REGION,
+    accessKeyId: ctx.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: ctx.env.AWS_SECRET_ACCESS_KEY,
+    defaultFrom: ctx.env.SES_FROM,
+  });
+  const content = storeEmailVerificationEmail(code);
+  try {
+    await sender.send({ to: store.email, subject: content.subject, text: content.text, html: content.html });
+  } catch {
+    throw httpError('email_send_failed', 502);
+  }
+  return json({ ok: true });
+}
+
+async function verifyStoreEmail(ctx: RouteContext): Promise<Response> {
+  const user = await requireUser(ctx);
+  const body = await readJson<{ code?: string }>(ctx.request);
+  const code = body.code?.trim();
+  if (!code) throw httpError('code_required', 400);
+
+  const key = `store-email-verify:${user.id}`;
+  const stored = await ctx.env.SESSION_KV.get(key);
+  if (!stored || stored !== code) throw httpError('invalid_code', 400);
+  await ctx.env.SESSION_KV.delete(key);
+
+  const db = createDb(ctx.env.DB);
+  const profile = await loadProfile(db, user.id);
+  if (!profile) throw httpError('profile_not_found', 409);
+
+  const storeKycVerified = computeStoreKyc({
+    storeEmailVerified: true,
+    storePhoneNumberVerified: profile.storePhoneNumberVerified,
+    storeAddressVerified: profile.storeAddressVerified,
+    phoneRequired: flagEnabledStrict(ctx.env.ENABLE_STORE_PHONE_VERIFICATION),
+    addressRequired: flagEnabledStrict(ctx.env.ENABLE_STORE_ADDRESS_VERIFICATION),
+  });
+  await db
+    .update(schema.userProfile)
+    .set({ storeEmailVerified: true, storeKycVerified, updatedAt: new Date() })
+    .where(eq(schema.userProfile.userId, user.id));
+  const updated = await loadProfile(db, user.id);
+  return json(toUserJson(user, updated));
+}
+
 // ---------- owner: image upload (R2) ----------
 
 const IMAGE_EXT: Record<string, string> = {
@@ -412,6 +480,8 @@ export function registerDomainRoutes(router: Router): void {
     .put('/api/flea-market/me', putMe)
     .get('/api/flea-market/me/store', getMyStore)
     .put('/api/flea-market/me/store', putMyStore)
+    .post('/api/flea-market/me/store/verify-email/challenge', requestStoreEmailVerification)
+    .post('/api/flea-market/me/store/verify-email', verifyStoreEmail)
     .get('/api/flea-market/me/store/items', listMyItems)
     .post('/api/flea-market/me/store/items', createMyItem)
     .put('/api/flea-market/me/store/items/:itemId', updateMyItem)

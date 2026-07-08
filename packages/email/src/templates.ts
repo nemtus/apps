@@ -49,6 +49,18 @@ export function passwordResetEmail(url: string): EmailContent {
   };
 }
 
+/** Store email-address verification code (flea-market store KYC). */
+export function storeEmailVerificationEmail(code: string): EmailContent {
+  return {
+    subject: '店舗メールアドレスの確認コード',
+    text: `店舗メールアドレスの確認コードは ${code} です。\n確認ページに入力してください（有効期限: 15分）。`,
+    html: layout([
+      '店舗メールアドレスの確認コードは次のとおりです（有効期限: 15分）:',
+      `<strong style="font-size:24px;letter-spacing:4px">${escapeHtml(code)}</strong>`,
+    ]),
+  };
+}
+
 /** Order receipt after a successful payment. `amountJpy` is in yen (zero-decimal). */
 export function orderReceiptEmail(args: {
   itemName: string;

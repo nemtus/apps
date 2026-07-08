@@ -10,13 +10,7 @@ export type OrderPaymentStatus = 'PENDING' | 'PAID' | 'FAILED' | 'REFUNDED';
 export type PaymentMethod = 'XYM' | 'STRIPE';
 /** XYM注文のライフサイクル（旧 Firestore orderStatus 相当）。Stripe注文では undefined。 */
 export type OrderStatus =
-  | 'WAITING_PRICE_INFO'
-  | 'PENDING'
-  | 'UNCONFIRMED'
-  | 'CONFIRMED'
-  | 'SENT'
-  | 'TIMEOUT'
-  | 'ABORTED';
+  'WAITING_PRICE_INFO' | 'PENDING' | 'UNCONFIRMED' | 'CONFIRMED' | 'SENT' | 'TIMEOUT' | 'ABORTED';
 
 export interface StoreJson {
   storeId: string;
@@ -118,6 +112,9 @@ export interface ConfigJson {
   enableCreateStore: boolean;
   enableCreateItem: boolean;
   enableCreateOrder: boolean;
+  /** 店舗の電話/住所KYCは既定でスキップ。連携が整い次第 env で有効化する。 */
+  enableStorePhoneVerification: boolean;
+  enableStoreAddressVerification: boolean;
 }
 
 // ---- リクエスト入力 ----

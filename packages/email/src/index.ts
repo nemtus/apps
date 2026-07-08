@@ -4,5 +4,6 @@ export {
   type EmailContent,
   verificationEmail,
   passwordResetEmail,
+  storeEmailVerificationEmail,
   orderReceiptEmail,
 } from './templates';

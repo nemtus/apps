@@ -59,4 +59,10 @@ export interface Env {
   ENABLE_CREATE_STORE?: string;
   ENABLE_CREATE_ITEM?: string;
   ENABLE_CREATE_ORDER?: string;
+
+  // --- store KYC steps (opt-IN: required only when explicitly "true") ---
+  /** Require store phone verification (Twilio, once integrated). Default off = skipped. */
+  ENABLE_STORE_PHONE_VERIFICATION?: string;
+  /** Require store address verification (postal SaaS, once integrated). Default off = skipped. */
+  ENABLE_STORE_ADDRESS_VERIFICATION?: string;
 }
