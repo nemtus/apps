@@ -32,7 +32,7 @@ wrangler kv namespace create SESSION_KV
 wrangler r2 bucket create nemtus-flea-market
 
 # apply the shared auth schema to D1:
-wrangler d1 migrations apply DB --remote      # migrations_dir → packages/db/migrations
+wrangler d1 migrations apply nemtus-core --remote   # migrations_dir → migrations (combined auth + flea-market)
 
 # secrets:
 wrangler secret put BETTER_AUTH_SECRET
@@ -51,7 +51,7 @@ wrangler secret put STRIPE_WEBHOOK_SECRET
 ```bash
 firebase auth:export users.json --project symbol-fest-market
 npm run etl:users -- users.json > users.sql      # or: node --experimental-strip-types scripts/etl-users.ts users.json
-wrangler d1 execute flea-market --file=users.sql --remote
+wrangler d1 execute nemtus-core --file=users.sql --remote
 ```
 
 Preserves the Firebase uid as `user.id`; credential users import with a
@@ -69,7 +69,7 @@ GOOGLE_APPLICATION_CREDENTIALS=./sa.json \
 
 # 2. transform → D1 SQL (pure) and apply
 node --experimental-strip-types scripts/etl-domain.ts ./firestore-dump > domain.sql
-wrangler d1 execute flea-market --file=domain.sql --remote
+wrangler d1 execute nemtus-core --file=domain.sql --remote
 ```
 
 Firestore stored no timestamps, so `created_at`/`updated_at` come from the document
@@ -85,7 +85,7 @@ that reference now-deleted items** — review that count before applying to prod
 ```bash
 # copy all objects to R2 (preserves keys); needs Admin creds + R2 S3 creds
 GOOGLE_APPLICATION_CREDENTIALS=./sa.json FIREBASE_STORAGE_BUCKET=symbol-fest-market.appspot.com \
-R2_ACCOUNT_ID=... R2_ACCESS_KEY_ID=... R2_SECRET_ACCESS_KEY=... R2_BUCKET=flea-market \
+R2_ACCOUNT_ID=... R2_ACCESS_KEY_ID=... R2_SECRET_ACCESS_KEY=... R2_BUCKET=nemtus-flea-market \
   node --experimental-strip-types scripts/copy-storage.ts
 ```
 
