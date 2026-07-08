@@ -1,139 +1,27 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Container, Stack, TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Button, Container, Stack, Typography } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, functions, httpsCallable } from '../../../../../../configs/firebase';
-import LoadingOverlay from '../../../../../ui/LoadingOverlay';
-import ErrorDialog from '../../../../../ui/ErrorDialog';
 
-interface VerifyStoreAddressFormInput {
-  storeAddressSecret: string;
-}
-
-interface ChallengeToVerifyStoreAddressRequest {
-  userId: string;
-  storeId: string;
-  storeAddressSecret: string;
-}
-
-interface ChallengeToVerifyStoreAddressResponse {
-  storeAddressVerified: boolean;
-}
-
-const httpsOnCallChallengeToVerifyStoreAddress = httpsCallable<
-  ChallengeToVerifyStoreAddressRequest,
-  ChallengeToVerifyStoreAddressResponse
->(functions, 'httpsOnCallChallengeToVerifyStoreAddress');
-
-const schema = yup.object({
-  storeAddressSecret: yup
-    .string()
-    .required('必須です')
-    .matches(/^[0-9]{6}$/, '数字6桁で入力してください'),
-});
-
+// 店舗住所の確認は当面スキップ（env ENABLE_STORE_ADDRESS_VERIFICATION が既定 off）。
+// 郵送系 SaaS 等の連携が整い次第、チャレンジ実装を追加してフラグで有効化する。
 const VerifyStoreAddress = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<VerifyStoreAddressFormInput>({
-    resolver: yupResolver(schema),
-    mode: 'onChange',
-    reValidateMode: 'onChange',
-    criteriaMode: 'all',
-  });
-
   const { userId, storeId } = useParams();
   const navigate = useNavigate();
-  const [user, loadingUser, errorUser] = useAuthState(auth);
-  const [loadingChallenge, setLoadingChallenge] = useState(false);
-  const [error, setError] = useState<Error | undefined>(undefined);
-
-  useEffect(() => {
-    if (loadingUser) {
-      return;
-    }
-    if (loadingChallenge) {
-      return;
-    }
-    if (!(user && userId && userId === user.uid)) {
-      void navigate('/auth/sign-in/');
-      return;
-    }
-    if (userId !== storeId) {
-      void navigate(`/users/${userId}`);
-    }
-  });
-
-  const onSubmit: SubmitHandler<VerifyStoreAddressFormInput> = (data) => {
-    const { storeAddressSecret } = data;
-    if (!userId) {
-      return;
-    }
-    if (!storeId) {
-      return;
-    }
-    const challengeToVerifyStoreAddressRequest: ChallengeToVerifyStoreAddressRequest = {
-      userId,
-      storeId,
-      storeAddressSecret,
-    };
-    setLoadingChallenge(true);
-    httpsOnCallChallengeToVerifyStoreAddress(challengeToVerifyStoreAddressRequest)
-      .then((res) => {
-        if (res.data.storeAddressVerified) {
-          void navigate(`/users/${userId}/stores/${storeId}/`);
-        }
-      })
-      .catch((err) => {
-        setError(err as Error);
-      })
-      .finally(() => {
-        setLoadingChallenge(false);
-      });
+  const handleBack = () => {
+    void navigate(`/users/${userId ?? ''}/stores/${storeId ?? ''}/`);
   };
-
-  const handleCancel = () => {
-    if (!userId) {
-      return;
-    }
-    if (!storeId) {
-      return;
-    }
-    void navigate(`/users/${userId}/stores/${storeId}/`);
-  };
-
   return (
-    <>
-      <Container maxWidth="sm">
-        <h2>店舗住所確認</h2>
-        <Stack spacing={3}>
-          <TextField
-            required
-            label="確認コード"
-            type="text"
-            {...register('storeAddressSecret')}
-            error={'storeAddressSecret' in errors}
-            helperText={errors.storeAddressSecret?.message}
-          />
-          <Button color="primary" variant="contained" size="large" onClick={handleSubmit(onSubmit)}>
-            確認
-          </Button>
-          <Button color="primary" variant="contained" size="large" onClick={handleCancel}>
-            キャンセル
-          </Button>
-        </Stack>
-      </Container>
-      <LoadingOverlay open={loadingUser} />
-      <LoadingOverlay open={loadingChallenge} />
-      <ErrorDialog open={!!errorUser} error={errorUser} />
-      <ErrorDialog open={!!error} error={error} />
-    </>
+    <Container maxWidth="sm">
+      <h2>店舗住所確認</h2>
+      <Stack spacing={3}>
+        <Typography>
+          店舗住所の確認は現在準備中です。店舗KYCはメールアドレスの確認のみで完了します（住所の確認は連携準備が整い次第ご案内します）。
+        </Typography>
+        <Button color="primary" variant="contained" size="large" onClick={handleBack}>
+          店舗ページに戻る
+        </Button>
+      </Stack>
+    </Container>
   );
 };
 
