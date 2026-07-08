@@ -1,6 +1,6 @@
-# flea-market auth Worker. Fill the TODO ids after provisioning
-# (wrangler d1 create / kv namespace create / r2 bucket create).
-name = "flea-market-auth"
+# nemtus-flea-market-api: the flea-market backend Worker — Better Auth (the shared
+# NEMTUS core) + the flea-market domain API on D1/KV/R2, Stripe + XYM settlement.
+name = "nemtus-flea-market-api"
 main = "src/index.ts"
 compatibility_date = "2025-06-01"
 compatibility_flags = ["nodejs_compat"]
@@ -31,7 +31,7 @@ id = "33129b2218bf410ca73cec42efe90865"
 
 [[r2_buckets]]
 binding = "BUCKET"
-bucket_name = "flea-market"
+bucket_name = "nemtus-flea-market"
 
 # Per-environment overrides (testnet/mainnet analogues) can be added as
 # [env.production] blocks with their own binding ids and AUTH_BASE_URL.

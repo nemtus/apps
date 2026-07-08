@@ -39,11 +39,11 @@ wrangler d1 create nemtus-core
 wrangler kv namespace create SESSION_KV
 
 # R2 (store/item images)
-wrangler r2 bucket create flea-market
+wrangler r2 bucket create nemtus-flea-market
 ```
 
 Then edit `wrangler.toml`: replace `TODO_D1_DATABASE_ID` / `TODO_KV_NAMESPACE_ID`, and set
-`[vars] AUTH_BASE_URL` to the deployed Worker origin (e.g. `https://flea-market-auth.<subdomain>.workers.dev`
+`[vars] AUTH_BASE_URL` to the deployed Worker origin (e.g. `https://nemtus-flea-market-api.<subdomain>.workers.dev`
 or the custom domain).
 
 ## 2. Apply migrations
@@ -61,7 +61,7 @@ wrangler d1 migrations apply nemtus-core --remote
 | `BETTER_AUTH_SECRET` | 32+ random bytes. **Must be identical across all NEMTUS apps** sharing the core session (cross-subdomain SSO). |
 | `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | IAM user with `ses:SendEmail`. |
 | `STRIPE_SECRET_KEY` | Stripe → API keys (live). |
-| `STRIPE_WEBHOOK_SECRET` | Stripe → the webhook endpoint's signing secret (create the endpoint at `<AUTH_BASE_URL>/api/stripe/webhook`). |
+| `STRIPE_WEBHOOK_SECRET` | Stripe → the webhook endpoint's signing secret (create the endpoint at `<AUTH_BASE_URL>/api/flea-market/stripe/webhook`). |
 | `FIREBASE_SIGNER_KEY` / `FIREBASE_SALT_SEPARATOR` | from the source project's password `hash_config` (`firebase auth:export` hash params) — for lazy scrypt re-hash of migrated passwords. |
 | `COINMARKETCAP_API_KEY` | optional — enables the CMC price fallback. |
 | `GOOGLE_/GITHUB_/TWITTER_/MICROSOFT_/APPLE_CLIENT_ID`+`_SECRET` | optional — each provider is enabled only when both id+secret are present. |
