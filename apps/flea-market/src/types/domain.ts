@@ -10,7 +10,13 @@ export type OrderPaymentStatus = 'PENDING' | 'PAID' | 'FAILED' | 'REFUNDED';
 export type PaymentMethod = 'XYM' | 'STRIPE';
 /** XYM注文のライフサイクル（旧 Firestore orderStatus 相当）。Stripe注文では undefined。 */
 export type OrderStatus =
-  'WAITING_PRICE_INFO' | 'PENDING' | 'UNCONFIRMED' | 'CONFIRMED' | 'SENT' | 'TIMEOUT' | 'ABORTED';
+  | 'WAITING_PRICE_INFO'
+  | 'PENDING'
+  | 'UNCONFIRMED'
+  | 'CONFIRMED'
+  | 'SENT'
+  | 'TIMEOUT'
+  | 'ABORTED';
 
 export interface StoreJson {
   storeId: string;

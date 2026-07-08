@@ -1,0 +1,70 @@
+name: ci-flea-market
+
+# CI for the flea-market SPA (apps/flea-market), a Vite + React 19 app. Path-filtered so it
+# only runs when the frontend changes — the backend Worker (apps/flea-market/worker) is
+# excluded here and covered by ci-core. Deployment is handled separately by Cloudflare
+# Workers Builds (Git integration) — this workflow is checks only.
+#
+# Socket is integrated token-free, same as ci-xymposium-lp-2024 / ci-hackathon-lp-2026:
+#   - Socket Firewall Free (`sfw`, mode: firewall-free) wraps `npm ci` and blocks
+#     confirmed-malicious packages (incl. transitive) before they are fetched.
+#   - The Socket GitHub App (repo-root socket.yml) comments on dependency-changing PRs.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/flea-market/**"
+      - "!apps/flea-market/worker/**"
+      - ".github/workflows/ci-flea-market.yml"
+  pull_request:
+    paths:
+      - "apps/flea-market/**"
+      - "!apps/flea-market/worker/**"
+      - ".github/workflows/ci-flea-market.yml"
+
+concurrency:
+  group: ci-flea-market-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: apps/flea-market
+
+jobs:
+  quality:
+    name: audit / format / lint / types / test / build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/flea-market/package-lock.json
+      # Audit the lockfile before install so a known-bad version is caught before its
+      # (deferred) install scripts could ever run. Gated at `high`, scoped to production
+      # deps (`--omit=dev`): this is a browser SPA, so devDependencies (jsdom, firebase-tools)
+      # never reach the bundle. The two prod highs (undici / form-data, pulled in by
+      # better-auth) are pinned to patched versions via package.json `overrides`.
+      - name: Audit before install
+        run: npm audit --package-lock-only --omit=dev --audit-level=high
+      - name: Socket Firewall (firewall-free, no token)
+        uses: SocketDev/action@ba6de6cc0565af1f42295590380973573297e31f # v1.3.2
+        with:
+          mode: firewall-free
+      - name: Install (clean, via Socket Firewall)
+        run: sfw npm ci
+      - name: Format check
+        run: npm run format:check
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Test
+        run: npm test
+      - name: Build
+        run: npm run build
