@@ -1,9 +1,9 @@
 /**
- * Create an order and a Stripe Checkout session. Replaces the old XYM flow
- * (unsigned transfer + QR + on-chain tx matching) with Stripe.
+ * Create an order — dual-rail: Stripe Checkout or on-chain XYM.
  *
- *   POST /api/orders   { itemId: string, quantity?: number }
- *   -> 200 { orderId, url }   (url = Stripe Checkout page)
+ *   POST /api/flea-market/orders   { itemId, quantity?, paymentMethod? }
+ *     paymentMethod 'STRIPE' (default) -> 200 { orderId, url }  (url = Stripe Checkout page)
+ *     paymentMethod 'XYM'              -> 201 { orderId }        (client renders the transfer QR)
  *
  * Gated on an authenticated, KYC-verified buyer.
  */
@@ -12,13 +12,14 @@ import { createCheckoutSession, createStripe } from '@nemtus/billing';
 import type { Auth } from '@nemtus/auth';
 import { createDb, schema } from '../db';
 import type { Env } from '../env';
+import type { PaymentMethod } from '../schema/domain';
 import { getXymJpyRate } from '../lib/price';
 
 interface CreateOrderBody {
   itemId?: string;
   quantity?: number;
   /** Payment rail. Defaults to STRIPE (backward-compatible). */
-  paymentMethod?: 'XYM' | 'STRIPE';
+  paymentMethod?: PaymentMethod;
 }
 
 /**
