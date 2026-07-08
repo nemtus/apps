@@ -22,10 +22,7 @@ interface TransferTxDto {
   meta?: { hash?: string };
 }
 
-export interface VerifyResult {
-  ok: boolean;
-  reason?: string;
-}
+export type VerifyResult = { ok: true; txHash: string } | { ok: false; reason: string };
 
 /** Strip 0x / quotes and upper-case a mosaic id for comparison. */
 export function normalizeMosaicId(id: string): string {
@@ -70,21 +67,19 @@ export function currencyMosaicAmount(
 /**
  * Re-verify an XYM payment: `txHash` must be a CONFIRMED transfer TO the store's
  * address, carrying `orderId` as its message and at least `minMicros` of the
- * network currency mosaic. Pages newest-first through the store's confirmed
- * incoming transfers (the payment is recent) to find the hash, so no address
- * decoding is needed — the node matched the recipient for us.
+ * network currency mosaic. Matches by the **message** (== orderId), so the client
+ * needn't find the txHash itself — it just polls and the node matches the recipient
+ * for us (no address decoding). Returns the matched transfer's hash.
  */
 export async function verifyXymTransfer(opts: {
   nodeUrl: string;
   storeAddress: string;
   orderId: string;
-  txHash: string;
   minMicros: bigint;
   currencyMosaicId: string;
   maxPages?: number;
 }): Promise<VerifyResult> {
   const base = opts.nodeUrl.replace(/\/+$/, '');
-  const wantHash = opts.txHash.toUpperCase();
   const maxPages = opts.maxPages ?? DEFAULT_MAX_PAGES;
 
   for (let page = 1; page <= maxPages; page += 1) {
@@ -96,14 +91,11 @@ export async function verifyXymTransfer(opts: {
     const body = (await res.json()) as { data?: TransferTxDto[] };
     const data = body.data ?? [];
     for (const tx of data) {
-      if ((tx.meta?.hash ?? '').toUpperCase() !== wantHash) continue;
-      // Found the confirmed transfer to the store — check amount + message.
+      if (decodeTransferMessage(tx.transaction?.message) !== opts.orderId) continue;
+      // Found the confirmed transfer to the store carrying this orderId — check amount.
       const amount = currencyMosaicAmount(tx.transaction?.mosaics, opts.currencyMosaicId);
       if (amount < opts.minMicros) return { ok: false, reason: 'insufficient_amount' };
-      if (decodeTransferMessage(tx.transaction?.message) !== opts.orderId) {
-        return { ok: false, reason: 'message_mismatch' };
-      }
-      return { ok: true };
+      return { ok: true, txHash: (tx.meta?.hash ?? '').toUpperCase() };
     }
     if (data.length < PAGE_SIZE) break; // last page reached
   }

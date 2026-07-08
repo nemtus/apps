@@ -47,7 +47,6 @@ describe('verifyXymTransfer', () => {
     nodeUrl: 'https://node.example:3001',
     storeAddress: 'TSTORE',
     orderId: 'order-1',
-    txHash: 'ABCDEF',
     minMicros: 5_000_000n,
     currencyMosaicId: currency,
   };
@@ -72,7 +71,7 @@ describe('verifyXymTransfer', () => {
         ),
       ),
     );
-    expect(await verifyXymTransfer(base)).toEqual({ ok: true });
+    expect(await verifyXymTransfer(base)).toEqual({ ok: true, txHash: 'ABCDEF' });
   });
 
   it('rejects an underpaying transfer', async () => {
@@ -92,7 +91,7 @@ describe('verifyXymTransfer', () => {
     expect(await verifyXymTransfer(base)).toEqual({ ok: false, reason: 'insufficient_amount' });
   });
 
-  it('rejects a wrong-order message', async () => {
+  it('ignores transfers carrying a different orderId (not found)', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(() =>
@@ -106,7 +105,7 @@ describe('verifyXymTransfer', () => {
         ),
       ),
     );
-    expect(await verifyXymTransfer(base)).toEqual({ ok: false, reason: 'message_mismatch' });
+    expect(await verifyXymTransfer(base)).toEqual({ ok: false, reason: 'tx_not_found' });
   });
 
   it('returns tx_not_found when the hash is not among the store transfers', async () => {

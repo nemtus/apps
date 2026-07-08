@@ -291,10 +291,11 @@ async function getOrder(ctx: RouteContext): Promise<Response> {
 }
 
 /**
- * XYM payment verification. The buyer's client detects its on-chain transfer
- * (websocket + REST) and POSTs the txHash here; the worker independently RE-VERIFIES
- * it against the Symbol node REST (never trusting the client) and, on a confirmed
- * matching transfer, advances the order to CONFIRMED + records the tx hash.
+ * XYM payment verification (polled by the buyer's order page). The worker searches
+ * the store's confirmed transfers for one carrying this orderId as its message and a
+ * sufficient amount (never trusting the client), and on a match advances the order to
+ * CONFIRMED + records the tx hash. When no matching transfer is found yet it returns
+ * the still-PENDING order (200) so the client can keep polling.
  */
 async function verifyOrderPayment(ctx: RouteContext): Promise<Response> {
   const user = await requireUser(ctx);
@@ -313,9 +314,6 @@ async function verifyOrderPayment(ctx: RouteContext): Promise<Response> {
   if (order.orderStatus !== 'PENDING' && order.orderStatus !== 'UNCONFIRMED') {
     throw httpError('order_not_payable', 409);
   }
-
-  const body = await readJson<{ txHash?: string }>(ctx.request);
-  if (!body.txHash) throw httpError('txHash_required', 400);
   if (!ctx.env.SYMBOL_NODE_URL || !ctx.env.SYMBOL_CURRENCY_MOSAIC_ID) {
     throw httpError('symbol_not_configured', 503);
   }
@@ -328,15 +326,19 @@ async function verifyOrderPayment(ctx: RouteContext): Promise<Response> {
     nodeUrl: ctx.env.SYMBOL_NODE_URL,
     storeAddress: store.symbolAddress,
     orderId: order.id,
-    txHash: body.txHash,
     minMicros: BigInt(order.totalPriceCc ?? 0),
     currencyMosaicId: ctx.env.SYMBOL_CURRENCY_MOSAIC_ID,
   });
-  if (!result.ok) throw httpError(result.reason ?? 'verification_failed', 422);
+  if (!result.ok) {
+    // Not confirmed yet (tx_not_found / insufficient_amount) or a node hiccup — return
+    // the current (still-PENDING) order so the client keeps polling.
+    const [orderJson] = await loadOrderJsons(db, [order]);
+    return json(orderJson);
+  }
 
   await db
     .update(schema.order)
-    .set({ orderStatus: 'CONFIRMED', symbolTxHash: body.txHash, updatedAt: new Date() })
+    .set({ orderStatus: 'CONFIRMED', symbolTxHash: result.txHash, updatedAt: new Date() })
     .where(eq(schema.order.id, order.id));
   const updated = await db.select().from(schema.order).where(eq(schema.order.id, order.id));
   const [orderJson] = await loadOrderJsons(db, [updated[0]!]);

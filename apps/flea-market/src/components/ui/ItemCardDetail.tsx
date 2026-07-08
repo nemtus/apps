@@ -11,12 +11,36 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useEffect, useState } from 'react';
 import { useDocument } from 'react-firebase-hooks/firestore';
-import { ItemProps } from './ItemCard';
-import { Order, User } from './OrderCardDetails';
+import { ItemProps, Item } from './ItemCard';
+import { Store } from './StoreCard';
 import db, { auth, collection, addDoc, doc, getDoc } from '../../configs/firebase';
 import LoadingOverlay from './LoadingOverlay';
 import ConfirmationDialog, { ConfirmationDialogProps } from './ConfirmationDialog';
 import ErrorDialog from './ErrorDialog';
+
+// Local order/user shapes for the (still Firestore-based) order-creation flow;
+// removed when this component is rewired to api.createOrder.
+interface User {
+  userId: string;
+  email: string;
+  name: string;
+  phoneNumber: string;
+  zipCode: string;
+  address1: string;
+  address2: string;
+  symbolAddress: string;
+}
+
+interface Order extends User, Store, Item {
+  orderId?: string;
+  orderAmount: number;
+  orderTotalPrice?: number;
+  orderTotalPriceUnit?: string;
+  orderTotalPriceCC?: number;
+  orderTotalPriceCCUnit?: string;
+  orderTxHash?: string;
+  orderStatus?: 'WAITING_PRICE_INFO' | 'PENDING' | 'UNCONFIRMED' | 'CONFIRMED' | 'SENT' | 'TIMEOUT' | 'ABORTED';
+}
 
 const ItemCardDetail = (itemProps: ItemProps) => {
   const navigate = useNavigate();
