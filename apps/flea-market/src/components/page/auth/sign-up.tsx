@@ -44,7 +44,7 @@ const SignUp = () => {
     criteriaMode: 'all',
   });
 
-  // Feature flag still read from Firestore; migrates to api.getConfig() in the data PR.
+  // フィーチャーフラグは当面 Firestore から読む（データPRで api.getConfig() へ移行）。
   const [configDoc, configDocLoading, configDocError] = useDocument(doc(db, 'configs/1'), {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
@@ -58,9 +58,9 @@ const SignUp = () => {
     }
     setLoading(true);
     setError(undefined);
-    // Better Auth requires a name; the profile name is set later, so seed it with
-    // the email (matches the user ETL's displayName ?? email fallback). Better Auth
-    // sends the verification email on sign-up (emailVerification.sendOnSignUp).
+    // Better Auth は name が必須。プロフィール名は後で設定するため、ここでは email をシードする
+    // （ユーザーETLの displayName ?? email フォールバックと一致）。Better Auth は sign-up 時に
+    // 確認メールを送る（emailVerification.sendOnSignUp）。
     const res = await signUp.email({ email: data.email, password: data.password, name: data.email });
     setLoading(false);
     if (res.error) {

@@ -92,7 +92,7 @@ const UserCreate = () => {
       void navigate('/auth/sign-in/');
       return;
     }
-    // Email verification replaces the old httpsOnCallVerifyKyc emailVerified gate.
+    // メール確認は旧 httpsOnCallVerifyKyc の emailVerified ゲートの置き換え。
     if (!user.emailVerified) {
       void navigate(`/users/${userId}/verify-user-email`);
     }

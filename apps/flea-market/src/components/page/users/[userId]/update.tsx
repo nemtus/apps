@@ -77,7 +77,7 @@ const UserUpdate = () => {
   });
 
   const onSubmit: SubmitHandler<UserUpdateFormInput> = async (data) => {
-    if (!config?.enableCreateStore) {
+    if (!config?.enableCreateUser) {
       setSubmitError(Error('現在、ユーザー登録を受け付けていません。'));
       return;
     }

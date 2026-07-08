@@ -1,7 +1,7 @@
 /**
- * JSON shapes returned by the flea-market Worker domain API (`/api/flea-market/*`).
- * These mirror the Worker's `src/lib/mappers.ts` field-for-field, so they are the
- * canonical replacement for the old colocated Firestore document interfaces.
+ * flea-market Worker のドメインAPI（`/api/flea-market/*`）が返す JSON の型。Worker の
+ * `src/lib/mappers.ts` とフィールド単位で一致しており、旧来コンポーネントに同居していた
+ * Firestore ドキュメント用インターフェースの正規の置き換えとなる。
  */
 
 export type ItemStatus = 'ON_SALE' | 'SOLD_OUT';
@@ -74,7 +74,7 @@ export interface ConfigJson {
   enableCreateOrder: boolean;
 }
 
-// ---- request inputs ----
+// ---- リクエスト入力 ----
 
 export interface UpdateProfileInput {
   name?: string;

@@ -16,7 +16,7 @@ const User = () => {
   const { userId } = useParams();
   const [user, loading, error] = useAuthUser();
   const [me, meLoading, meError] = useApi(() => api.getMe(), [user?.uid]);
-  // getMyStore 404s when the owner hasn't created a store yet — treat that as "none".
+  // 店舗未作成のときは getMyStore が 404 を返すため、それは「店舗なし」として扱う。
   const [store, storeLoading, storeError] = useApi(
     () =>
       api.getMyStore().catch((e) => {
@@ -35,7 +35,7 @@ const User = () => {
       void navigate('/auth/sign-in/');
       return;
     }
-    // Old userKycVerified === email-verified; keep the same gate.
+    // 旧 userKycVerified はメール確認済みと同義。同じゲートを維持する。
     if (!user.emailVerified) {
       void navigate(`/users/${userId}/verify-user-email`);
     }

@@ -24,7 +24,7 @@ const schema = yup.object({
     ),
 });
 
-// Landing page for the password-reset email link (`/auth/reset-password/?token=...`).
+// パスワードリセットメールのリンク（`/auth/reset-password/?token=...`）の着地ページ。
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
