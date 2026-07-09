@@ -68,7 +68,7 @@ describe('getXymJpyRate (KV cache)', () => {
     const kv = { get: vi.fn(() => Promise.resolve('5')), put: vi.fn() };
     const fetchSpy = vi.fn();
     vi.stubGlobal('fetch', fetchSpy);
-    const rate = await getXymJpyRate({ SESSION_KV: kv } as unknown as Env);
+    const rate = await getXymJpyRate({ APP_KV: kv } as unknown as Env);
     expect(rate).toBe(5);
     expect(fetchSpy).not.toHaveBeenCalled();
     expect(kv.put).not.toHaveBeenCalled();
@@ -77,7 +77,7 @@ describe('getXymJpyRate (KV cache)', () => {
   it('fetches then caches on a cache miss', async () => {
     const kv = { get: vi.fn(() => Promise.resolve(null)), put: vi.fn(() => Promise.resolve()) };
     stubFetch((url) => (url.includes('zaif') ? okJson({ last: 6 }) : fail()));
-    const env = { SESSION_KV: kv, COINMARKETCAP_API_KEY: undefined } as unknown as Env;
+    const env = { APP_KV: kv, COINMARKETCAP_API_KEY: undefined } as unknown as Env;
     expect(await getXymJpyRate(env)).toBe(6);
     expect(kv.put).toHaveBeenCalledWith('price:xym_jpy', '6', { expirationTtl: 60 });
   });

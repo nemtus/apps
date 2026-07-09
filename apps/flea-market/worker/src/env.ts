@@ -5,7 +5,10 @@
 export interface Env {
   // --- Cloudflare bindings ---
   DB: D1Database;
+  /** Shared NEMTUS core: Better Auth sessions (cross-app). Title: nemtus-core-session-kv. */
   SESSION_KV: KVNamespace;
+  /** flea-market app-scoped ephemera: XYM price cache + store-email codes. Title: nemtus-flea-market-kv. */
+  APP_KV: KVNamespace;
   BUCKET: R2Bucket;
 
   // --- core auth config ---

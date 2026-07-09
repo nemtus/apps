@@ -366,7 +366,7 @@ async function requestStoreEmailVerification(ctx: RouteContext): Promise<Respons
   // 6-digit code, kept in KV for 15 min, emailed to the store address via SES.
   const rand = crypto.getRandomValues(new Uint32Array(1))[0] ?? 0;
   const code = String(rand % 1_000_000).padStart(6, '0');
-  await ctx.env.SESSION_KV.put(`store-email-verify:${user.id}`, code, { expirationTtl: 900 });
+  await ctx.env.APP_KV.put(`store-email-verify:${user.id}`, code, { expirationTtl: 900 });
 
   const sender = createSesSender({
     region: ctx.env.AWS_REGION,
@@ -390,9 +390,9 @@ async function verifyStoreEmail(ctx: RouteContext): Promise<Response> {
   if (!code) throw httpError('code_required', 400);
 
   const key = `store-email-verify:${user.id}`;
-  const stored = await ctx.env.SESSION_KV.get(key);
+  const stored = await ctx.env.APP_KV.get(key);
   if (!stored || stored !== code) throw httpError('invalid_code', 400);
-  await ctx.env.SESSION_KV.delete(key);
+  await ctx.env.APP_KV.delete(key);
 
   const db = createDb(ctx.env.DB);
   const profile = await loadProfile(db, user.id);
