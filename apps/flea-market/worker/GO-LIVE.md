@@ -33,7 +33,7 @@ Still needs credentials to verify (see §5): Firebase-scrypt vs a real export, S
 
 ```bash
 # D1 (shared NEMTUS core DB) → copy database_id into wrangler.toml (TODO_D1_DATABASE_ID)
-wrangler d1 create nemtus-core
+wrangler d1 create nemtus-core-d1
 
 # KV — two namespaces: SESSION_KV (shared Better Auth sessions) + APP_KV (XYM price
 # cache + store-email codes). Put each id into the matching binding in wrangler.toml.
@@ -41,7 +41,7 @@ wrangler kv namespace create nemtus-core-session-kv
 wrangler kv namespace create nemtus-flea-market-kv
 
 # R2 (store/item images)
-wrangler r2 bucket create nemtus-flea-market
+wrangler r2 bucket create nemtus-flea-market-r2
 ```
 
 Then edit `wrangler.toml`: fill each binding's id from the create output (D1 `database_id`, the two
@@ -52,7 +52,7 @@ or the custom domain).
 ## 2. Apply migrations
 
 ```bash
-wrangler d1 migrations apply nemtus-core --remote
+wrangler d1 migrations apply nemtus-core-d1 --remote
 ```
 
 ## 3. Set secrets + vars

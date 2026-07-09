@@ -45,12 +45,12 @@ deploys via Cloudflare Workers Builds from `main`, so nothing secret lives in th
 is the authoritative provisioning + secrets/vars checklist. Quick reference:
 
 ```bash
-wrangler d1 create nemtus-core                       # shared NEMTUS core D1 -> database_id
+wrangler d1 create nemtus-core-d1                       # shared NEMTUS core D1 -> database_id
 wrangler kv namespace create nemtus-core-session-kv  # -> SESSION_KV id (shared Better Auth sessions)
 wrangler kv namespace create nemtus-flea-market-kv   # -> APP_KV id (XYM price cache + store-email codes)
-wrangler r2 bucket create nemtus-flea-market
+wrangler r2 bucket create nemtus-flea-market-r2
 
-wrangler d1 migrations apply nemtus-core --remote   # migrations_dir -> migrations (combined auth + flea-market)
+wrangler d1 migrations apply nemtus-core-d1 --remote   # migrations_dir -> migrations (combined auth + flea-market)
 ```
 
 Secrets (dashboard, or `wrangler secret put`): `BETTER_AUTH_SECRET`, `AWS_ACCESS_KEY_ID` /
@@ -65,7 +65,7 @@ Stripe webhook endpoint is `<AUTH_BASE_URL>/api/flea-market/stripe/webhook`.
 ```bash
 firebase auth:export users.json --project symbol-fest-market
 npm run etl:users -- users.json > users.sql      # or: node --experimental-strip-types scripts/etl-users.ts users.json
-wrangler d1 execute nemtus-core --file=users.sql --remote
+wrangler d1 execute nemtus-core-d1 --file=users.sql --remote
 ```
 
 Preserves the Firebase uid as `user.id`; credential users import with a `firebase-scrypt$…` marker
@@ -83,7 +83,7 @@ GOOGLE_APPLICATION_CREDENTIALS=./sa.json \
 
 # 2. transform → D1 SQL (pure) and apply
 node --experimental-strip-types scripts/etl-domain.ts ./firestore-dump > domain.sql
-wrangler d1 execute nemtus-core --file=domain.sql --remote
+wrangler d1 execute nemtus-core-d1 --file=domain.sql --remote
 ```
 
 Firestore stored no timestamps, so `created_at`/`updated_at` come from the document
@@ -102,7 +102,7 @@ production.
 ```bash
 # copy all objects to R2 (preserves keys); needs Admin creds + R2 S3 creds
 GOOGLE_APPLICATION_CREDENTIALS=./sa.json FIREBASE_STORAGE_BUCKET=symbol-fest-market.appspot.com \
-R2_ACCOUNT_ID=... R2_ACCESS_KEY_ID=... R2_SECRET_ACCESS_KEY=... R2_BUCKET=nemtus-flea-market \
+R2_ACCOUNT_ID=... R2_ACCESS_KEY_ID=... R2_SECRET_ACCESS_KEY=... R2_BUCKET=nemtus-flea-market-r2 \
   node --experimental-strip-types scripts/copy-storage.ts
 ```
 
