@@ -32,9 +32,9 @@ id = "cd2c1ed677da4d04bd8ab7d62d03a395"
 
 [[kv_namespaces]]
 # flea-market app-scoped ephemera (XYM price cache + store-email codes), kept out of
-# the shared session store. Title: nemtus-flea-market-kv. Create it + fill the id.
+# the shared session store. Title: nemtus-flea-market-kv.
 binding = "APP_KV"
-id = "TODO_APP_KV_ID"
+id = "63d52b22460f43d7bc7e718b59fcefd7"
 
 [[r2_buckets]]
 binding = "BUCKET"
