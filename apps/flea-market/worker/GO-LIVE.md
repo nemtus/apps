@@ -35,14 +35,17 @@ Still needs credentials to verify (see §5): Firebase-scrypt vs a real export, S
 # D1 (shared NEMTUS core DB) → copy database_id into wrangler.toml (TODO_D1_DATABASE_ID)
 wrangler d1 create nemtus-core
 
-# KV (Better Auth sessions + the price cache + store-email codes) → id into TODO_KV_NAMESPACE_ID
-wrangler kv namespace create SESSION_KV
+# KV — two namespaces: SESSION_KV (shared Better Auth sessions) + APP_KV (XYM price
+# cache + store-email codes). Put each id into the matching binding in wrangler.toml.
+wrangler kv namespace create nemtus-core-session-kv
+wrangler kv namespace create nemtus-flea-market-kv
 
 # R2 (store/item images)
 wrangler r2 bucket create nemtus-flea-market
 ```
 
-Then edit `wrangler.toml`: replace `TODO_D1_DATABASE_ID` / `TODO_KV_NAMESPACE_ID`, and set
+Then edit `wrangler.toml`: fill each binding's id from the create output (D1 `database_id`, the two
+KV ids for `SESSION_KV` / `APP_KV`), and set
 `[vars] AUTH_BASE_URL` to the deployed Worker origin (e.g. `https://nemtus-flea-market-api.<subdomain>.workers.dev`
 or the custom domain).
 

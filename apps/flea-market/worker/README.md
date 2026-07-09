@@ -45,8 +45,9 @@ deploys via Cloudflare Workers Builds from `main`, so nothing secret lives in th
 is the authoritative provisioning + secrets/vars checklist. Quick reference:
 
 ```bash
-wrangler d1 create nemtus-core                 # shared NEMTUS core D1 -> database_id in wrangler.toml
-wrangler kv namespace create SESSION_KV        # -> id in wrangler.toml
+wrangler d1 create nemtus-core                       # shared NEMTUS core D1 -> database_id
+wrangler kv namespace create nemtus-core-session-kv  # -> SESSION_KV id (shared Better Auth sessions)
+wrangler kv namespace create nemtus-flea-market-kv   # -> APP_KV id (XYM price cache + store-email codes)
 wrangler r2 bucket create nemtus-flea-market
 
 wrangler d1 migrations apply nemtus-core --remote   # migrations_dir -> migrations (combined auth + flea-market)
