@@ -30,6 +30,7 @@ export function buildAuth(env: Env, ctx: ExecutionContext) {
       accessKeyId: env.AWS_ACCESS_KEY_ID,
       secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
       defaultFrom: env.SES_FROM,
+      configurationSetName: env.SES_CONFIGURATION_SET,
     }),
     waitUntil: ctx.waitUntil.bind(ctx),
     appName: 'flea-market',
