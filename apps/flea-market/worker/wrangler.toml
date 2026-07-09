@@ -21,8 +21,8 @@ binding = "DB"
 # prefixed (flea_market_*). This worker owns the combined migration set for now — when
 # a second app worker is added, split the core migrations to a shared owner so
 # `d1 migrations apply` tracking doesn't collide on the shared DB.
-database_name = "nemtus-core"
-database_id = "f927fa40-aa0c-4257-aca0-1817dec78e5f"
+database_name = "nemtus-core-d1"
+database_id = "74a1e55f-182f-430b-98ce-9077f7ae99ed"
 migrations_dir = "migrations"
 
 [[kv_namespaces]]
@@ -38,7 +38,7 @@ id = "63d52b22460f43d7bc7e718b59fcefd7"
 
 [[r2_buckets]]
 binding = "BUCKET"
-bucket_name = "nemtus-flea-market"
+bucket_name = "nemtus-flea-market-r2"
 
 # Per-environment overrides (testnet/mainnet analogues) can be added as
 # [env.production] blocks with their own binding ids and AUTH_BASE_URL.
