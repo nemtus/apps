@@ -83,12 +83,12 @@ export async function fetchXymJpyRate(env: Env): Promise<number> {
 
 /** KV-cached XYM/JPY rate (short TTL). Falls back to a live fetch on cache miss. */
 export async function getXymJpyRate(env: Env): Promise<number> {
-  const cached = await env.SESSION_KV.get(CACHE_KEY);
+  const cached = await env.APP_KV.get(CACHE_KEY);
   if (cached !== null) {
     const n = Number(cached);
     if (Number.isFinite(n) && n > 0) return n;
   }
   const rate = await fetchXymJpyRate(env);
-  await env.SESSION_KV.put(CACHE_KEY, String(rate), { expirationTtl: CACHE_TTL_SECONDS });
+  await env.APP_KV.put(CACHE_KEY, String(rate), { expirationTtl: CACHE_TTL_SECONDS });
   return rate;
 }

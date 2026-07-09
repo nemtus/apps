@@ -26,8 +26,15 @@ database_id = "f927fa40-aa0c-4257-aca0-1817dec78e5f"
 migrations_dir = "migrations"
 
 [[kv_namespaces]]
+# Shared NEMTUS core: Better Auth sessions (cross-app SSO). Title: nemtus-core-session-kv.
 binding = "SESSION_KV"
-id = "33129b2218bf410ca73cec42efe90865"
+id = "cd2c1ed677da4d04bd8ab7d62d03a395"
+
+[[kv_namespaces]]
+# flea-market app-scoped ephemera (XYM price cache + store-email codes), kept out of
+# the shared session store. Title: nemtus-flea-market-kv. Create it + fill the id.
+binding = "APP_KV"
+id = "TODO_APP_KV_ID"
 
 [[r2_buckets]]
 binding = "BUCKET"
