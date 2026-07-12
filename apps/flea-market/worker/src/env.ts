@@ -39,7 +39,7 @@ export interface Env {
   AWS_REGION: string;
   AWS_ACCESS_KEY_ID: string;
   AWS_SECRET_ACCESS_KEY: string;
-  SES_FROM: string;
+  AWS_SES_FROM: string;
 
   // --- Stripe ---
   STRIPE_SECRET_KEY: string;

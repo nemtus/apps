@@ -11,7 +11,7 @@ compatibility_flags = ["nodejs_compat"]
 [vars]
 AUTH_BASE_URL = "http://localhost:8787"
 AWS_REGION = "ap-northeast-1"
-SES_FROM = "NEMTUS <no-reply@nemtus.com>"
+AWS_SES_FROM = "NEMTUS <no-reply@nemtus.com>"
 # TRUSTED_ORIGINS = "https://flea-market.nemtus.com"
 
 [[d1_databases]]

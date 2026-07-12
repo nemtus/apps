@@ -372,7 +372,7 @@ async function requestStoreEmailVerification(ctx: RouteContext): Promise<Respons
     region: ctx.env.AWS_REGION,
     accessKeyId: ctx.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: ctx.env.AWS_SECRET_ACCESS_KEY,
-    defaultFrom: ctx.env.SES_FROM,
+    defaultFrom: ctx.env.AWS_SES_FROM,
   });
   const content = storeEmailVerificationEmail(code);
   try {

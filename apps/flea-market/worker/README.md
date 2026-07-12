@@ -56,7 +56,7 @@ wrangler d1 migrations apply nemtus-core-d1 --remote   # migrations_dir -> migra
 Secrets (dashboard, or `wrangler secret put`): `BETTER_AUTH_SECRET`, `AWS_ACCESS_KEY_ID` /
 `AWS_SECRET_ACCESS_KEY`, `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET`, `FIREBASE_SIGNER_KEY` /
 `FIREBASE_SALT_SEPARATOR`, optional `COINMARKETCAP_API_KEY` + social `*_CLIENT_ID`/`*_CLIENT_SECRET`.
-Vars (`[vars]`): `AUTH_BASE_URL`, `TRUSTED_ORIGINS`, `SES_FROM`, `CHECKOUT_SUCCESS_URL` /
+Vars (`[vars]`): `AUTH_BASE_URL`, `TRUSTED_ORIGINS`, `AWS_SES_FROM`, `CHECKOUT_SUCCESS_URL` /
 `CHECKOUT_CANCEL_URL`, `SYMBOL_NODE_URL`, `SYMBOL_CURRENCY_MOSAIC_ID`, and the `ENABLE_*` flags. The
 Stripe webhook endpoint is `<AUTH_BASE_URL>/api/flea-market/stripe/webhook`.
 
