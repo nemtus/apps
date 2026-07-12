@@ -21,7 +21,7 @@ TRUSTED_ORIGINS = "https://flea-market.nemtus.com"
 # and flea-market-test / flea-market-dev.
 AWS_REGION = "ap-northeast-1"
 SES_FROM = "NEMTUS <no-reply@nemtus.com>"
-SES_CONFIGURATION_SET = "flea-market"
+AWS_SES_CONFIGURATION_SET = "flea-market"
 # Stripe Checkout return URLs (SPA). The order is reconciled by the webhook via
 # client_reference_id, so these are just landing pages (see PR note re: /checkout/*).
 CHECKOUT_SUCCESS_URL = "https://flea-market.nemtus.com/checkout/success"
