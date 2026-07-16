@@ -40,9 +40,11 @@ supplies the bindings + config. The D1 schema is the combined auth (`@nemtus/db`
 
 ## Provisioning
 
-Bindings/ids go in `wrangler.toml`; **secrets + vars are set in the Cloudflare dashboard** (the worker
-deploys via Cloudflare Workers Builds from `main`, so nothing secret lives in the repo). `GO-LIVE.md`
-is the authoritative provisioning + secrets/vars checklist. Quick reference:
+Bindings/ids and **non-secret `[vars]` live in `wrangler.toml`** (version-controlled, applied on each
+deploy); **only secrets are provisioned separately** in the Cloudflare dashboard (or `wrangler secret
+put`) — the worker deploys via Cloudflare Workers Builds from `main`, so nothing secret lives in the
+repo, and dashboard plaintext vars are avoided (a deploy would override them). `GO-LIVE.md` is the
+authoritative provisioning + secrets/vars checklist. Quick reference:
 
 ```bash
 wrangler d1 create nemtus-core-d1                       # shared NEMTUS core D1 -> database_id
