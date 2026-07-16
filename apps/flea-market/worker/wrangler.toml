@@ -5,14 +5,32 @@ main = "src/index.ts"
 compatibility_date = "2025-06-01"
 compatibility_flags = ["nodejs_compat"]
 
-# Non-secret vars ([vars]); secrets go via `wrangler secret put <NAME>`:
-#   BETTER_AUTH_SECRET, FIREBASE_SIGNER_KEY, FIREBASE_SALT_SEPARATOR,
-#   AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and any *_CLIENT_SECRET.
+# Non-secret vars ([vars]); secrets are set out-of-band (never in git) via
+# `wrangler secret put <NAME>` or the dashboard: BETTER_AUTH_SECRET,
+# FIREBASE_SIGNER_KEY, FIREBASE_SALT_SEPARATOR, AWS_ACCESS_KEY_ID,
+# AWS_SECRET_ACCESS_KEY, STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, and the
+# {GOOGLE,GITHUB,TWITTER}_CLIENT_ID/_SECRET pairs.
 [vars]
-AUTH_BASE_URL = "http://localhost:8787"
+# Worker origin. Better Auth sets the session cookie on `.nemtus.com`, so this
+# MUST be a nemtus.com custom domain for cross-app SSO (not *.workers.dev).
+AUTH_BASE_URL = "https://flea-market-api.nemtus.com"
+# SPA origin(s) permitted to call the API with credentials (CORS), comma-separated.
+TRUSTED_ORIGINS = "https://flea-market.nemtus.com"
+# AWS SES (sender identity must be verified + the account out of the SES sandbox).
+# prod uses the unsuffixed sender/config-set; test/dev use no-reply-test@ / -dev@
+# and flea-market-test / flea-market-dev.
 AWS_REGION = "ap-northeast-1"
-SES_FROM = "NEMTUS <no-reply@nemtus.com>"
-# TRUSTED_ORIGINS = "https://flea-market.nemtus.com"
+AWS_SES_FROM = "NEMTUS <no-reply@nemtus.com>"
+AWS_SES_CONFIGURATION_SET = "flea-market"
+# Stripe Checkout return URLs (SPA). The order is reconciled by the webhook via
+# client_reference_id, so these are just landing pages (see PR note re: /checkout/*).
+CHECKOUT_SUCCESS_URL = "https://flea-market.nemtus.com/checkout/success"
+CHECKOUT_CANCEL_URL = "https://flea-market.nemtus.com/checkout/cancel"
+# Symbol (XYM settlement) — mainnet. Swap the node for a NEMTUS-run one if preferred.
+SYMBOL_NODE_URL = "https://sym-main-01.opening-line.jp:3001"
+SYMBOL_CURRENCY_MOSAIC_ID = "6BED913FA20223F8"
+# ENABLE_CREATE_* default ON (unset); ENABLE_STORE_{PHONE,ADDRESS}_VERIFICATION
+# default OFF (unset) until Twilio / postal integrations land — leave them unset.
 
 [[d1_databases]]
 binding = "DB"
