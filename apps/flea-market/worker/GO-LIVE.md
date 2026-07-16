@@ -76,7 +76,7 @@ wrangler d1 migrations apply nemtus-core-d1 --remote
 | `AUTH_BASE_URL` | the Worker origin (see §1). |
 | `TRUSTED_ORIGINS` | comma-separated SPA origins (the flea-market site origin(s)). |
 | `AWS_REGION` | e.g. `ap-northeast-1`. |
-| `SES_FROM` | a verified SES identity, e.g. `NEMTUS <no-reply@nemtus.com>`. |
+| `AWS_SES_FROM` | a verified SES identity, e.g. `NEMTUS <no-reply@nemtus.com>`. |
 | `CHECKOUT_SUCCESS_URL` / `CHECKOUT_CANCEL_URL` | SPA return URLs for Stripe Checkout. |
 | `SYMBOL_NODE_URL` | a reliable Symbol REST node, e.g. `https://sym-main-01.opening-line.jp:3001` (no trailing slash). **Required for the XYM rail.** |
 | `SYMBOL_CURRENCY_MOSAIC_ID` | `6BED913FA20223F8` (mainnet). **Required for the XYM rail.** |
