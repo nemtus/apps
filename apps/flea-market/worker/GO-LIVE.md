@@ -65,7 +65,7 @@ wrangler d1 migrations apply nemtus-core-d1 --remote
 | `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | IAM user with `ses:SendEmail`. |
 | `STRIPE_SECRET_KEY` | Stripe → API keys (live). |
 | `STRIPE_WEBHOOK_SECRET` | Stripe → the webhook endpoint's signing secret (create the endpoint at `<AUTH_BASE_URL>/api/flea-market/stripe/webhook`). |
-| `FIREBASE_SIGNER_KEY` / `FIREBASE_SALT_SEPARATOR` | from the source project's password `hash_config` (`firebase auth:export` hash params) — for lazy scrypt re-hash of migrated passwords. |
+| `FIREBASE_SIGNER_KEY` / `FIREBASE_SALT_SEPARATOR` / (optional) `FIREBASE_ROUNDS` / `FIREBASE_MEM_COST` | source project's password `hash_config` (Firebase console → Authentication → ⋮ → password hash parameters), for lazy scrypt re-hash of migrated passwords. `ROUNDS`/`MEM_COST` are non-secret tuning params but kept as secrets so all `FIREBASE_*` live in one place; set them only if they differ from the code defaults (8 / 14). Per-project value — testnet (`symbol-fest-market-test`) differs from mainnet (`symbol-fest-market`). |
 | `COINMARKETCAP_API_KEY` | optional — enables the CMC price fallback. |
 | `GOOGLE_/GITHUB_/TWITTER_/MICROSOFT_/APPLE_CLIENT_ID`+`_SECRET` | optional — each provider is enabled only when both id+secret are present. |
 
@@ -80,7 +80,6 @@ wrangler d1 migrations apply nemtus-core-d1 --remote
 | `CHECKOUT_SUCCESS_URL` / `CHECKOUT_CANCEL_URL` | SPA return URLs for Stripe Checkout. |
 | `SYMBOL_NODE_URL` | a reliable Symbol REST node, e.g. `https://sym-main-01.opening-line.jp:3001` (no trailing slash). **Required for the XYM rail.** |
 | `SYMBOL_CURRENCY_MOSAIC_ID` | `6BED913FA20223F8` (mainnet). **Required for the XYM rail.** |
-| `FIREBASE_ROUNDS` / `FIREBASE_MEM_COST` | scrypt params from `hash_config` (defaults exist). |
 | `ENABLE_CREATE_USER/STORE/ITEM/ORDER` | optional; enabled unless set to `"false"`. |
 | `ENABLE_STORE_PHONE_VERIFICATION` / `ENABLE_STORE_ADDRESS_VERIFICATION` | leave **unset/`false`** (skipped) until Twilio / postal-mail integrations land; set `"true"` to require them. |
 
