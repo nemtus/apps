@@ -8,7 +8,8 @@
     "npm": ">=11.10.0"
   },
   "overrides": {
-    "postcss": "^8.5.10"
+    "postcss": "^8.5.10",
+    "@vitest/browser": "4.1.10"
   },
   "scripts": {
     "dev": "next dev",
@@ -63,8 +64,8 @@
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^6.0.2",
-    "@vitest/browser-playwright": "^4.1.8",
-    "@vitest/coverage-v8": "^4.1.8",
+    "@vitest/browser-playwright": "4.1.10",
+    "@vitest/coverage-v8": "4.1.10",
     "dependency-cruiser": "^17.4.3",
     "eslint": "^9",
     "eslint-config-next": "^16.2.7",
@@ -80,7 +81,7 @@
     "tailwindcss": "^4.3.0",
     "typescript": "^6.0.3",
     "vite": "^8.0.16",
-    "vitest": "^4.1.8",
+    "vitest": "4.1.10",
     "wrangler": "^4.98.0"
   }
 }
