@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: apps/xymposium-lp-2024/.nvmrc
@@ -53,8 +53,11 @@ jobs:
       # ci-hackathon-lp-2026): the tree carries one unfixable low advisory in a transitive
       # esbuild (arbitrary file read on the *Windows dev server* only — irrelevant to Linux
       # CI and the deployed Worker), which `info` would fail on with no in-range remedy.
+      # --omit=dev (same as ci-flea-market): the storybook toolchain (@storybook/nextjs-vite
+      # -> image-size, all versions affected by GHSA-w3rx-r6r6-pgpr / GHSA-5p2g-fcmc-qvqq)
+      # has no fixed release; those are dev-only DoS advisories that never ship.
       - name: Audit before install
-        run: npm audit --package-lock-only --audit-level=high
+        run: npm audit --package-lock-only --omit=dev --audit-level=high
       - name: Socket Firewall (firewall-free, no token)
         uses: SocketDev/action@ba6de6cc0565af1f42295590380973573297e31f # v1.3.2
         with:
@@ -88,7 +91,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: apps/xymposium-lp-2024/.nvmrc
@@ -123,7 +126,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: apps/xymposium-lp-2024/.nvmrc

@@ -98,7 +98,17 @@
   "pnpm": {
     "comment": "Pin motion-dom to the release paired with framer-motion@12.23.24; the v0 lockfile resolved motion-dom@12.42.2, which dropped the `activeAnimations` export framer-motion 12.23.24 imports.",
     "overrides": {
-      "motion-dom": "12.23.23"
+      "motion-dom": "12.23.23",
+      "lodash@<4.18.0": ">=4.18.0 <5",
+      "postcss@<8.5.23": ">=8.5.23 <9",
+      "brace-expansion@<1.1.18": ">=1.1.18 <2",
+      "brace-expansion@>=4.0.0 <5.0.9": ">=5.0.9 <6",
+      "fast-uri@>=3.0.0 <3.1.5": ">=3.1.5 <4",
+      "sharp@<0.35.0": ">=0.35.0 <1",
+      "next@>=16.0.0 <16.2.11": ">=16.2.11 <16.3.0",
+      "undici@>=7.0.0 <7.29.0": ">=7.29.0 <8",
+      "js-yaml@>=4.0.0 <4.3.1": ">=4.3.1 <5",
+      "nanoid@<3.3.18": ">=3.3.18 <4"
     },
     "auditConfig": {
       "ignoreGhsas": [
