@@ -21,6 +21,6 @@
   },
   "homepage": "https://github.com/nemtus/hackathon-lp-2024",
   "devDependencies": {
-    "firebase-tools": "^12.7.0"
+    "firebase-tools": "^15.27.0"
   }
 }
