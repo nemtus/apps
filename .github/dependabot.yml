@@ -21,10 +21,10 @@ updates:
           - patch
 
   # ----------------------------------------------------------------------------
-  # npm — the ROOT WORKSPACE lockfile only (packages/* + apps/*/worker).
+  # npm — the ROOT WORKSPACE lockfile (packages/* + apps/*/worker).
   # The apps/* frontends install standalone with their own lockfiles (React 18
-  # vs 19 isolation — see root package.json) and are deliberately NOT enumerated
-  # here to keep PR noise proportionate; add per-app entries later if wanted.
+  # vs 19 isolation — see root package.json), so each of them gets its own entry
+  # below; this entry covers the root lockfile alone.
   # ----------------------------------------------------------------------------
   - package-ecosystem: npm
     directory: "/"
@@ -43,3 +43,252 @@ updates:
       # @types/node tracks the Node runtime major; hold the major.
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
+
+  # ----------------------------------------------------------------------------
+  # npm — the standalone apps/* installs, one entry per lockfile.
+  # Every app owns its package.json + lockfile and is built from inside its own
+  # directory, so each needs a separate entry: a single entry listing them under
+  # `directories:` would bundle unrelated apps into one pull request, and such a
+  # pull request goes stale as soon as any one of those directories moves (#76,
+  # superseded by #79, is an open example).
+  # `apps/flea-market/worker` and `packages/*` are absent on purpose — they have
+  # no lockfile of their own and are updated through the root workspace entry.
+  # The limit is lower than the root entry's because these twelve entries fire
+  # on the same weekly schedule; it caps how much lands for review at once, and
+  # each entry's limit is independent of every other's.
+  # The `ignore` entries are held majors carried over from the per-app configs
+  # of the repositories these apps came from (apps/<name>/.github/dependabot.yml,
+  # inert here because GitHub reads only this file). Those copies are superseded
+  # by this one — each hold below was re-checked against the current manifest.
+  # ----------------------------------------------------------------------------
+
+  - package-ecosystem: npm
+    directory: "/apps/flea-market"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      flea-market-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # @types/node tracks the Node runtime major; hold the major.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+
+  # Cloud Functions package; its runtime major is pinned by engines.node.
+  - package-ecosystem: npm
+    directory: "/apps/flea-market/functions"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      flea-market-functions-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # firebase-functions 7 rejects firebase-admin 14: its peer range is
+      # ^11.10.0 || ^12.0.0 || ^13.0.0. Revisit when that range widens.
+      - dependency-name: "firebase-admin"
+        update-types: ["version-update:semver-major"]
+      # @types/node tracks the Node runtime major; hold the major.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: npm
+    directory: "/apps/hackathon"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      hackathon-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # React 19 is deferred until this app's migration is scoped; it is what
+      # keeps this app installing separately from flea-market.
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react-dom"
+        update-types: ["version-update:semver-major"]
+      # TypeScript 6 is not supported by this app's toolchain yet.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      # daisyUI 5 requires Tailwind 4; the two move together.
+      - dependency-name: "daisyui"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "tailwindcss"
+        update-types: ["version-update:semver-major"]
+      # @types/node tracks the Node runtime major; hold the major.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+
+  # Cloud Functions package; its runtime major is pinned by engines.node.
+  - package-ecosystem: npm
+    directory: "/apps/hackathon/functions"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      hackathon-functions-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # TypeScript 6 / ESLint 10 are not supported by this toolchain yet.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      # symbol-sdk 3 is a crypto-breaking rewrite; migrate it deliberately.
+      - dependency-name: "symbol-sdk"
+        update-types: ["version-update:semver-major"]
+      # @types/node tracks the Node runtime major; hold the major.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: npm
+    directory: "/apps/hackathon-lp"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      hackathon-lp-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: npm
+    directory: "/apps/hackathon-lp-2023"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      hackathon-lp-2023-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: npm
+    directory: "/apps/hackathon-lp-2024"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      hackathon-lp-2024-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: npm
+    directory: "/apps/hackathon-lp-2025"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      hackathon-lp-2025-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+
+  # Installs with pnpm; the npm ecosystem is what reads pnpm-lock.yaml.
+  - package-ecosystem: npm
+    directory: "/apps/hackathon-lp-2026"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      hackathon-lp-2026-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # @types/node tracks the Node runtime major; hold the major.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: npm
+    directory: "/apps/xymposium-lp"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      xymposium-lp-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: npm
+    directory: "/apps/xymposium-lp-2024"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      xymposium-lp-2024-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # ESLint 10 removed context.getFilename(), which the eslint-plugin-react
+      # bundled with eslint-config-next still calls. Drop this once the bundled
+      # plugin is fixed upstream.
+      - dependency-name: "eslint"
+        versions: [">=10"]
+      # @types/node tracks the Node runtime major; hold the major.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+
+  # No dependencies yet; the entry tracks the lockfile so additions are covered.
+  - package-ecosystem: npm
+    directory: "/apps/xymposium-lp-2025"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      xymposium-lp-2025-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
