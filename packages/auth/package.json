@@ -15,7 +15,7 @@
     "@noble/hashes": "^2.3.0",
     "@nemtus/db": "*",
     "@nemtus/email": "*",
-    "better-auth": "^1.6.26",
+    "better-auth": "^1.6.29",
     "drizzle-orm": "^0.45.0"
   },
   "peerDependencies": {
@@ -27,7 +27,7 @@
     }
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20260810.1",
+    "@cloudflare/workers-types": "^5.20260817.1",
     "react": "^19.2.8",
     "typescript": "^6.0.3"
   }

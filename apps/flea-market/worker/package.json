@@ -23,11 +23,11 @@
     "drizzle-orm": "^0.45.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20260810.1",
+    "@cloudflare/workers-types": "^5.20260817.1",
     "@types/node": "^22.20.1",
     "drizzle-kit": "^0.31.1",
     "typescript": "^6.0.3",
-    "wrangler": "^4.120.0",
+    "wrangler": "^4.123.0",
     "firebase-admin": "^14.2.0",
     "aws4fetch": "^1.0.20"
   }
