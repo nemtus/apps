@@ -14,7 +14,7 @@
     "stripe": "^22.5.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20260817.1",
+    "@cloudflare/workers-types": "^5.20260823.1",
     "typescript": "^6.0.3"
   }
 }
