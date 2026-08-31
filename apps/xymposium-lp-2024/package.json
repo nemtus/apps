@@ -71,7 +71,7 @@
     "eslint-config-next": "^16.3.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-storybook": "^10.5.8",
-    "jsdom": "^29.1.1",
+    "jsdom": "^30.0.1",
     "knip": "^6.32.2",
     "playwright": "^1.62.1",
     "postcss": "^8.5.10",
