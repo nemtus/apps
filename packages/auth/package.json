@@ -12,10 +12,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@noble/hashes": "^2.3.0",
+    "@noble/hashes": "^2.4.0",
     "@nemtus/db": "*",
     "@nemtus/email": "*",
-    "better-auth": "^1.6.29",
+    "better-auth": "^1.7.2",
     "drizzle-orm": "^0.45.0"
   },
   "peerDependencies": {
@@ -27,7 +27,7 @@
     }
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20260817.1",
+    "@cloudflare/workers-types": "^5.20260831.1",
     "react": "^19.2.8",
     "typescript": "^6.0.3"
   }
