@@ -1,0 +1,90 @@
+name: ci-hackathon
+
+# CI for the hackathon SPA (apps/hackathon), a Vite + React 18 app. Path-filtered so it
+# only runs when the frontend changes — `apps/hackathon/functions/**` is excluded here and
+# covered by ci-hackathon-functions.yml.
+#
+# This re-establishes apps/hackathon/.github/workflows/ci-react.yml, which has been inert
+# since the monorepo import: GitHub only runs workflows from the repo-root
+# .github/workflows/. Two differences from that copy. It also runs `lint` and `typecheck`
+# rather than `build` alone. And it does not reconstruct a `.env` from a `REACT_ENV`
+# secret: only `.env.example` is committed, the build does not read any REACT_APP_* value
+# at compile time, and it completes without one — so this workflow needs no secret, which
+# also means it works on forks.
+#
+# Deployment is NOT covered. The Firebase CD workflows under apps/hackathon/.github/ stay
+# inert until their Workload Identity Federation trust is re-bound from nemtus/hackathon
+# to nemtus/apps.
+#
+# Socket is integrated token-free, same as the other workflows here:
+#   - Socket Firewall Free (`sfw`, mode: firewall-free) wraps `npm ci` and blocks
+#     confirmed-malicious packages (incl. transitive) before they are fetched.
+#   - The Socket GitHub App (repo-root socket.yml) comments on dependency-changing PRs.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/hackathon/**"
+      - "!apps/hackathon/functions/**"
+      - ".github/workflows/ci-hackathon.yml"
+  pull_request:
+    paths:
+      - "apps/hackathon/**"
+      - "!apps/hackathon/functions/**"
+      - ".github/workflows/ci-hackathon.yml"
+
+concurrency:
+  group: ci-hackathon-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: apps/hackathon
+
+jobs:
+  quality:
+    name: audit / lint / types / build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false # read-only job; don't leave GITHUB_TOKEN in git config
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: apps/hackathon/.nvmrc
+          cache: npm
+          cache-dependency-path: apps/hackathon/package-lock.json
+      # Audit the lockfile before install so a known-bad version is caught before its
+      # (deferred) install scripts could ever run.
+      #
+      # Gated at `critical`, not `high`, and `--omit=dev` would not help. The tree carries
+      # four highs that all reduce to one root cause with no upstream fix: `firebase` ->
+      # `@firebase/firestore` pins `@grpc/grpc-js` at `~1.9.0`, and firebase 13's
+      # firestore 4.19.0 still does, so there is no version to move to and an override
+      # would violate the declared range. It also never ships: the built bundle contains
+      # `grpc` only as the Firestore settings name `grpcFlowControlWindow`, with no
+      # `@grpc/grpc-js`, `ChannelCredentials`, `loadPackageDefinition` or
+      # `makeClientConstructor` anywhere — the browser build goes through
+      # `@firebase/webchannel-wrapper`, and grpc-js belongs to Firestore's Node entry
+      # point. Tighten this to `high` once the Firebase SDK moves off grpc-js 1.9.
+      - name: Audit before install
+        run: npm audit --package-lock-only --audit-level=critical
+      - name: Socket Firewall (firewall-free, no token)
+        uses: SocketDev/action@ba6de6cc0565af1f42295590380973573297e31f # v1.3.2
+        with:
+          mode: firewall-free
+      - name: Install (clean, via Socket Firewall)
+        run: sfw npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      # `build` is `tsc --noEmit && vite build`, so this re-runs the typecheck. Keeping
+      # the separate step above is deliberate: a type error then fails as "Typecheck"
+      # instead of being buried in a build log.
+      - name: Build
+        run: npm run build

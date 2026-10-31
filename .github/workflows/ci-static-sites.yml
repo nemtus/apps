@@ -1,0 +1,88 @@
+name: ci-static-sites
+
+# Config validation for the assets-only static sites. These have no build step and, since
+# #368 removed the unused firebase-tools devDependency, no dependencies either — so there
+# is nothing to install, lint, typecheck or test, and CLAUDE.md records that they
+# deliberately had no checks workflow.
+#
+# What they do still have is a wrangler.toml that Cloudflare Workers Builds acts on. A
+# typo in `name`, a bad `routes` entry or a missing `[assets] directory` only surfaces as
+# a failed production deploy after merge. `wrangler deploy --dry-run` catches all three
+# before that, needs no Cloudflare credentials, and runs in seconds against a
+# zero-dependency tree — the same idea as ci-xymposium-lp.yml's bundle check.
+#
+# The two sites with real toolchains are covered elsewhere: apps/xymposium-lp-2024 by
+# ci-xymposium-lp-2024.yml, apps/hackathon-lp-2026 by ci-hackathon-lp-2026.yml.
+# apps/xymposium-lp has a `main` Worker script and keeps its own ci-xymposium-lp.yml.
+#
+# Socket Firewall Free wraps the `npx` fetch of wrangler, same as ci-xymposium-lp.yml.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/hackathon-lp/**"
+      - "apps/hackathon-lp-2023/**"
+      - "apps/hackathon-lp-2024/**"
+      - "apps/hackathon-lp-2025/**"
+      - "apps/xymposium-lp-2025/**"
+      - ".github/workflows/ci-static-sites.yml"
+  pull_request:
+    paths:
+      - "apps/hackathon-lp/**"
+      - "apps/hackathon-lp-2023/**"
+      - "apps/hackathon-lp-2024/**"
+      - "apps/hackathon-lp-2025/**"
+      - "apps/xymposium-lp-2025/**"
+      - ".github/workflows/ci-static-sites.yml"
+
+concurrency:
+  group: ci-static-sites-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  bundle-check:
+    name: "wrangler dry-run: ${{ matrix.site }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false # one bad wrangler.toml should not hide the others
+      matrix:
+        site:
+          - hackathon-lp
+          - hackathon-lp-2023
+          - hackathon-lp-2024
+          - hackathon-lp-2025
+          - xymposium-lp-2025
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false # read-only job; don't leave GITHUB_TOKEN in git config
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+      - name: Socket Firewall (firewall-free, no token)
+        uses: SocketDev/action@ba6de6cc0565af1f42295590380973573297e31f # v1.3.2
+        with:
+          mode: firewall-free
+      # No install step: these packages declare zero dependencies on purpose. Asserted
+      # here so that if one ever grows a dependency, this workflow says so rather than
+      # silently skipping an install the site now needs.
+      - name: Assert the site is still dependency-free
+        working-directory: apps/${{ matrix.site }}
+        run: |
+          node -e '
+            const pkg = require("./package.json");
+            const deps = Object.keys({ ...pkg.dependencies, ...pkg.devDependencies });
+            if (deps.length === 0) process.exit(0);
+            console.error(
+              "This site is no longer dependency-free: " + deps.join(", ") + ".\n" +
+              "Give it a real checks workflow (install + audit) instead of this dry-run."
+            );
+            process.exit(1);
+          '
+      - name: Bundle check (wrangler deploy --dry-run)
+        working-directory: apps/${{ matrix.site }}
+        run: sfw npx --yes wrangler@4 deploy --dry-run

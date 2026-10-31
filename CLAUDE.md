@@ -92,24 +92,51 @@ that can't be dropped), Deploy stays the uniform `npx wrangler deploy`, config i
 has no build but ships a `main` Worker script (`src/index.ts`, bundled by wrangler on deploy).
 `xymposium-lp-2025` is a plain assets-only static site like the `hackathon-lp*`.
 
-**Checks CI → GitHub Actions (repo-root, path-filtered, token-free Socket).** Apps with a real
-build/test surface get a **checks-only** workflow at `.github/workflows/ci-<app>.yml` (deploys
-stay on Workers Builds). Each is path-filtered to its app, pins every `uses:` to a full commit
-SHA, and hardens installs with **Socket Firewall Free** (`SocketDev/action`, `mode:
-firewall-free`) so `sfw npm ci` / `sfw pnpm install` blocks confirmed-malicious packages at
-fetch time — no Socket token/account. This complements the repo-root `socket.yml` (Socket
-GitHub App: PR dependency-risk comments) and `.npmrc` (`ignore-scripts`, `save-exact`). Current
-workflows: `ci-hackathon-lp-2026` (pnpm/Next), `ci-xymposium-lp-2024` (npm/Next: quality +
-vitest + Playwright e2e), `ci-xymposium-lp` (aggregator: `npm ci` → typecheck → `wrangler
-deploy --dry-run`). The static assets-only sites have nothing to install/build, so they get no
-checks workflow. When adding a Socket-wrapped workflow, reuse the SHAs already pinned in these
-files.
+**Checks CI → GitHub Actions (repo-root, path-filtered, token-free Socket).** Every package
+gets a **checks-only** workflow at `.github/workflows/ci-<name>.yml` (deploys stay on Workers
+Builds). Each is path-filtered to its package, pins every `uses:` to a full commit SHA, and
+hardens installs with **Socket Firewall Free** (`SocketDev/action`, `mode: firewall-free`) so
+`sfw npm ci` / `sfw pnpm install` blocks confirmed-malicious packages at fetch time — no Socket
+token/account. This complements the repo-root `socket.yml` (Socket GitHub App: PR
+dependency-risk comments) and `.npmrc` (`ignore-scripts`, `save-exact`). **Only the repo-root
+`.github/workflows/` runs** — anything under `apps/*/.github/workflows/` is inert, so a gap
+there is silent. The full set:
 
-**Firebase apps (follow-up).** The per-app deploy workflows imported from the source repos live
-under `apps/<name>/.github/workflows/` and are **inert** (GitHub only runs workflows from the
-repo-root `.github/workflows/`). The `hackathon` / `flea-market` Firebase deploys still need to
-be re-established (OIDC + Workload Identity Federation) or migrated to their Cloudflare
-equivalents; tracked as a follow-up.
+| Workflow | Covers | Audit gate |
+| --- | --- | --- |
+| `ci-core` | `packages/*` + `apps/*/worker` | `high`, all deps |
+| `ci-flea-market` | the React 19 SPA (excludes `worker/`) | `high`, `--omit=dev` |
+| `ci-flea-market-functions` | `apps/flea-market/functions` (install + `tsc`; no lint script) | `high` |
+| `ci-hackathon` | the React 18 SPA (excludes `functions/`) | `critical` — see below |
+| `ci-hackathon-functions` | `apps/hackathon/functions` | `high` |
+| `ci-hackathon-lp-2026` | pnpm/Next | `high` (`pnpm audit`) |
+| `ci-xymposium-lp-2024` | npm/Next: quality + vitest + Playwright e2e | `high`, `--omit=dev` |
+| `ci-xymposium-lp` | aggregator: `npm ci` → typecheck → `wrangler deploy --dry-run` | `high` |
+| `ci-static-sites` | the 5 assets-only sites: asserts they are still dependency-free, then `wrangler deploy --dry-run` per site | n/a (no deps) |
+| `pinact` | SHA-pinning of every `uses:` | n/a |
+
+Two gates are deliberately not `high`. `ci-hackathon` sits at `critical` because `firebase` →
+`@firebase/firestore` pins `@grpc/grpc-js` at `~1.9.0` (still true in firebase 13), giving four
+highs with no version to move to; grpc-js never reaches the browser bundle, which goes through
+`@firebase/webchannel-wrapper`. Tighten it once the Firebase SDK moves on. `ci-static-sites` has
+no gate because those packages have no dependencies — it asserts that instead, and fails if one
+ever grows a dependency without getting a real checks workflow.
+
+When adding a Socket-wrapped workflow, reuse the SHAs already pinned in these files.
+
+**Node versions.** The two `functions/` packages are pinned to **22** by `engines.node`, and
+that is not a free choice: the field selects the Cloud Functions runtime and Firebase offers
+only `nodejs18/20/22`, so they cannot follow the frontends up. Everything else is build
+tooling only (the deployed Workers do not run Node), so it tracks a current LTS. Keep each
+package's `.nvmrc`, `engines.node` and workflow `node-version` on the same major.
+
+**Firebase CD (follow-up).** The per-app *deploy* workflows imported from the source repos live
+under `apps/<name>/.github/workflows/` and remain **inert** on purpose — they are the spec for
+the deferred work, not live config. The `hackathon` / `flea-market` Firebase deploys still need
+their OIDC + Workload Identity Federation trust re-bound from the old repositories
+(`nemtus/hackathon`, `nemtus/symbol-fest-market`) to `nemtus/apps`, which is Google Cloud–side
+work, or migrating to their Cloudflare equivalents. The `firebase-hosting-*` workflows under the
+four `hackathon-lp*` sites are obsolete rather than pending: those sites are on Cloudflare now.
 
 ## Roadmap
 
