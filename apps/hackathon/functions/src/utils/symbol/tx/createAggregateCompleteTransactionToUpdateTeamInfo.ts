@@ -157,8 +157,9 @@ export const createAggregateCompleteTransactionToUpdateTeamInfo = async (
     networkType,
   ).toAggregate(teamAccount.publicAccount);
 
-  // eslint-disable-next-line
-  const copiedPublicUserYearTeam = Object.assign({}, publicUserYearTeam) as any;
+  const copiedPublicUserYearTeam: Partial<typeof publicUserYearTeam> = {
+    ...publicUserYearTeam,
+  };
   delete copiedPublicUserYearTeam.users;
   delete copiedPublicUserYearTeam.addressForPrizeReceipt;
   const message4Json = { team: copiedPublicUserYearTeam };

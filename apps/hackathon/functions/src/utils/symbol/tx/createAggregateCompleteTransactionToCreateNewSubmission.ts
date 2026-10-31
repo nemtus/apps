@@ -148,7 +148,9 @@ export const createAggregateCompleteTransactionToCreateNewSubmission = async (
   if (!publicUserYearSubmission) {
     throw Error('publicUserYearSubmission is undefined');
   }
-  const message3Json = Object.assign({}, publicUserYearSubmission) as any;
+  const message3Json: Partial<typeof publicUserYearSubmission> = {
+    ...publicUserYearSubmission,
+  };
   if (!publicUserYearSubmission.storeRepositoryUrlOnChain) {
     delete message3Json.repositoryUrl;
   }

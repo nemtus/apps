@@ -236,10 +236,9 @@ export const createAggregateCompleteTransactionToUpdateFinalJudge = async (
   }
 
   logger.debug('embeddedTransferTransaction3');
-  const copiedAdminUserYearFinalJudge = Object.assign(
-    {},
-    adminUserYearFinalJudge,
-  ) as any;
+  const copiedAdminUserYearFinalJudge: Partial<AdminUserYearFinalJudge> = {
+    ...adminUserYearFinalJudge,
+  };
   delete copiedAdminUserYearFinalJudge.judges;
   const message3Json = copiedAdminUserYearFinalJudge;
   logger.debug('message3Json', { message3Json });

@@ -226,7 +226,9 @@ export const createAggregateCompleteTransactionToUpdateVote = async (
   }
 
   logger.debug('embeddedTransferTransaction3');
-  const copiedAdminUserYearVote = Object.assign({}, adminUserYearVote) as any;
+  const copiedAdminUserYearVote: Partial<AdminUserYearVote> = {
+    ...adminUserYearVote,
+  };
   delete copiedAdminUserYearVote.votes;
   const message3Json = copiedAdminUserYearVote;
   logger.debug('message3Json', { message3Json });

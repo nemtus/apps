@@ -227,8 +227,9 @@ export const createAggregateCompleteTransactionToCreateNewJudge = async (
   }
 
   logger.debug('embeddedTransferTransaction3');
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const copiedAdminUserYearJudge = Object.assign({}, adminUserYearJudge) as any;
+  const copiedAdminUserYearJudge: Partial<AdminUserYearJudge> = {
+    ...adminUserYearJudge,
+  };
   delete copiedAdminUserYearJudge.judges;
   const message3Json = copiedAdminUserYearJudge;
   logger.debug('message3Json', { message3Json });

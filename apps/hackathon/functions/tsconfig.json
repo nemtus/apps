@@ -7,7 +7,15 @@
     "sourceMap": true,
     "strict": true,
     "target": "es2017",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    // Do not type-check dependency .d.ts files. Two of them do not compile
+    // against this project's `target`/`lib`: @slack/web-api references the
+    // ES2022 `ErrorOptions`, and the generated
+    // @nemtus/symbol-sdk-openapi-generator-typescript-axios declarations
+    // reference a `globalAxios` namespace they never declare. Neither is
+    // actionable here, and the repo's own tsconfig.base.json plus every
+    // apps/* frontend already set this.
+    "skipLibCheck": true
   },
   "compileOnSave": true,
   "include": ["src"]

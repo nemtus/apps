@@ -13,6 +13,11 @@ const exportFunctionsModule = (paths: string[], _exports: any) => {
     const moduleName = paths.slice(-1)[0];
     const modulePath = [rootPath, paths.join('/')].join('/');
     _exports[moduleName] = {
+      // A dynamic `require` is the point of this helper: the module is loaded
+      // only for the function actually being deployed or invoked, so a cold
+      // start does not pull in every other function's dependencies. A static
+      // import cannot express that.
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       ...require(modulePath),
     };
   }

@@ -230,10 +230,9 @@ export const createAggregateCompleteTransactionToCreateNewFinalVote = async (
   }
 
   logger.debug('embeddedTransferTransaction3');
-  const copiedAdminUserYearFinalVote = Object.assign(
-    {},
-    adminUserYearFinalVote,
-  ) as any;
+  const copiedAdminUserYearFinalVote: Partial<AdminUserYearFinalVote> = {
+    ...adminUserYearFinalVote,
+  };
   delete copiedAdminUserYearFinalVote.votes;
   const message3Json = copiedAdminUserYearFinalVote;
   logger.debug('message3Json', { message3Json });

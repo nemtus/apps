@@ -1,0 +1,74 @@
+name: ci-hackathon-functions
+
+# CI for the hackathon Cloud Functions package (apps/hackathon/functions). Path-filtered
+# so it only runs when that package changes.
+#
+# This re-establishes apps/hackathon/.github/workflows/ci-functions.yml, which has been
+# inert since the monorepo import: GitHub only runs workflows from the repo-root
+# .github/workflows/. That copy did `npm audit` -> `npm ci` -> `npm run build`; `lint` is
+# added here because the package has the script and it now passes.
+#
+# Deployment is NOT covered. The Firebase CD workflows under apps/hackathon/.github/ stay
+# inert until their Workload Identity Federation trust is re-bound from nemtus/hackathon
+# to nemtus/apps.
+#
+# Socket is integrated token-free, same as the other workflows here:
+#   - Socket Firewall Free (`sfw`, mode: firewall-free) wraps `npm ci` and blocks
+#     confirmed-malicious packages (incl. transitive) before they are fetched.
+#   - The Socket GitHub App (repo-root socket.yml) comments on dependency-changing PRs.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/hackathon/functions/**"
+      - ".github/workflows/ci-hackathon-functions.yml"
+  pull_request:
+    paths:
+      - "apps/hackathon/functions/**"
+      - ".github/workflows/ci-hackathon-functions.yml"
+
+concurrency:
+  group: ci-hackathon-functions-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: apps/hackathon/functions
+
+jobs:
+  verify:
+    name: audit / lint / build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false # read-only job; don't leave GITHUB_TOKEN in git config
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          # Node 22 is not a free choice here: engines.node selects the Cloud Functions
+          # runtime, and Firebase offers only nodejs18/20/22. Keep .nvmrc, engines.node
+          # and this job on the same major.
+          node-version-file: apps/hackathon/functions/.nvmrc
+          cache: npm
+          cache-dependency-path: apps/hackathon/functions/package-lock.json
+      # Audit the lockfile before install so a known-bad version is caught before its
+      # (deferred) install scripts could ever run. `high` is achievable for this package:
+      # the tree carries 33 moderate + 3 low, all in firebase-tools and the jest
+      # toolchain, whose only offered "fix" is a semver-major downgrade.
+      - name: Audit before install
+        run: npm audit --package-lock-only --audit-level=high
+      - name: Socket Firewall (firewall-free, no token)
+        uses: SocketDev/action@ba6de6cc0565af1f42295590380973573297e31f # v1.3.2
+        with:
+          mode: firewall-free
+      - name: Install (clean, via Socket Firewall)
+        run: sfw npm ci
+      - name: Lint
+        run: npm run lint
+      # `build` is `tsc`, so this is the typecheck too — there is no separate script.
+      - name: Build (tsc)
+        run: npm run build
