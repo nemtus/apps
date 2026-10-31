@@ -166,6 +166,13 @@ updates:
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
 
+  # The four `hackathon-lp*` static sites below carry no dependencies at all: they are
+  # assets-only Cloudflare Workers with no build step, so wrangler needs nothing installed
+  # (`wrangler deploy` reads ./public directly). Their lone devDependency was
+  # `firebase-tools`, a leftover of the pre-Cloudflare deploy path; it was unused by CI/CD
+  # yet pulled ~40 transitive advisories into each lockfile and produced the bulk of this
+  # repository's Dependabot backlog, so it was removed. These entries are kept so updates
+  # resume automatically if a dependency is ever added back.
   - package-ecosystem: npm
     directory: "/apps/hackathon-lp"
     schedule:
