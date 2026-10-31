@@ -163,7 +163,9 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewTeam = async (
     networkType,
   ).toAggregate(teamAccount.publicAccount);
 
-  const copiedPublicUserYearTeam = Object.assign({}, publicUserYearTeam) as any;
+  const copiedPublicUserYearTeam: Partial<typeof publicUserYearTeam> = {
+    ...publicUserYearTeam,
+  };
   delete copiedPublicUserYearTeam.users;
   delete copiedPublicUserYearTeam.addressForPrizeReceipt;
   const message4Json = { team: copiedPublicUserYearTeam };

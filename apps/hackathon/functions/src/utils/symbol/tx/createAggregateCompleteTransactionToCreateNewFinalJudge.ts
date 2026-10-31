@@ -132,19 +132,17 @@ export const createAggregateCompleteTransactionToCreateNewFinalJudge = async (
       logger.debug('finalJudge.userId is not matched to userId');
       continue;
     }
-    if (
-      !(
-        finalJudge.userId && // Note: judging user
-        finalJudge.yearId === CURRENT_YEAR &&
-        finalJudge.teamId &&
-        finalJudge.submissionId &&
-        Number.isInteger(finalJudge.point) &&
-        finalJudge.point >= 0 &&
-        finalJudge.point <= adminUserYearFinalJudge.judges.length * 100 &&
-        totalPoints <= adminUserYearFinalJudge.judges.length * 100 &&
-        typeof finalJudge.message === 'string'
-      )
-    ) {
+    if (!(
+      finalJudge.userId && // Note: judging user
+      finalJudge.yearId === CURRENT_YEAR &&
+      finalJudge.teamId &&
+      finalJudge.submissionId &&
+      Number.isInteger(finalJudge.point) &&
+      finalJudge.point >= 0 &&
+      finalJudge.point <= adminUserYearFinalJudge.judges.length * 100 &&
+      totalPoints <= adminUserYearFinalJudge.judges.length * 100 &&
+      typeof finalJudge.message === 'string'
+    )) {
       logger.debug('judge is not valid');
       continue;
     }
@@ -233,11 +231,9 @@ export const createAggregateCompleteTransactionToCreateNewFinalJudge = async (
   }
 
   logger.debug('embeddedTransferTransaction3');
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const copiedAdminUserYearFinalJudge = Object.assign(
-    {},
-    adminUserYearFinalJudge,
-  ) as any;
+  const copiedAdminUserYearFinalJudge: Partial<AdminUserYearFinalJudge> = {
+    ...adminUserYearFinalJudge,
+  };
   delete copiedAdminUserYearFinalJudge.judges;
   const message3Json = copiedAdminUserYearFinalJudge;
   logger.debug('message3Json', { message3Json });

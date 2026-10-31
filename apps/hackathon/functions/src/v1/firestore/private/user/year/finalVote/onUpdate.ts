@@ -134,24 +134,22 @@ export const onUpdate = () =>
         if (finalVote.userId !== userId) {
           throw Error('finalVote.userId is not matched to userId');
         }
-        if (
-          !(
+        if (!(
+          afterPrivateUserYearFinalVote.createdAt &&
+          configHackathonYearFinalVote.startAt <=
             afterPrivateUserYearFinalVote.createdAt &&
-            configHackathonYearFinalVote.startAt <=
-              afterPrivateUserYearFinalVote.createdAt &&
-            afterPrivateUserYearFinalVote.createdAt <=
-              configHackathonYearFinalVote.endAt &&
-            finalVote.userId && // Note: voting user
-            finalVote.yearId === CURRENT_YEAR &&
-            finalVote.teamId &&
-            finalVote.submissionId &&
-            Number.isInteger(finalVote.point) &&
-            finalVote.point >= 0 &&
-            finalVote.point <= afterPrivateUserYearFinalVote.votes.length * 5 &&
-            totalPoints <= afterPrivateUserYearFinalVote.votes.length * 5 &&
-            typeof finalVote.message === 'string'
-          )
-        ) {
+          afterPrivateUserYearFinalVote.createdAt <=
+            configHackathonYearFinalVote.endAt &&
+          finalVote.userId && // Note: voting user
+          finalVote.yearId === CURRENT_YEAR &&
+          finalVote.teamId &&
+          finalVote.submissionId &&
+          Number.isInteger(finalVote.point) &&
+          finalVote.point >= 0 &&
+          finalVote.point <= afterPrivateUserYearFinalVote.votes.length * 5 &&
+          totalPoints <= afterPrivateUserYearFinalVote.votes.length * 5 &&
+          typeof finalVote.message === 'string'
+        )) {
           throw Error('vote is not valid');
         }
         const adminUserYearTeam = await getAdminUserYearTeam(

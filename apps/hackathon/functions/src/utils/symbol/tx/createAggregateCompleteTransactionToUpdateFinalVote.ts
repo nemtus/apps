@@ -132,19 +132,17 @@ export const createAggregateCompleteTransactionToUpdateFinalVote = async (
       logger.debug('finalVote.userId is not matched to userId');
       continue;
     }
-    if (
-      !(
-        finalVote.userId && // Note: voting user
-        finalVote.yearId === CURRENT_YEAR &&
-        finalVote.teamId &&
-        finalVote.submissionId &&
-        Number.isInteger(finalVote.point) &&
-        finalVote.point >= 0 &&
-        finalVote.point <= adminUserYearFinalVote.votes.length * 5 &&
-        totalPoints <= adminUserYearFinalVote.votes.length * 5 &&
-        typeof finalVote.message === 'string'
-      )
-    ) {
+    if (!(
+      finalVote.userId && // Note: voting user
+      finalVote.yearId === CURRENT_YEAR &&
+      finalVote.teamId &&
+      finalVote.submissionId &&
+      Number.isInteger(finalVote.point) &&
+      finalVote.point >= 0 &&
+      finalVote.point <= adminUserYearFinalVote.votes.length * 5 &&
+      totalPoints <= adminUserYearFinalVote.votes.length * 5 &&
+      typeof finalVote.message === 'string'
+    )) {
       logger.debug('finalVote is not valid');
       continue;
     }
@@ -231,10 +229,9 @@ export const createAggregateCompleteTransactionToUpdateFinalVote = async (
   }
 
   logger.debug('embeddedTransferTransaction3');
-  const copiedAdminUserYearFinalVote = Object.assign(
-    {},
-    adminUserYearFinalVote,
-  ) as any;
+  const copiedAdminUserYearFinalVote: Partial<AdminUserYearFinalVote> = {
+    ...adminUserYearFinalVote,
+  };
   delete copiedAdminUserYearFinalVote.votes;
   const message3Json = copiedAdminUserYearFinalVote;
   logger.debug('message3Json', { message3Json });

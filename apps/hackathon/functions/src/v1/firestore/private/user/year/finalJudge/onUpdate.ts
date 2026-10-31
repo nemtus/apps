@@ -122,28 +122,26 @@ export const onUpdate = () =>
         if (finalJudge.userId !== userId) {
           throw Error('judge.userId is not matched to userId');
         }
-        if (
-          !(
+        if (!(
+          afterPrivateUserYearFinalJudge.createdAt &&
+          configHackathonYearFinalJudge.startAt <=
             afterPrivateUserYearFinalJudge.createdAt &&
-            configHackathonYearFinalJudge.startAt <=
-              afterPrivateUserYearFinalJudge.createdAt &&
-            afterPrivateUserYearFinalJudge.createdAt <=
-              configHackathonYearFinalJudge.endAt &&
-            configHackathonYearFinalJudge.users.some(
-              (userId) => userId === afterPrivateUserYearFinalJudge.userId,
-            ) &&
-            finalJudge.userId && // Note: voting user
-            finalJudge.yearId === CURRENT_YEAR &&
-            finalJudge.teamId &&
-            finalJudge.submissionId &&
-            Number.isInteger(finalJudge.point) &&
-            finalJudge.point >= 0 &&
-            finalJudge.point <=
-              afterPrivateUserYearFinalJudge.judges.length * 100 &&
-            totalPoints <= afterPrivateUserYearFinalJudge.judges.length * 100 &&
-            typeof finalJudge.message === 'string'
-          )
-        ) {
+          afterPrivateUserYearFinalJudge.createdAt <=
+            configHackathonYearFinalJudge.endAt &&
+          configHackathonYearFinalJudge.users.some(
+            (userId) => userId === afterPrivateUserYearFinalJudge.userId,
+          ) &&
+          finalJudge.userId && // Note: voting user
+          finalJudge.yearId === CURRENT_YEAR &&
+          finalJudge.teamId &&
+          finalJudge.submissionId &&
+          Number.isInteger(finalJudge.point) &&
+          finalJudge.point >= 0 &&
+          finalJudge.point <=
+            afterPrivateUserYearFinalJudge.judges.length * 100 &&
+          totalPoints <= afterPrivateUserYearFinalJudge.judges.length * 100 &&
+          typeof finalJudge.message === 'string'
+        )) {
           throw Error('finalJudge is not valid');
         }
         const adminUserYearTeam = await getAdminUserYearTeam(

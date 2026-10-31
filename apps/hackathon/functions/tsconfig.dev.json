@@ -1,3 +1,10 @@
 {
+  "compilerOptions": {
+    // This config exists only so `@typescript-eslint` can type-check
+    // `.eslintrc.js` itself. Without `allowJs`, TypeScript discards the sole
+    // `include` entry and the parser fails with "No inputs were found in
+    // config file 'tsconfig.dev.json'".
+    "allowJs": true
+  },
   "include": [".eslintrc.js"]
 }

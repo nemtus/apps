@@ -192,24 +192,22 @@ export const onCreate = () =>
           flag12,
         });
 
-        if (
-          !(
+        if (!(
+          privateUserYearFinalVote.createdAt &&
+          configHackathonYearFinalVote.startAt <=
             privateUserYearFinalVote.createdAt &&
-            configHackathonYearFinalVote.startAt <=
-              privateUserYearFinalVote.createdAt &&
-            privateUserYearFinalVote.createdAt <=
-              configHackathonYearFinalVote.endAt &&
-            finalVote.userId && // Note: voting user
-            finalVote.yearId === CURRENT_YEAR &&
-            finalVote.teamId &&
-            finalVote.submissionId &&
-            Number.isInteger(finalVote.point) &&
-            finalVote.point >= 0 &&
-            finalVote.point <= privateUserYearFinalVote.votes.length * 5 &&
-            totalPoints <= privateUserYearFinalVote.votes.length * 5 &&
-            typeof finalVote.message === 'string'
-          )
-        ) {
+          privateUserYearFinalVote.createdAt <=
+            configHackathonYearFinalVote.endAt &&
+          finalVote.userId && // Note: voting user
+          finalVote.yearId === CURRENT_YEAR &&
+          finalVote.teamId &&
+          finalVote.submissionId &&
+          Number.isInteger(finalVote.point) &&
+          finalVote.point >= 0 &&
+          finalVote.point <= privateUserYearFinalVote.votes.length * 5 &&
+          totalPoints <= privateUserYearFinalVote.votes.length * 5 &&
+          typeof finalVote.message === 'string'
+        )) {
           throw Error('finalVote is not valid');
         }
         const adminUserYearTeam = await getAdminUserYearTeam(
