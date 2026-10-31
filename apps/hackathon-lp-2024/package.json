@@ -19,8 +19,5 @@
   "bugs": {
     "url": "https://github.com/nemtus/hackathon-lp-2024/issues"
   },
-  "homepage": "https://github.com/nemtus/hackathon-lp-2024",
-  "devDependencies": {
-    "firebase-tools": "^15.27.0"
-  }
+  "homepage": "https://github.com/nemtus/hackathon-lp-2024"
 }
