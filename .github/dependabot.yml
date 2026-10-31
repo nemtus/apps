@@ -117,6 +117,14 @@ updates:
           - minor
           - patch
     ignore:
+      # This app lints through `.eslintrc.json` + `.eslintignore`. ESLint 9 stopped
+      # reading them by default and ESLint 10 dropped them outright, and
+      # eslint-plugin-react caps its peer at ^9.7 (7.37.5 is its latest release), so
+      # an ESLint major leaves the app unable to resolve *or* lint. It was bumped to
+      # ^10.9.0 once and `npm ci` failed until it was put back. Lift this hold
+      # together with a migration to flat config.
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
       # React 19 is deferred until this app's migration is scoped; it is what
       # keeps this app installing separately from flea-market.
       - dependency-name: "react"
@@ -154,6 +162,12 @@ updates:
           - minor
           - patch
     ignore:
+      # firebase-functions-test 3.5.0 (its latest) peers firebase-admin
+      # ^8 || ^9 || ^10 || ^11 || ^12 || ^13 — so firebase-admin 14 makes this
+      # package unresolvable, exactly as in apps/flea-market/functions above. It
+      # was bumped to ^14.2.0 once and `npm ci` failed until it was put back.
+      - dependency-name: "firebase-admin"
+        update-types: ["version-update:semver-major"]
       # TypeScript 6 / ESLint 10 are not supported by this toolchain yet.
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
