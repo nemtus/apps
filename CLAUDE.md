@@ -124,11 +124,15 @@ ever grows a dependency without getting a real checks workflow.
 
 When adding a Socket-wrapped workflow, reuse the SHAs already pinned in these files.
 
-**Node versions.** The two `functions/` packages are pinned to **22** by `engines.node`, and
-that is not a free choice: the field selects the Cloud Functions runtime and Firebase offers
-only `nodejs18/20/22`, so they cannot follow the frontends up. Everything else is build
-tooling only (the deployed Workers do not run Node), so it tracks a current LTS. Keep each
-package's `.nvmrc`, `engines.node` and workflow `node-version` on the same major.
+**Node versions.** CI runs **Node 26** (the LTS line, "Lithium") everywhere except the two
+`functions/` packages, which are pinned to **22** by `engines.node`. That pin is not a free
+choice: the field selects the Cloud Functions runtime and Firebase offers only
+`nodejs18/20/22`, so they cannot follow the frontends up — `ci-hackathon-functions` and
+`ci-flea-market-functions` stay on 22 for that reason alone. Everywhere else Node is build
+tooling only (the deployed Workers do not run Node), so it tracks the current LTS. Keep each
+package's `.nvmrc`, `engines.node` and workflow `node-version` on the same major. The
+`engines.node` entries that read `>=22` (repo root) and `>=20.9.0` (`xymposium-lp-2024`) are
+floors, not runtime selectors, and are left permissive on purpose.
 
 **Firebase CD (follow-up).** The per-app *deploy* workflows imported from the source repos live
 under `apps/<name>/.github/workflows/` and remain **inert** on purpose — they are the spec for

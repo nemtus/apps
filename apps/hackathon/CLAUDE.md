@@ -44,7 +44,9 @@ npm run preview     # ビルド結果のプレビュー
 
 ## 規約
 
-- **Node**: ルートは Node 24（`.nvmrc`）。`functions/` は Node 22（`engines.node`）
+- **Node**: このアプリは Node 26（`.nvmrc`）。`functions/` は Node 22（`engines.node`）で
+  固定。これは選択ではなく制約で、`engines.node` が Cloud Functions のランタイムを決め、
+  Firebase は `nodejs18/20/22` しか提供していないため上げられない
 - **整形**: Prettier（`singleQuote: true`、`printWidth: 80`、`semi: true`、`tabWidth: 2`、`endOfLine: lf`）
 - **Lint**: ESLint（`eslint:recommended` + React + `@typescript-eslint`）
 - **npm**（`.npmrc`）:
@@ -64,9 +66,16 @@ npm run preview     # ビルド結果のプレビュー
 
 ## CI
 
-- `.github/workflows/ci-react.yml` — PR ごとに `npm audit` → `npm ci` → `npm run build`
-- `.github/workflows/ci-functions.yml` — 同上を `functions/` で実行
-- いずれも Node 24 環境。コミット前に `npm run typecheck` / `npm run build` が通ることを確認する
+CI はモノレポのルート（`<repo-root>/.github/workflows/`）に移設済み。**このディレクトリ配下の
+`.github/workflows/` は実行されない**（GitHub はルートの `.github/workflows/` のみ実行する）。
+
+- `ci-hackathon.yml` — このアプリ: `npm audit`（gate は `critical`）→ `npm ci` → `lint` →
+  `typecheck` → `build`。Node 26（`.nvmrc`）
+- `ci-hackathon-functions.yml` — `functions/`: `npm audit`（`high`）→ `npm ci` →
+  `format:check` → `lint` → `build`。Node 22（`functions/.nvmrc`）
+- 配下に残る `ci-react.yml` / `ci-functions.yml` は上記で置き換え済みの不活性コピー。
+  `cd-firebase-*.yml` は WIF の信頼設定をこのリポジトリへ張り替えるまで不活性のまま
+- コミット前に `npm run typecheck` / `npm run build` が通ることを確認する
 
 ## CD（デプロイ）
 
