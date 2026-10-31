@@ -20,7 +20,8 @@ import LoadingOverlay from '../../../../../../ui/LoadingOverlay';
 import ErrorDialog from '../../../../../../ui/ErrorDialog';
 
 interface Column {
-  id: // | 'userId'
+  id:
+    // | 'userId'
     | 'email'
     | 'name'
     | 'phoneNumber'
