@@ -144,5 +144,8 @@ Auth user. Admin-only actions across `firestore.rules` key off
   `prettier`. Run `npm run format` before committing frontend changes.
 - Code comments and all user-facing strings are in Japanese — match the existing
   language when editing.
-- Node 22 is the pinned runtime for functions (`functions/package.json` engines)
-  and the CI/CD baseline.
+- Node 22 is the pinned runtime for functions (`functions/package.json`
+  `engines.node`), and `ci-flea-market-functions` runs on 22 to match. That pin is
+  a constraint, not a preference: `engines.node` selects the Cloud Functions
+  runtime and Firebase offers only `nodejs18/20/22`. The frontend has no such
+  constraint and `ci-flea-market` runs on Node 26.
