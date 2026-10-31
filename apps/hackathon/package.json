@@ -55,7 +55,7 @@
     "@vitejs/plugin-react": "^6.0.5",
     "autoprefixer": "^10.5.4",
     "daisyui": "^2.52.0",
-    "eslint": "^10.9.0",
+    "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
     "firebase-tools": "^15.28.1",
