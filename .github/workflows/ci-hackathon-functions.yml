@@ -67,6 +67,8 @@ jobs:
           mode: firewall-free
       - name: Install (clean, via Socket Firewall)
         run: sfw npm ci
+      - name: Format check
+        run: npm run format:check
       - name: Lint
         run: npm run lint
       # `build` is `tsc`, so this is the typecheck too — there is no separate script.

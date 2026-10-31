@@ -3,6 +3,7 @@
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
     "format": "prettier --write \"**/*.{js,ts}\"",
+    "format:check": "prettier --check \"**/*.{js,ts}\"",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "serve": "firebase emulators:start --only auth,firestore,storage,functions --import=emulator --export-on-exit",

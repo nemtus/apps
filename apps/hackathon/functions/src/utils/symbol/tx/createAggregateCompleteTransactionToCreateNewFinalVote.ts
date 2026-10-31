@@ -132,19 +132,17 @@ export const createAggregateCompleteTransactionToCreateNewFinalVote = async (
       logger.debug('vote.userId is not matched to userId');
       continue;
     }
-    if (
-      !(
-        finalVote.userId && // Note: voting user
-        finalVote.yearId === CURRENT_YEAR &&
-        finalVote.teamId &&
-        finalVote.submissionId &&
-        Number.isInteger(finalVote.point) &&
-        finalVote.point >= 0 &&
-        finalVote.point <= adminUserYearFinalVote.votes.length * 5 &&
-        totalPoints <= adminUserYearFinalVote.votes.length * 5 &&
-        typeof finalVote.message === 'string'
-      )
-    ) {
+    if (!(
+      finalVote.userId && // Note: voting user
+      finalVote.yearId === CURRENT_YEAR &&
+      finalVote.teamId &&
+      finalVote.submissionId &&
+      Number.isInteger(finalVote.point) &&
+      finalVote.point >= 0 &&
+      finalVote.point <= adminUserYearFinalVote.votes.length * 5 &&
+      totalPoints <= adminUserYearFinalVote.votes.length * 5 &&
+      typeof finalVote.message === 'string'
+    )) {
       logger.debug('finalVote is not valid');
       continue;
     }

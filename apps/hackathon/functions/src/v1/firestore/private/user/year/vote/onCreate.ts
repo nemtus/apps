@@ -161,22 +161,20 @@ export const onCreate = () =>
           flag12,
         });
 
-        if (
-          !(
-            privateUserYearVote.createdAt &&
-            configHackathonYearVote.startAt <= privateUserYearVote.createdAt &&
-            privateUserYearVote.createdAt <= configHackathonYearVote.endAt &&
-            vote.userId && // Note: voting user
-            vote.yearId === CURRENT_YEAR &&
-            vote.teamId &&
-            vote.submissionId &&
-            Number.isInteger(vote.point) &&
-            vote.point >= 0 &&
-            vote.point <= privateUserYearVote.votes.length * 5 &&
-            totalPoints <= privateUserYearVote.votes.length * 5 &&
-            typeof vote.message === 'string'
-          )
-        ) {
+        if (!(
+          privateUserYearVote.createdAt &&
+          configHackathonYearVote.startAt <= privateUserYearVote.createdAt &&
+          privateUserYearVote.createdAt <= configHackathonYearVote.endAt &&
+          vote.userId && // Note: voting user
+          vote.yearId === CURRENT_YEAR &&
+          vote.teamId &&
+          vote.submissionId &&
+          Number.isInteger(vote.point) &&
+          vote.point >= 0 &&
+          vote.point <= privateUserYearVote.votes.length * 5 &&
+          totalPoints <= privateUserYearVote.votes.length * 5 &&
+          typeof vote.message === 'string'
+        )) {
           throw Error('vote is not valid');
         }
         const adminUserYearTeam = await getAdminUserYearTeam(

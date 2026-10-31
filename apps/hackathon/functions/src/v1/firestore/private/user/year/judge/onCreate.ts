@@ -93,26 +93,23 @@ export const onCreate = () =>
         if (judge.userId !== userId) {
           throw Error('judge.userId is not matched to userId');
         }
-        if (
-          !(
-            privateUserYearJudge.createdAt &&
-            configHackathonYearJudge.startAt <=
-              privateUserYearJudge.createdAt &&
-            privateUserYearJudge.createdAt <= configHackathonYearJudge.endAt &&
-            configHackathonYearJudge.users.some(
-              (userId) => userId === privateUserYearJudge.userId,
-            ) &&
-            judge.userId && // Note: voting user
-            judge.yearId === CURRENT_YEAR &&
-            judge.teamId &&
-            judge.submissionId &&
-            Number.isInteger(judge.point) &&
-            judge.point >= 0 &&
-            judge.point <= privateUserYearJudge.judges.length * 100 &&
-            totalPoints <= privateUserYearJudge.judges.length * 100 &&
-            typeof judge.message === 'string'
-          )
-        ) {
+        if (!(
+          privateUserYearJudge.createdAt &&
+          configHackathonYearJudge.startAt <= privateUserYearJudge.createdAt &&
+          privateUserYearJudge.createdAt <= configHackathonYearJudge.endAt &&
+          configHackathonYearJudge.users.some(
+            (userId) => userId === privateUserYearJudge.userId,
+          ) &&
+          judge.userId && // Note: voting user
+          judge.yearId === CURRENT_YEAR &&
+          judge.teamId &&
+          judge.submissionId &&
+          Number.isInteger(judge.point) &&
+          judge.point >= 0 &&
+          judge.point <= privateUserYearJudge.judges.length * 100 &&
+          totalPoints <= privateUserYearJudge.judges.length * 100 &&
+          typeof judge.message === 'string'
+        )) {
           throw Error('judge is not valid');
         }
         const adminUserYearTeam = await getAdminUserYearTeam(

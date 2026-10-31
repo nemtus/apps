@@ -132,19 +132,17 @@ export const createAggregateCompleteTransactionToCreateNewJudge = async (
       logger.debug('judge.userId is not matched to userId');
       continue;
     }
-    if (
-      !(
-        judge.userId && // Note: judging user
-        judge.yearId === CURRENT_YEAR &&
-        judge.teamId &&
-        judge.submissionId &&
-        Number.isInteger(judge.point) &&
-        judge.point >= 0 &&
-        judge.point <= adminUserYearJudge.judges.length * 100 &&
-        totalPoints <= adminUserYearJudge.judges.length * 100 &&
-        typeof judge.message === 'string'
-      )
-    ) {
+    if (!(
+      judge.userId && // Note: judging user
+      judge.yearId === CURRENT_YEAR &&
+      judge.teamId &&
+      judge.submissionId &&
+      Number.isInteger(judge.point) &&
+      judge.point >= 0 &&
+      judge.point <= adminUserYearJudge.judges.length * 100 &&
+      totalPoints <= adminUserYearJudge.judges.length * 100 &&
+      typeof judge.message === 'string'
+    )) {
       logger.debug('judge is not valid');
       continue;
     }

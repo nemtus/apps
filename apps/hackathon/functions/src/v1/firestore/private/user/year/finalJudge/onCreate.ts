@@ -115,27 +115,25 @@ export const onCreate = () =>
         if (finalJudge.userId !== userId) {
           throw Error('finalJudge.userId is not matched to userId');
         }
-        if (
-          !(
+        if (!(
+          privateUserYearFinalJudge.createdAt &&
+          configHackathonYearFinalJudge.startAt <=
             privateUserYearFinalJudge.createdAt &&
-            configHackathonYearFinalJudge.startAt <=
-              privateUserYearFinalJudge.createdAt &&
-            privateUserYearFinalJudge.createdAt <=
-              configHackathonYearFinalJudge.endAt &&
-            configHackathonYearFinalJudge.users.some(
-              (userId) => userId === privateUserYearFinalJudge.userId,
-            ) &&
-            finalJudge.userId && // Note: voting user
-            finalJudge.yearId === CURRENT_YEAR &&
-            finalJudge.teamId &&
-            finalJudge.submissionId &&
-            Number.isInteger(finalJudge.point) &&
-            finalJudge.point >= 0 &&
-            finalJudge.point <= privateUserYearFinalJudge.judges.length * 100 &&
-            totalPoints <= privateUserYearFinalJudge.judges.length * 100 &&
-            typeof finalJudge.message === 'string'
-          )
-        ) {
+          privateUserYearFinalJudge.createdAt <=
+            configHackathonYearFinalJudge.endAt &&
+          configHackathonYearFinalJudge.users.some(
+            (userId) => userId === privateUserYearFinalJudge.userId,
+          ) &&
+          finalJudge.userId && // Note: voting user
+          finalJudge.yearId === CURRENT_YEAR &&
+          finalJudge.teamId &&
+          finalJudge.submissionId &&
+          Number.isInteger(finalJudge.point) &&
+          finalJudge.point >= 0 &&
+          finalJudge.point <= privateUserYearFinalJudge.judges.length * 100 &&
+          totalPoints <= privateUserYearFinalJudge.judges.length * 100 &&
+          typeof finalJudge.message === 'string'
+        )) {
           throw Error('finalJudge is not valid');
         }
         const adminUserYearTeam = await getAdminUserYearTeam(
