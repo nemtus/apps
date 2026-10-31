@@ -76,6 +76,24 @@ updates:
           - minor
           - patch
     ignore:
+      # This app lints through `.eslintrc.json` on the airbnb preset, and three of
+      # its own devDependencies hold the toolchain at ESLint 8 / typescript-eslint 7:
+      #   eslint-config-airbnb 19.0.4            peers eslint ^7.32.0 || ^8.2.0
+      #   eslint-config-airbnb-typescript 18.0.0 peers eslint ^8.56.0 and
+      #                                          @typescript-eslint/* ^7.0.0
+      #   eslint-plugin-react-hooks 4.6.0        peers eslint ^3 ... ^8
+      # None has a release that accepts ESLint 9, let alone 10, and ESLint 9 also
+      # stopped reading `.eslintrc.json` by default. An ESLint or typescript-eslint
+      # major therefore breaks `npm ci` and `npm run lint` here — which is exactly
+      # what happened to apps/hackathon when eslint went to ^10.9.0 (see its hold
+      # below). Lift both together with a migration to flat config and a newer
+      # airbnb preset.
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@typescript-eslint/eslint-plugin"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@typescript-eslint/parser"
+        update-types: ["version-update:semver-major"]
       # @types/node tracks the Node runtime major; hold the major.
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
