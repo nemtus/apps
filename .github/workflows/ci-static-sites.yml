@@ -25,6 +25,7 @@ on:
       - "apps/hackathon-lp-2024/**"
       - "apps/hackathon-lp-2025/**"
       - "apps/xymposium-lp-2025/**"
+      - "apps/stir-hosyu-lp/**"
       - ".github/workflows/ci-static-sites.yml"
   pull_request:
     paths:
@@ -33,6 +34,7 @@ on:
       - "apps/hackathon-lp-2024/**"
       - "apps/hackathon-lp-2025/**"
       - "apps/xymposium-lp-2025/**"
+      - "apps/stir-hosyu-lp/**"
       - ".github/workflows/ci-static-sites.yml"
 
 concurrency:
@@ -56,6 +58,7 @@ jobs:
           - hackathon-lp-2024
           - hackathon-lp-2025
           - xymposium-lp-2025
+          - stir-hosyu-lp
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

@@ -1,0 +1,106 @@
+<!doctype html>
+<!--
+  Source for public/assets/ogp.png — the Open Graph card, 1200x630.
+
+  This file is NOT served: it lives outside public/ on purpose. It exists so the
+  card can be regenerated when the title or wording changes, instead of being an
+  opaque binary nobody can edit. See ../README.md for the one-line command.
+
+  Colours are copied from public/assets/style.css rather than imported, so this
+  renders standalone. Keep them in sync if the palette changes.
+-->
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 1200px;
+        height: 630px;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        /* Platforms crop the edges of a card; keep everything well inside. */
+        padding: 76px 90px;
+        background: linear-gradient(135deg, #0e5f5a 0%, #137a74 55%, #1b9089 100%);
+        color: #fff;
+        font-family:
+          system-ui,
+          -apple-system,
+          "Hiragino Kaku Gothic ProN",
+          "Noto Sans JP",
+          Meiryo,
+          sans-serif;
+        overflow: hidden;
+      }
+
+      .badge {
+        display: inline-block;
+        align-self: flex-start;
+        padding: 9px 22px;
+        border: 2px solid rgba(255, 255, 255, 0.55);
+        border-radius: 999px;
+        font-size: 24px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+      }
+
+      h1 {
+        margin: 34px 0 0;
+        font-size: 76px;
+        line-height: 1.25;
+        letter-spacing: 0.01em;
+      }
+
+      h1 b {
+        color: #9ff0e8;
+      }
+
+      .tagline {
+        margin: 26px 0 0;
+        font-size: 36px;
+        font-weight: 500;
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.92);
+      }
+
+      .footer {
+        display: flex;
+        align-items: baseline;
+        gap: 18px;
+        margin-top: auto;
+        padding-top: 34px;
+        border-top: 2px solid rgba(255, 255, 255, 0.28);
+      }
+
+      .by {
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+      }
+
+      .host {
+        font-size: 26px;
+        color: rgba(255, 255, 255, 0.78);
+        letter-spacing: 0.04em;
+      }
+    </style>
+  </head>
+  <body>
+    <span class="badge">提供準備中</span>
+    <h1>Stir Hosyu <b>Symbol</b></h1>
+    <p class="tagline">
+      Symbol ノードの運用保守を、まるごと代行します。
+    </p>
+    <div class="footer">
+      <span class="by">NEMTUS</span>
+      <span class="host">stir-hosyu.nemtus.com</span>
+    </div>
+  </body>
+</html>
