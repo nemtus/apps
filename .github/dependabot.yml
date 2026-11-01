@@ -302,6 +302,38 @@ updates:
     cooldown:
       default-days: 7
     groups:
+      # `@vitest/browser-playwright` and `@vitest/browser` peer `vitest` at an
+      # EXACT version, and this app pins the family. Moving one member alone is
+      # not resolvable, and Dependabot does not notice: for #393 it wrote a
+      # lockfile holding @vitest/browser-playwright@5.0.5 next to vitest@4.1.12
+      # with @vitest/browser missing entirely. `npm ci` then rejects it
+      # ("Conflicting peer dependency: vitest@5.0.5"), so CI and the Cloudflare
+      # preview both fail and the pull request can never go green — the same way
+      # #326 died on vitest alone.
+      #
+      # Grouping is what fixes it: every member's spec moves in one pull
+      # request, so the tree Dependabot resolves is internally consistent.
+      # Majors are included because that is exactly when the family diverges.
+      #
+      # Keep this group FIRST — a dependency joins the first group it matches,
+      # so the catch-all below must not claim these.
+      xymposium-lp-2024-vitest:
+        applies-to: version-updates
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+        update-types:
+          - major
+          - minor
+          - patch
+      # Security updates are grouped separately — `applies-to` defaults to
+      # version-updates, so without this a security bump would arrive as the
+      # same unresolvable single-package pull request.
+      xymposium-lp-2024-vitest-security:
+        applies-to: security-updates
+        patterns:
+          - "vitest"
+          - "@vitest/*"
       xymposium-lp-2024-minor-patch:
         applies-to: version-updates
         update-types:
