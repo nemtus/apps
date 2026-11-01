@@ -13,8 +13,11 @@
 name = "nemtus-stir-hosyu-lp"
 compatibility_date = "2025-06-01"
 
-# Custom domain (managed as code; attached by Workers Builds on deploy). The DNS record
-# for stir-hosyu.nemtus.com must exist in the nemtus.com zone before the first deploy.
+# Custom domain (managed as code; attached by Workers Builds on deploy). Cloudflare
+# creates the DNS record and the certificate itself when the domain is attached, so there
+# is nothing to add to the nemtus.com zone by hand. The one constraint is that the
+# hostname must not already have a CNAME record — a Custom Domain cannot be created on
+# top of one.
 routes = [{ pattern = "stir-hosyu.nemtus.com", custom_domain = true }]
 
 [assets]
