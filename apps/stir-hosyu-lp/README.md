@@ -19,6 +19,28 @@ wrangler.toml         Cloudflare Workers（Static Assets）の設定
 画像を用意した場合は、その `<link rel="icon">` を
 `<link rel="icon" href="/assets/favicon.ico" />` に差し替えてください。
 
+## OGP 画像
+
+`public/assets/ogp.png`（1200×630）は `ogp/template.html` から生成しています。
+`ogp/` は `public/` の外にあるため配信されません。タイトルや文言を変えたときは、
+テンプレートを編集して再生成してください。
+
+```bash
+# playwright が入っているワークスペースから実行する
+cd ../xymposium-lp-2024
+node -e '
+import("playwright").then(async ({ chromium }) => {
+  const b = await chromium.launch();
+  const p = await b.newPage({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 1 });
+  await p.goto("file://" + process.cwd() + "/../stir-hosyu-lp/ogp/template.html", { waitUntil: "networkidle" });
+  await p.screenshot({ path: "../stir-hosyu-lp/public/assets/ogp.png" });
+  await b.close();
+});'
+```
+
+`og:image` は絶対 URL で指定する必要があります（クローラは相対パスを解決しません）。
+ドメインを変える場合は `index.html` の `og:image` / `twitter:image` も合わせて更新してください。
+
 ## 公開前に設定が必要なリンク（3箇所）
 
 Google Form と Google Docs の URL が決まったら差し替えてください。未設定の間は

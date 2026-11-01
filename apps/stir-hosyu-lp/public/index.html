@@ -21,7 +21,26 @@
     />
     <meta property="og:site_name" content="NEMTUS" />
     <meta property="og:locale" content="ja_JP" />
-    <meta name="twitter:card" content="summary" />
+    <!--
+      og:image must be an absolute URL — crawlers do not resolve relative paths.
+      The card is generated from ogp/template.html; see README.md to regenerate.
+    -->
+    <meta
+      property="og:image"
+      content="https://stir-hosyu.nemtus.com/assets/ogp.png"
+    />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Stir Hosyu Symbol — Symbol ノードの運用保守を、まるごと代行します。NEMTUS"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:image"
+      content="https://stir-hosyu.nemtus.com/assets/ogp.png"
+    />
     <!--
       Inline SVG favicon so the site stays file-free. Drop in a real icon later by
       replacing this with: <link rel="icon" href="/assets/favicon.ico" />
