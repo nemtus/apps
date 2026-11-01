@@ -18,7 +18,11 @@ export default defineConfig({
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
-    command: `pnpm exec serve out -l ${PORT} -n`,
+    // `serve` is fetched on demand rather than installed. As a dependency it
+    // pinned compression@1.8.1 exactly, whose advisory could only be lifted
+    // with a pnpm override — and any override makes Dependabot's regenerated
+    // lockfiles fail --frozen-lockfile. Mirrors the `preview` script.
+    command: `npx --yes serve@14 out -l ${PORT} -n`,
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
