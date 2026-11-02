@@ -23,3 +23,13 @@ routes = [{ pattern = "stir-hosyu.nemtus.com", custom_domain = true }]
 [assets]
 directory = "./public"
 not_found_handling = "404-page" # serve /404.html for unmatched paths
+
+# Required by `wrangler preview`, which Workers Builds runs for non-production
+# branches — without it every pull-request preview fails with:
+#   "Your Wrangler configuration is missing a `previews` block to run this
+#    command."
+# The block is deliberately empty: previews do not inherit production settings,
+# but this site has no bindings or vars to carry over, and `assets`,
+# `compatibility_date` and `routes` stay at the top level by design. It does not
+# affect `wrangler deploy`.
+[previews]
