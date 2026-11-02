@@ -20,6 +20,25 @@ compatibility_date = "2025-06-01"
 # top of one.
 routes = [{ pattern = "stir-hosyu.nemtus.com", custom_domain = true }]
 
+# Publish a Preview URL for each pull-request build. Without this the build
+# succeeds but Workers Builds reports "No Preview URL", because the setting
+# defaults to whatever `workers_dev` is and that is off for this Worker.
+#
+# Deliberately NOT paired with `workers_dev = true`: that would also expose
+# nemtus-stir-hosyu-lp.workers.dev as a second copy of the production site,
+# which is duplicate content on a hostname nobody should be linking to.
+preview_urls = true
+
 [assets]
 directory = "./public"
 not_found_handling = "404-page" # serve /404.html for unmatched paths
+
+# Required by `wrangler preview`, which Workers Builds runs for non-production
+# branches — without it every pull-request preview fails with:
+#   "Your Wrangler configuration is missing a `previews` block to run this
+#    command."
+# The block is deliberately empty: previews do not inherit production settings,
+# but this site has no bindings or vars to carry over, and `assets`,
+# `compatibility_date` and `routes` stay at the top level by design. It does not
+# affect `wrangler deploy`.
+[previews]

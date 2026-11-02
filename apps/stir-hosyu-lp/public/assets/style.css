@@ -44,8 +44,8 @@ body {
   font-family:
     system-ui,
     -apple-system,
-    "Hiragino Kaku Gothic ProN",
-    "Noto Sans JP",
+    'Hiragino Kaku Gothic ProN',
+    'Noto Sans JP',
     Meiryo,
     sans-serif;
   font-size: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);
@@ -171,8 +171,7 @@ a:hover {
 
 .hero {
   padding-block: clamp(2.5rem, 7vw, 4.5rem);
-  background:
-    linear-gradient(180deg, var(--accent-faint), transparent 70%), var(--bg);
+  background: linear-gradient(180deg, var(--accent-faint), transparent 70%), var(--bg);
 }
 
 .hero h1 {
@@ -234,13 +233,6 @@ a:hover {
   text-align: center;
 }
 
-.btn small {
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  opacity: 0.85;
-}
-
 .btn--primary {
   background: var(--accent);
   color: #fff;
@@ -254,16 +246,6 @@ a:hover {
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--fg);
-}
-
-/* Shared "not published yet" treatment: reads as text, never as a dead link. */
-.is-pending {
-  color: var(--fg-muted);
-  cursor: default;
-}
-
-.btn.is-pending {
-  border-style: dashed;
 }
 
 /* --------------------------------------------------------------- content -- */
