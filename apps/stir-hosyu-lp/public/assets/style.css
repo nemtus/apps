@@ -175,7 +175,7 @@ a:hover {
 }
 
 .hero h1 {
-  margin: 0.6rem 0 0;
+  margin: 0;
   font-size: clamp(1.55rem, 1.15rem + 2vw, 2.5rem);
 }
 
@@ -185,32 +185,10 @@ a:hover {
   display: inline-block;
 }
 
-.badge {
-  display: inline-block;
-  margin: 0;
-  padding: 0.3rem 0.85rem;
-  border-radius: 999px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-}
-
 .lead {
   max-width: 44rem;
   margin-top: 1.1rem;
   font-size: clamp(1rem, 0.95rem + 0.35vw, 1.15rem);
-}
-
-.notice {
-  max-width: 44rem;
-  margin-top: 1.2rem;
-  padding: 0.9rem 1.1rem;
-  border-left: 4px solid var(--accent);
-  border-radius: 0 var(--radius) var(--radius) 0;
-  background: var(--bg-alt);
-  font-size: 0.95rem;
 }
 
 .cta-row {
@@ -314,14 +292,9 @@ a:hover {
 
 /* ----------------------------------------------------------------- plans -- */
 
-.plans {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
-  gap: 1.25rem;
-  margin-top: 1.5rem;
-}
-
 .plan {
+  max-width: 44rem;
+  margin-top: 1.5rem;
   padding: 1.5rem;
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -400,8 +373,8 @@ td {
   text-align: left;
 }
 
-/* Keep the amounts intact, but let the spec column wrap — otherwise the three
-   columns cannot fit a 320px phone and the table is silently clipped. */
+/* Keep the amounts intact, but let the spec column wrap — otherwise the columns
+   cannot fit a 320px phone and the table is silently clipped. */
 thead th,
 td {
   white-space: nowrap;
@@ -437,8 +410,8 @@ td {
   color: var(--fg-muted);
 }
 
-/* On a phone the badge gets its own line and the cells tighten up, so all
-   three columns fit without the table being cut off. */
+/* On a phone the badge gets its own line and the cells tighten up, so the
+   columns fit without the table being cut off. */
 @media (max-width: 26rem) {
   th,
   td {
@@ -456,24 +429,6 @@ td {
   border-color: var(--accent);
   background: var(--accent-faint);
   color: var(--accent-strong);
-}
-
-.common-notes {
-  margin-top: 1.5rem;
-  padding: 1.25rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--bg-alt);
-}
-
-.common-notes h4 {
-  margin-top: 0;
-}
-
-.disclaimer {
-  margin: 1rem 0 0;
-  font-size: 0.85rem;
-  color: var(--fg-muted);
 }
 
 /* --------------------------------------------------------------- contact -- */
