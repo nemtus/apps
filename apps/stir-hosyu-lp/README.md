@@ -15,15 +15,25 @@ public/
 wrangler.toml         Cloudflare Workers（Static Assets）の設定
 ```
 
-ファビコンは `index.html` / `404.html` にインライン SVG（data URI）で埋め込んでいます。
-画像を用意した場合は、その `<link rel="icon">` を
-`<link rel="icon" href="/assets/favicon.ico" />` に差し替えてください。
+ファビコンは移行元サイト（stir-hosyu.com）の Stir Hosyu ロゴを引き継いでいます。
+
+- `assets/favicon.svg` … 元データ（移行元の SVG から Illustrator の付帯情報を除いたもの）
+- `favicon.ico` … 16 / 32 / 48px。`/favicon.ico` を直接取りに来るクライアント向けにルートに置いています
+- `assets/apple-touch-icon.png` … 180px。iOS は透過部分を黒で塗るため白地に配置しています
+
+PNG / ICO は `favicon.svg` から生成しています。ロゴを差し替えるときは 3 つとも作り直してください。
 
 ## OGP 画像
 
 `public/assets/ogp.png`（1200×630）は `ogp/template.html` から生成しています。
 `ogp/` は `public/` の外にあるため配信されません。タイトルや文言を変えたときは、
 テンプレートを編集して再生成してください。
+
+- ロゴは `public/assets/favicon.svg` を読み込んでいます（ファビコンと共通）。
+- フォントは Google Fonts の Inter / Noto Sans JP を読み込むため、生成時はネットワーク接続が
+  必要です。OS のフォントに依存しないので、macOS でも Linux でも同じ画像になります。
+- Linux で初めて実行する場合は、Chromium の依存ライブラリを
+  `sudo env "PATH=$PATH" npx playwright install-deps chromium` で入れてください。
 
 ```bash
 # playwright が入っているワークスペースから実行する
