@@ -1,6 +1,8 @@
 # stir-hosyu-lp
 
 **Stir Hosyu Symbol** のランディングページ。<https://stir-hosyu.nemtus.com> で公開します。
+移行元サービスのドメイン <https://stir-hosyu.com>（および `www`）でも同じサイトを配信します
+（canonical は `stir-hosyu.nemtus.com`）。
 
 Symbol ブロックチェーンのノード運用保守を代行するサービスの案内ページです。HTML と CSS
 のみで構成されており、ビルド手順も JavaScript も依存パッケージもありません。
