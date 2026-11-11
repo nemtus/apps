@@ -11,6 +11,8 @@ if (typeof globalThis.IntersectionObserver === "undefined") {
   class IntersectionObserverStub implements IntersectionObserver {
     readonly root = null
     readonly rootMargin = ""
+    // Part of the interface since the TypeScript 6 DOM lib.
+    readonly scrollMargin = ""
     readonly thresholds = []
     observe() {}
     unobserve() {}
@@ -23,7 +25,7 @@ if (typeof globalThis.IntersectionObserver === "undefined") {
     IntersectionObserverStub as unknown as typeof IntersectionObserver
 }
 
-// jsdom lacks matchMedia (used by hooks/use-mobile).
+// jsdom lacks matchMedia; stub it for media-query consumers such as framer-motion.
 if (typeof window !== "undefined" && !window.matchMedia) {
   window.matchMedia = ((query: string) => ({
     matches: false,
