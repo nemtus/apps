@@ -1,5 +1,9 @@
-import admin from 'firebase-admin';
+import { initializeApp } from 'firebase-admin/app';
+import { getAuth } from 'firebase-admin/auth';
+import { getFirestore } from 'firebase-admin/firestore';
 
-export const app = admin.initializeApp();
-export const db = app.firestore();
-export const auth = app.auth();
+// Modular entry points: firebase-admin 14 no longer exposes the namespaced
+// `app.firestore()` / `app.auth()` accessors on the App type.
+export const app = initializeApp();
+export const db = getFirestore(app);
+export const auth = getAuth(app);
