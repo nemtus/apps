@@ -52,7 +52,7 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.72.1",
     "vite": "^8.3.5",
-    "vitest": "^4.1.12"
+    "vitest": "^5.1.0"
   },
   "pnpm": {
     "comment": "Intentionally no `overrides` here. Dependabot regenerates pnpm-lock.yaml without the lockfile's `overrides:` block, so any entry makes every Dependabot pull request fail `pnpm install --frozen-lockfile` with ERR_PNPM_LOCKFILE_CONFIG_MISMATCH. Before adding one, prefer moving the offending dependency instead — see the notes in this app's README.",
