@@ -5,3 +5,43 @@
 /%E6%A1%9C%E7%B9%8B%E3%81%8E/ /front/%E6%A1%9C%E7%B9%8B%E3%81%8E/ 301
 /front/ / 301
 /front /front/ 301
+
+# Old WordPress upload URLs (hotlinks, cached shares) → the same file under /assets/img/.
+# _redirects takes precedence over static files, so 2021/03 is listed file by file: the
+# OGP images are served as static files from their original /wp-content/uploads/2021/03/
+# path (og:image keeps the exact URL the WordPress site used) and must not be redirected.
+/wp-content/uploads/2021/02/* /assets/img/:splat 301
+/wp-content/uploads/elementor/thumbs/* /assets/img/:splat 301
+/wp-content/uploads/2021/03/Symbol_bl_bw_4x_xh.png /assets/img/Symbol_bl_bw_4x_xh.png 301
+/wp-content/uploads/2021/03/block3-300x244.png /assets/img/block3-300x244.png 301
+/wp-content/uploads/2021/03/block_2-300x244.png /assets/img/block_2-300x244.png 301
+/wp-content/uploads/2021/03/bokashi-scaled.jpg /assets/img/bokashi-scaled.jpg 301
+/wp-content/uploads/2021/03/bokashi_toumei-scaled.jpg /assets/img/bokashi_toumei-scaled.jpg 301
+/wp-content/uploads/2021/03/donate.jpg /assets/img/donate.jpg 301
+/wp-content/uploads/2021/03/en_top_bk_s_xhdpi.png /assets/img/en_top_bk_s_xhdpi.png 301
+/wp-content/uploads/2021/03/en_top_s_xhdpi.png /assets/img/en_top_s_xhdpi.png 301
+/wp-content/uploads/2021/03/gobu-300x244.png /assets/img/gobu-300x244.png 301
+/wp-content/uploads/2021/03/kareki-300x244.png /assets/img/kareki-300x244.png 301
+/wp-content/uploads/2021/03/kibou_01.jpg /assets/img/kibou_01.jpg 301
+/wp-content/uploads/2021/03/kigou_01_xhdpi.png /assets/img/kigou_01_xhdpi.png 301
+/wp-content/uploads/2021/03/live_xhdpi.png /assets/img/live_xhdpi.png 301
+/wp-content/uploads/2021/03/mankai-300x244.png /assets/img/mankai-300x244.png 301
+/wp-content/uploads/2021/03/nem_xhdpi.png /assets/img/nem_xhdpi.png 301
+/wp-content/uploads/2021/03/sakura2000x1000.png /assets/img/sakura2000x1000.png 301
+/wp-content/uploads/2021/03/sakura_01.jpg /assets/img/sakura_01.jpg 301
+/wp-content/uploads/2021/03/sakura_hanabira.jpg /assets/img/sakura_hanabira.jpg 301
+/wp-content/uploads/2021/03/sakura_qr.png /assets/img/sakura_qr.png 301
+/wp-content/uploads/2021/03/sakura_tsunagi_s-1024x401.png /assets/img/sakura_tsunagi_s-1024x401.png 301
+/wp-content/uploads/2021/03/sakura_tsunagi_s-1536x602.png /assets/img/sakura_tsunagi_s-1536x602.png 301
+/wp-content/uploads/2021/03/sakura_tsunagi_s-300x118.png /assets/img/sakura_tsunagi_s-300x118.png 301
+/wp-content/uploads/2021/03/sakura_tsunagi_s-768x301.png /assets/img/sakura_tsunagi_s-768x301.png 301
+/wp-content/uploads/2021/03/sakura_tsunagi_s.png /assets/img/sakura_tsunagi_s.png 301
+/wp-content/uploads/2021/03/scroll.png /assets/img/scroll.png 301
+/wp-content/uploads/2021/03/shutterstock_1111717889-scaled.jpg /assets/img/shutterstock_1111717889-scaled.jpg 301
+/wp-content/uploads/2021/03/shutterstock_1280939815-scaled.jpg /assets/img/shutterstock_1280939815-scaled.jpg 301
+/wp-content/uploads/2021/03/title311_bk_xhdpi.png /assets/img/title311_bk_xhdpi.png 301
+/wp-content/uploads/2021/03/title311_xhdpi.png /assets/img/title311_xhdpi.png 301
+/wp-content/uploads/2021/03/turu2.jpg /assets/img/turu2.jpg 301
+/wp-content/uploads/2021/03/%E3%82%A2%E3%82%BB%E3%83%83%E3%83%88-1_xhdpi-150x150.png /assets/img/%E3%82%A2%E3%82%BB%E3%83%83%E3%83%88-1_xhdpi-150x150.png 301
+/wp-content/uploads/2021/03/%E3%82%A2%E3%82%BB%E3%83%83%E3%83%88-2_xhdpi-150x150.png /assets/img/%E3%82%A2%E3%82%BB%E3%83%83%E3%83%88-2_xhdpi-150x150.png 301
+/wp-content/uploads/2021/03/%E3%82%A2%E3%82%BB%E3%83%83%E3%83%88-3_xhdpi-150x150.png /assets/img/%E3%82%A2%E3%82%BB%E3%83%83%E3%83%88-3_xhdpi-150x150.png 301
