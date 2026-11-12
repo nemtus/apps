@@ -1,0 +1,7 @@
+# Old WordPress URLs → canonical pages.
+# The JP project pages used to be linked at the site root and 301-redirected by WordPress
+# to /front/<slug>/; keep those links working.
+/%E6%8F%AE%E6%AF%AB/ /front/%E6%8F%AE%E6%AF%AB/ 301
+/%E6%A1%9C%E7%B9%8B%E3%81%8E/ /front/%E6%A1%9C%E7%B9%8B%E3%81%8E/ 301
+/front/ / 301
+/front /front/ 301

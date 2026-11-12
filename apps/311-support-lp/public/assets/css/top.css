@@ -1,0 +1,824 @@
+/*
+ * top.css — layout of the two top pages (/ and /en/). Shared components (header,
+ * donate-info, donate bands, org footer, page tiles, buttons) live in common.css.
+ *
+ * Breakpoints follow the original Elementor site:
+ *   desktop >= 1025px, tablet 768–1024px, mobile <= 767px.
+ *
+ * Several sections centre a fixed-width column inside a full-width band; they use
+ *   padding-inline: max(<side padding>, (100% - <column width>) / 2)
+ * which reproduces Elementor's "boxed container inside a padded section".
+ */
+
+/* Hidden sprite with the shared SVG symbols. */
+.svg-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Most entrance animations on the top pages use Elementor's "slow" speed (2s). */
+.js .page-top [data-anim].is-in { animation-duration: 2s; }
+.js .page-top :is(.site-header, .projects__title, .feature__photo, .closing__logo).is-in {
+  animation-duration: 1.25s;
+}
+
+/* Hover "float" effect of the two feature photos. */
+.float {
+  transition: transform 1s ease-out;
+}
+.float:hover,
+.float:focus {
+  transform: translateY(-8px);
+}
+
+/* ---------- Hero: full-height background slideshow ---------- */
+.hero {
+  display: flex;
+  align-items: center;
+  box-sizing: content-box; /* min-height excludes the tablet padding, as in the original */
+  min-height: 100vh;
+  overflow: hidden;
+  color: #fff;
+}
+.hero > .hero__slides {
+  position: absolute;
+  inset: 0;
+}
+/* Three slides cross-fade in a 21s loop: 5s on screen + 2s fade each (as the original). */
+.hero__slide {
+  position: absolute;
+  inset: 0;
+  background: center / cover no-repeat;
+  opacity: 0;
+  animation: hero-slide 21s linear infinite both;
+}
+.hero__slide:nth-child(1) { animation-delay: -2s; }
+.hero__slide:nth-child(2) { animation-delay: 5s; }
+.hero__slide:nth-child(3) { animation-delay: 12s; }
+@keyframes hero-slide {
+  0% { opacity: 0; }
+  9.524% { opacity: 1; }   /* 2s fade in */
+  33.333% { opacity: 1; }  /* hold until 7s */
+  42.857% { opacity: 0; }  /* 2s fade out */
+  100% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__slide { animation: none; }
+  .hero__slide:first-child { opacity: 1; }
+}
+.hero > .overlay {
+  background: #000;
+  opacity: 0.3;
+}
+.hero__inner {
+  width: 100%;
+  padding-top: 30px;
+}
+.hero__title {
+  margin: 0;
+  padding-bottom: 30px;
+}
+.hero__title img {
+  display: block;
+  width: 850px;
+  margin: 0 auto;
+}
+
+/* "welcome" mouse-scroll indicator (ported from the original custom CSS). */
+.scroll-hint {
+  position: absolute;
+  top: 62vh;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  padding-top: 72px;
+  text-align: center;
+}
+.scroll-hint a {
+  padding-top: 60px;
+  color: #fff;
+  font-size: 0.8em;
+  letter-spacing: 0.2em;
+}
+.scroll-hint span {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 30px;
+  height: 50px;
+  margin-left: -15px;
+  border: 2px solid #fff;
+  border-radius: 50px;
+}
+.scroll-hint span::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 100%;
+  background-color: #fff;
+  animation: scroll-hint 2s infinite;
+}
+@keyframes scroll-hint {
+  0% { transform: translate(0, 0); opacity: 0; }
+  40% { opacity: 1; }
+  80% { transform: translate(0, 20px); opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@media (max-width: 1024px) {
+  .hero { padding: 50px; }
+  .hero__title { margin-bottom: 250px; }
+  .scroll-hint { display: none; }
+}
+@media (max-width: 767px) {
+  .hero { padding: 0 15px; }
+  .hero__inner { padding-top: 0; }
+  .hero__title {
+    margin-bottom: 50px;
+    padding-bottom: 0;
+  }
+}
+
+/* ---------- Shared type for the dark-on-light sections ---------- */
+.intro__title,
+.projects__title,
+.feature__title,
+.message__title {
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 2em;
+  letter-spacing: 3px;
+}
+.intro__text,
+.card__text,
+.feature__text,
+.message__text,
+.closing__text {
+  display: flow-root; /* keep the last paragraph's margin inside, like Elementor's widgets */
+  color: var(--ink);
+  font-family: var(--font-sans);
+  line-height: 2em;
+  letter-spacing: 1px;
+  text-align: justify;
+}
+
+/* ---------- Introduction ---------- */
+.intro {
+  max-width: 800px;
+  margin: 150px auto 50px;
+}
+.intro__title {
+  margin-bottom: 20px;
+  padding-bottom: 50px;
+  letter-spacing: 2px;
+  text-align: center;
+}
+.intro__text {
+  line-height: 1.5em;
+  text-align: center;
+}
+@media (max-width: 767px) {
+  .intro {
+    margin: 0;
+    padding: 100px 20px 50px;
+  }
+  .intro__title {
+    font-size: 1.5em;
+    line-height: 1.8em;
+  }
+  .intro__text {
+    font-size: 0.8em;
+    line-height: 1.8em;
+  }
+}
+
+/* ---------- Project overview (three cards) ---------- */
+.projects {
+  margin-top: 150px;
+  padding: 130px max(0px, calc((100% - 1000px) / 2)) 0;
+  overflow: hidden;
+}
+.projects > .overlay {
+  background: #fff url("../img/bokashi_toumei-scaled.jpg") bottom center / cover no-repeat;
+}
+.projects__inner {
+  min-height: 400px;
+}
+.projects__title {
+  margin-bottom: 20px;
+  padding-bottom: 80px;
+  text-align: center;
+}
+.projects__cards {
+  display: flex;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.card {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  border: 1px solid #bcbcbc;
+  background: #fff;
+}
+.card__icon {
+  position: absolute;
+  top: -55px;
+  left: 25px;
+  z-index: 1;
+  width: 30%;
+  opacity: 0.8;
+}
+.card__photo {
+  display: block;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.card__text {
+  padding: 10px 20px 20px;
+}
+@media (max-width: 1024px) {
+  .projects {
+    margin-top: 0;
+    padding: 150px 30px 100px;
+  }
+  .card__icon { width: 45%; }
+}
+@media (max-width: 767px) {
+  .projects { padding: 80px 20px 50px; }
+  .projects > .overlay { background-position: center center; }
+  .projects .shape svg { height: 30px; }
+  .projects__title {
+    padding: 10px 0 30px;
+    font-size: 1.5em;
+    text-align: justify;
+  }
+  .projects__cards { display: block; }
+  .card + .card { margin-top: 60px; }
+  .card:last-child { margin-bottom: 30px; }
+  .card__icon {
+    top: -40px;
+    left: 20px;
+    width: 25%;
+  }
+  .card__text {
+    font-size: 0.8em;
+    line-height: 1.8em;
+  }
+}
+
+/* ---------- Features (photo + overlapping translucent card) ---------- */
+.feature__photo {
+  padding: 100px max(80px, calc((100% - 1000px) / 2)) 10px;
+  overflow: hidden;
+}
+.feature__photo img {
+  display: block;
+}
+.feature--sakura .feature__photo img { margin-left: auto; }
+.feature__body {
+  position: relative;
+  display: flex;
+  margin-top: -200px;
+  padding: 0 max(80px, calc((100% - 1000px) / 2));
+}
+.feature--kigou .feature__body { justify-content: flex-end; }
+.feature__card {
+  width: 62%;
+  padding: 50px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.74);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+.feature__title {
+  font-size: 1.7em;
+  letter-spacing: 2px;
+}
+.feature__text {
+  padding-top: 20px;
+}
+.feature__action {
+  margin-top: 20px;
+}
+.feature--kigou .feature__action { text-align: right; }
+@media (max-width: 1024px) {
+  .feature__photo { padding: 0; }
+  .feature__photo img { width: 100%; }
+  .feature--kigou .feature__photo { margin-top: 50px; }
+  /* The empty 1px column beside each card wraps onto its own line. */
+  .feature__body {
+    flex-wrap: wrap;
+    margin-top: -100px;
+    padding: 0 30px 1px;
+  }
+  .feature--kigou .feature__body { padding: 1px 30px 0; }
+  .feature__card { width: 100%; }
+  .feature__action,
+  .feature--kigou .feature__action { text-align: center; }
+}
+@media (max-width: 767px) {
+  /* The original keeps an empty 1px column next to each card. */
+  .feature__body {
+    display: block;
+    margin-top: 0;
+    padding: 15px 20px 16px;
+  }
+  .feature--kigou .feature__body { padding: 16px 20px 15px; }
+  .feature__card {
+    margin-top: -60px;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  .feature__title {
+    font-size: 1.5em;
+    line-height: 1.8em;
+    letter-spacing: 1px;
+    text-align: justify;
+  }
+  .feature__text {
+    font-size: 0.8em;
+    line-height: 1.8em;
+  }
+  .feature__action { margin: 0; padding: 10px 0; }
+  .feature--kigou .feature__action { margin: 10px 0; padding: 0; }
+}
+
+/* ---------- Report on the first donation round ---------- */
+.report {
+  margin-top: 150px;
+  padding: 100px 0;
+  background: #000 url("../img/sakura_hanabira.jpg") 0 0 / cover;
+  color: #fff;
+}
+.report > .overlay {
+  background: #000;
+  opacity: 0.5;
+}
+.report__inner {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 10px;
+}
+/* Like the original's heading widgets: an inline span inside a 16px/1.5 block, so the
+   block's strut keeps every line at least 24px tall when the text is smaller. */
+.report__text,
+.report__label {
+  margin: 0;
+  text-align: center;
+}
+.report__text > span,
+.report__label > span {
+  font-family: var(--font-latin);
+  line-height: 2em;
+  letter-spacing: 1px;
+}
+.report__text--start { text-align: start; }
+.report__label {
+  margin-bottom: 20px;
+}
+.report__label > span { text-decoration: underline; }
+.report__totals {
+  margin: 30px 0;
+  padding: 30px 0;
+  border: 1px solid #d5d5d5;
+}
+.report__rule {
+  height: 31px;
+  margin: 60px 0 0;
+  border: 0;
+  background: linear-gradient(#fff, #fff) 0 15px / 100% 1px no-repeat;
+}
+.report__update {
+  margin-top: 30px;
+  padding-top: 30px;
+}
+@media (min-width: 1025px) {
+  .report { background-attachment: fixed; }
+}
+@media (max-width: 1024px) {
+  .report {
+    margin-top: 100px;
+    padding: 0;
+  }
+}
+@media (max-width: 767px) {
+  .report {
+    margin-top: 50px;
+    padding: 50px 20px;
+  }
+  .report__inner { padding: 0; }
+  .report__text { text-align: justify; }
+  .report__text > span {
+    font-size: 0.8em;
+    line-height: 1.8em;
+  }
+  .report__totals .report__text { text-align: center; }
+  .report__text--start { text-align: start; }
+  .report__label > span { font-size: 0.8em; }
+  .report__totals { padding: 20px; }
+  .report__rule { margin-top: 30px; }
+  .report__update {
+    margin-top: 0;
+    padding: 30px 20px 20px;
+  }
+}
+
+/* ---------- Message (photo + text in a framed box) ---------- */
+.message {
+  display: flow-root;
+  padding: 150px max(0px, calc((100% - 1000px) / 2));
+}
+.message > .overlay {
+  background: url("../img/sakura2000x1000.png") center center / cover;
+  opacity: 0.5;
+}
+.message__title { text-align: center; }
+.message__box {
+  display: flex;
+  margin: 100px 0;
+  border: 1px solid #b19c9c;
+}
+.message__photo {
+  width: 62%;
+}
+.message__photo img {
+  display: block;
+  width: 100%;
+}
+.message__body {
+  display: flex;
+  align-items: center;
+  width: 37.95%;
+  padding: 30px;
+}
+@media (max-width: 1024px) {
+  .message { padding: 100px 0 0; }
+  .message > .overlay {
+    background-image: url("../img/sakura_hanabira.jpg");
+  }
+  .message__box {
+    flex-wrap: wrap;
+    border-width: 0;
+  }
+  .message__photo,
+  .message__body { width: 100%; }
+  .message__text { text-align: center; }
+}
+@media (max-width: 767px) {
+  .message {
+    margin-top: 100px;
+    padding: 0;
+  }
+  .message > .overlay { display: none; }
+  .message__title {
+    padding: 0 15px;
+    font-size: 1.5em;
+  }
+  .message__box {
+    display: block;
+    margin: 100px 0 0;
+    padding: 0 20px;
+  }
+  .message__photo { display: block; }
+  .message__photo img { border-radius: 20px; }
+  .message__body {
+    display: block;
+    padding: 30px 0 0;
+  }
+  .message__text {
+    font-size: 0.8em;
+    line-height: 1.8em;
+    text-align: justify;
+  }
+}
+
+/* The NEM band follows the message section with a gap on mobile only. */
+@media (max-width: 767px) {
+  .message + .donate-band { margin-top: 80px; }
+}
+
+/* ---------- Closing statement ---------- */
+.closing {
+  padding: 150px max(0px, calc((100% - 800px) / 2)) 0;
+  text-align: center;
+}
+.closing__logo {
+  display: block;
+  width: 70%;
+  margin: 0 auto;
+}
+.closing__text {
+  margin: 70px 0 0;
+}
+@media (max-width: 1024px) {
+  .closing { padding: 100px max(30px, calc((100% - 800px) / 2)) 30px; }
+  .closing__logo { width: 85%; }
+}
+@media (max-width: 767px) {
+  .closing { padding: 80px 20px 0; }
+  .closing__logo { width: 90%; }
+  .closing__text {
+    margin-top: 50px;
+    font-size: 0.8em;
+  }
+}
+
+/* ---------- Social icons + contact buttons ---------- */
+.contact-links {
+  display: flex;
+  align-items: center;
+  padding: 50px max(0px, calc((100% - 800px) / 2)) 0;
+  overflow: hidden;
+}
+.contact-links__icon { width: 8%; padding-top: 6px; }
+.contact-links__icon--telegram { width: 12%; padding-top: 5px; }
+.contact-links__icon a {
+  display: inline-block;
+  color: var(--ink);
+  font-size: 35px;
+  line-height: 1;
+  transition: color 0.3s;
+}
+.contact-links__icon a:hover,
+.contact-links__icon a:focus-visible { color: #329cda; }
+.contact-links__icon svg {
+  display: block;
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
+.contact-links__button { width: 40%; }
+.contact-links__button--site { padding-right: 10px; }
+.contact-links__button--mail { padding-left: 10px; }
+.contact-links__button .btn {
+  display: block;
+  width: 100%;
+}
+@media (max-width: 1024px) {
+  .contact-links {
+    flex-wrap: wrap;
+    padding: 30px;
+  }
+  .contact-links__icon,
+  .contact-links__icon--telegram {
+    width: 50%;
+    padding: 21px 15px 15px;
+  }
+  .contact-links__icon--telegram { padding-top: 20px; }
+  .contact-links__icon--twitter { text-align: end; }
+  .contact-links__button,
+  .contact-links__button--site,
+  .contact-links__button--mail {
+    width: calc(100% - 60px);
+    margin: 30px 30px 0;
+    padding: 0 150px;
+  }
+  .contact-links__button--mail { margin-bottom: 30px; }
+}
+@media (max-width: 767px) {
+  .contact-links { margin-top: 30px; }
+  .contact-links__icon,
+  .contact-links__icon--telegram { padding: 0; }
+  .contact-links__icon--twitter { padding-right: 10px; }
+  .contact-links__icon--telegram { padding-left: 10px; }
+  .contact-links__icon a { font-size: 25px; }
+  .contact-links__button,
+  .contact-links__button--site,
+  .contact-links__button--mail {
+    width: 100%;
+    margin: 0;
+    padding: 20px 20px 0;
+  }
+  .contact-links__button--mail { padding-top: 15px; }
+}
+
+/* ---------- Share band ---------- */
+.share {
+  margin-top: 150px;
+  padding: 20px 0 30px;
+  background: var(--ink);
+}
+.share__title {
+  margin: 0 0 15px;
+  color: #fff;
+  font-family: var(--font-latin);
+  font-size: 0.8em;
+  font-weight: 500;
+  line-height: 2em;
+  letter-spacing: 3px;
+  text-align: center;
+}
+/* The original printed an unrendered [copy_btn] shortcode here, invisible (dark on dark). */
+.share__slot {
+  height: calc(2rem + 0.9rem);
+}
+@media (max-width: 1024px) {
+  .share { margin-top: 50px; }
+}
+
+/* =====================================================================================
+ * English top page (/en/, body.page-top--en). The EN page was built separately in
+ * Elementor and differs in many small ways: tighter letter-spacing, start-aligned text,
+ * 10px column padding in some sections and different spacing. Everything below only
+ * overrides the JP layout above (and the shared components in common.css).
+ * ===================================================================================== */
+.page-top--en .site-header__lang .current {
+  border-bottom-color: #00b4b4;
+  color: #00b4b4;
+}
+.page-top--en .btn { letter-spacing: 1px; }
+.page-top--en .intro__title,
+.page-top--en .projects__title,
+.page-top--en .feature__title,
+.page-top--en .message__title,
+.page-top--en .donate-info__title,
+.page-top--en .donate-band__title { letter-spacing: 0; }
+.page-top--en .card__text,
+.page-top--en .feature__text,
+.page-top--en .message__text,
+.page-top--en .donate-band--nem .donate-band__text,
+.page-top--en .donate-info__usage { text-align: start; }
+
+/* Hero */
+.page-top--en .hero__title { padding-bottom: 0; }
+.page-top--en .hero__title img { width: 600px; }
+.page-top--en .scroll-hint { top: 58vh; }
+
+/* Introduction */
+.page-top--en .intro__inner { padding: 10px; }
+.page-top--en .intro__text { line-height: 2em; }
+
+/* Report */
+.page-top--en .report__text--start { text-align: justify; }
+.page-top--en .report__update {
+  margin-bottom: 30px;
+  padding-bottom: 30px;
+}
+
+/* Continuous donations */
+.page-top--en .donate-info__inner { padding: 10px; }
+.page-top--en .donate-info__lead { margin: 20px 0 0; }
+.page-top--en .donate-info__period {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 1px;
+}
+.page-top--en .donate-info__subtitle { font-weight: 400; }
+.page-top--en .donate-info__usage { padding-bottom: 20px; }
+.page-top--en .donate-info__link-fukushima { padding: 15px 0; }
+.page-top--en .donate-info__link-miyagi { padding-bottom: 15px; }
+
+/* Message: no background overlay on the EN page */
+.page-top--en .message > .overlay { display: none; }
+
+/* Donation bands */
+.page-top--en .donate-band__action { padding-left: 50px; }
+.page-top--en .donate-band .btn {
+  display: block;
+  width: 100%;
+}
+.page-top--en .donate-band__note p {
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* Closing statement */
+.page-top--en .closing { padding-top: 50px; }
+.page-top--en .closing__logo {
+  width: 80%;
+  margin-top: 100px;
+}
+
+/* Share band + bottom tiles */
+.page-top--en .share__title { letter-spacing: 1px; }
+.page-top--en .page-tile--sakura .page-tile__label {
+  width: 68%;
+  letter-spacing: 1px;
+}
+.page-top--en .page-tile--sakura .page-tile__arrow { width: 31.815%; }
+.page-top--en .page-tile--kigou .page-tile__label { width: 59%; }
+.page-top--en .page-tile--kigou .page-tile__arrow { width: 40.815%; }
+
+@media (max-width: 1024px) {
+  .page-top--en .hero__title { margin-bottom: 200px; }
+  .page-top--en .intro {
+    margin: 100px auto;
+    padding: 0 30px;
+  }
+  .page-top--en .intro__title { padding: 0 50px 50px; }
+  .page-top--en .feature--kigou .feature__photo img {
+    width: 1000px;
+    max-width: 1000px;
+  }
+  .page-top--en .report { padding: 100px 20px; }
+  .page-top--en .donate-info { background-position: center center; background-size: cover; }
+  .page-top--en .message__title { padding: 0 50px; }
+  .page-top--en .message__text { text-align: start; }
+  .page-top--en .donate-band__title { text-align: start; }
+  .page-top--en .donate-band__action { padding-left: 0; text-align: left; }
+  .page-top--en .donate-band--nem .donate-band__action { margin-top: -80px; }
+  .page-top--en .donate-band .btn {
+    display: inline-block;
+    width: auto;
+    padding: 10px 30px;
+  }
+  .page-top--en .closing { padding-top: 100px; }
+  .page-top--en .closing__logo { width: 80%; }
+  .page-top--en .share { margin-top: 100px; }
+  .page-top--en .page-tile--sakura .page-tile__label { width: 75%; }
+  .page-top--en .page-tile--sakura .page-tile__arrow { width: 25%; }
+  .page-top--en .page-tile--kigou .page-tile__label { width: 65%; }
+  .page-top--en .page-tile--kigou .page-tile__arrow { width: 30%; }
+}
+@media (max-width: 767px) {
+  .page-top--en .hero__title {
+    margin-bottom: 50px;
+    padding-bottom: 50px;
+  }
+  .page-top--en .intro {
+    margin: 0;
+    padding: 100px 20px 50px;
+  }
+  .page-top--en .intro__title {
+    padding: 0 0 50px;
+    letter-spacing: 1px;
+  }
+  .page-top--en .intro__text { line-height: 1.8em; }
+  .page-top--en .feature__title { letter-spacing: 1px; }
+  .page-top--en .report { padding: 50px 20px; }
+  .page-top--en .share { margin-top: 50px; }
+  .page-top--en .projects { padding: 50px 20px; }
+  .page-top--en .projects__title,
+  .page-top--en .feature__title,
+  .page-top--en .donate-info__title { text-align: center; }
+  .page-top--en .feature--kigou .feature__photo img {
+    width: 100%;
+    max-width: 100%;
+  }
+  .page-top--en .report__rule { margin-top: 20px; }
+  .page-top--en .report__update {
+    margin-bottom: 30px;
+    padding: 20px;
+  }
+  .page-top--en .donate-info {
+    padding: 30px 20px;
+    background-position: -91.7em 0;
+  }
+  .page-top--en .donate-info__inner { padding: 0; }
+  .page-top--en .donate-info__lead { text-align: center; }
+  .page-top--en .donate-info__text { text-align: start; }
+  .page-top--en .dots-divider { margin: 30px 0 10px; }
+  .page-top--en .donate-info__subtitle {
+    margin-top: 30px;
+    padding: 0 0 calc(20px + 0.9rem);
+    font-size: 0.8em;
+    text-align: start;
+  }
+  .page-top--en .donate-info__links { text-align: center; }
+  .page-top--en .message { margin-top: 50px; }
+  .page-top--en .message__title {
+    padding: 0 15px;
+    letter-spacing: 1px;
+  }
+  .page-top--en .message__title + .message__title { padding-top: 20px; }
+  .page-top--en .message__box { margin-top: 50px; }
+  .page-top--en .message + .donate-band { margin-top: 50px; }
+  .page-top--en .donate-band__title { text-align: center; }
+  .page-top--en .donate-band .btn {
+    display: block;
+    width: 100%;
+    padding: 10px 20px;
+  }
+  .page-top--en .donate-band--nem .donate-band__action {
+    height: auto;
+    margin-top: -50px;
+    padding: 15px 20px 0;
+  }
+  .page-top--en .donate-band--nem .donate-band__action .btn {
+    position: static;
+  }
+  .page-top--en .donate-band--jpy .donate-band__action { padding: 15px 20px 0; }
+  .page-top--en .donate-band__note p { padding: 0; }
+  .page-top--en .closing { padding: 30px 20px 0; }
+  .page-top--en .closing__logo {
+    width: 90%;
+    margin-top: 50px;
+  }
+  .page-top--en .closing__text { text-align: start; }
+  .page-top--en .page-tile__label,
+  .page-top--en .page-tile--sakura .page-tile__label,
+  .page-top--en .page-tile--kigou .page-tile__label { width: 100%; }
+  .page-top--en .page-tile__arrow,
+  .page-top--en .page-tile--sakura .page-tile__arrow,
+  .page-top--en .page-tile--kigou .page-tile__arrow { width: 100%; }
+}
