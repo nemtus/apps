@@ -378,3 +378,18 @@ updates:
         update-types:
           - minor
           - patch
+
+  # Same shape: a dependency-free static site, tracked so additions are covered.
+  - package-ecosystem: npm
+    directory: "/apps/311-support-lp"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      311-support-lp-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch

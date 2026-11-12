@@ -1,0 +1,797 @@
+/*
+ * kigou.css — the 揮毫「きごう」 (KIGOU calligraphy event) pages:
+ *   /front/揮毫/ (body.page-kigou) and /en/kigou-event/ (body.page-kigou.page-kigou-en).
+ * Shared components (header, donation sections, footer, tiles) come from common.css;
+ * page-scoped tweaks to them live at the end of this file.
+ *
+ * Breakpoints: desktop >= 1025px, tablet 768–1024px, mobile <= 767px.
+ * Vertical rhythm reproduces the original Elementor layout: most blocks are flex
+ * columns so margins add up instead of collapsing, as they did there.
+ */
+
+.page-kigou {
+  --kigou-ink: #262626;
+}
+
+/* ---------- Hero ---------- */
+.kigou-hero {
+  display: flex;
+  align-items: center;
+  min-height: 50vh;
+  background: url("../img/shutterstock_1111717889-scaled.jpg") bottom center / cover no-repeat;
+  color: #fff;
+}
+.kigou-hero > .overlay {
+  background: #000;
+  opacity: 0.5;
+}
+.kigou-hero__inner {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 10px;
+}
+.kigou-hero__title {
+  margin: 100px 0 120px;
+  padding-top: 80px;
+  font-family: var(--font-serif);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 2em;
+  letter-spacing: 3px;
+  text-align: center;
+}
+@media (min-width: 1025px) {
+  .kigou-hero { background-attachment: fixed; }
+}
+@media (max-width: 767px) {
+  .kigou-hero { padding: 0 20px; }
+  .kigou-hero__title {
+    margin: 100px 0;
+    padding: 0;
+    font-size: 24px;
+    text-align: justify;
+  }
+}
+
+/* ---------- Introduction ---------- */
+.kigou-intro {
+  display: flex;
+  flex-direction: column;
+  max-width: 1000px;
+  margin: 0 auto;
+  color: var(--kigou-ink);
+}
+.kigou-intro__title {
+  margin: 100px 0 70px;
+  font-family: var(--font-serif);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 2em;
+  letter-spacing: 3px;
+  text-align: center;
+}
+.kigou-intro__text {
+  margin: 0 0 20px;
+  font-family: var(--font-sans);
+  line-height: 2em;
+  letter-spacing: 1px;
+  text-align: justify;
+}
+.kigou-intro__figure {
+  margin: 50px 0 30px;
+  padding-right: 20px;
+  text-align: center;
+}
+.kigou-intro__figure img {
+  display: block;
+  width: 100%;
+}
+@media (max-width: 1024px) {
+  .kigou-intro {
+    max-width: none;
+    padding: 100px 50px 30px;
+  }
+  .kigou-intro__title {
+    margin: 0 0 20px;
+    font-size: 28.8px;
+  }
+}
+@media (max-width: 767px) {
+  .kigou-intro { padding: 0 20px; }
+  .kigou-intro__title {
+    margin: 0;
+    padding: 50px 0;
+    font-size: 24px;
+    text-align: justify;
+  }
+  .kigou-intro__text {
+    margin: 0;
+    font-size: 12.8px;
+    letter-spacing: 1.8px;
+  }
+}
+
+/* ---------- Three themes ---------- */
+.kigou-themes {
+  display: flex;
+  max-width: 1200px;
+  margin: 100px auto 50px;
+  padding: 0 100px;
+  color: var(--kigou-ink);
+  text-align: center;
+}
+.kigou-theme {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-width: 0;
+}
+.kigou-theme img {
+  display: block;
+  width: 100%;
+}
+.kigou-theme__pref {
+  margin: 0;
+  padding-top: 30px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  line-height: 2em;
+  letter-spacing: 3px;
+}
+.kigou-theme__name {
+  margin: 0 0 -10px;
+  font-family: var(--font-serif);
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 2em;
+  letter-spacing: 3px;
+}
+.kigou-theme__sub {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 2em;
+  letter-spacing: 3px;
+}
+@media (max-width: 1024px) {
+  .kigou-themes {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0;
+  }
+}
+@media (max-width: 767px) {
+  .kigou-themes {
+    display: block;
+    margin-top: 50px;
+  }
+  .kigou-theme__pref {
+    margin-top: 15px;
+    padding-top: 0;
+  }
+  .kigou-theme + .kigou-theme { margin-top: 80px; }
+}
+
+/* ---------- Live streaming / NEM cards ---------- */
+.kigou-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 30px;
+  max-width: 1200px;
+  margin: 100px auto 150px;
+  padding: 0 100px;
+  color: var(--kigou-ink);
+}
+.kigou-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 50px 30px 30px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+}
+.kigou-card--live { background: #fff; }
+.kigou-card__icon {
+  position: absolute;
+  top: -41px;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 5px 0;
+  text-align: center;
+}
+.kigou-card--nem .kigou-card__icon { top: -40px; }
+.kigou-card__icon img { width: 70px; }
+.kigou-card__title {
+  margin: 0 0 20px;
+  font-family: var(--font-serif);
+  font-size: 27.2px;
+  font-weight: 600;
+  line-height: 1.7em;
+  letter-spacing: 3px;
+  text-align: center;
+}
+.kigou-card__text {
+  margin: 0 0 20px;
+  font-family: var(--font-sans);
+  line-height: 2em;
+  letter-spacing: 1px;
+  text-align: justify;
+}
+.kigou-card__text a { color: inherit; }
+.kigou-card > :last-child { margin-bottom: 0; }
+.kigou-card__channel {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+.kigou-card__channel-label {
+  width: 76.898%;
+  margin: 0;
+  font-family: var(--font-sans);
+  line-height: 2em;
+  letter-spacing: 1px;
+  text-align: center;
+}
+.kigou-card__channel-icon {
+  width: 22.902%;
+  line-height: 0;
+  text-align: center;
+}
+.kigou-card__logo {
+  padding-left: 20px;
+  text-align: center;
+}
+
+/* YouTube social icon (Elementor social-icons widget, "float" hover). */
+.yt-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2em;
+  height: 2em;
+  border-radius: 10px;
+  background: #cd201f;
+  color: #fff;
+  font-size: 40px;
+  transition: transform 0.3s;
+}
+.yt-icon:hover,
+.yt-icon:focus-visible { transform: translateY(-8px); }
+.yt-icon svg {
+  width: 1.125em;
+  height: 1em;
+  flex: none;
+  fill: currentColor;
+}
+@media (max-width: 1024px) {
+  .kigou-cards {
+    max-width: 1100px;
+    margin: 50px auto 100px;
+    padding: 0 50px;
+    column-gap: 20px;
+  }
+  .kigou-card { padding: 50px 20px 20px; }
+  .kigou-card__title { font-size: 20.8px; }
+  .kigou-card__channel-label { font-size: 12.8px; }
+  .kigou-card__channel-icon { text-align: right; }
+  .kigou-card__logo img { width: 50%; }
+  .yt-icon { font-size: 25px; }
+}
+@media (max-width: 767px) {
+  .kigou-cards {
+    display: block;
+    margin: 100px 0 0;
+    padding: 0 20px;
+  }
+  .kigou-card { padding: 0 15px; }
+  .kigou-card--nem {
+    margin-top: 80px;
+    padding-bottom: 30px;
+  }
+  .kigou-card__title {
+    padding-top: 50px;
+    font-size: 19.2px;
+  }
+  .kigou-card__text {
+    font-size: 12.8px;
+    letter-spacing: 1.5px;
+  }
+  .kigou-card__channel { display: block; }
+  .kigou-card__channel-label,
+  .kigou-card__channel-icon { width: 100%; }
+  .kigou-card__channel-icon {
+    padding: 15px 0 30px;
+    text-align: center;
+  }
+}
+
+/* ---------- Date and venues ---------- */
+.kigou-event {
+  overflow: hidden;
+  padding: 100px;
+  background: url("../img/kibou_01.jpg") 0 0 / cover;
+  color: #fff;
+  text-align: center;
+}
+.kigou-event > .overlay {
+  background: #000;
+  opacity: 0.5;
+}
+.kigou-event__inner {
+  display: flex;
+  align-items: center;
+  max-width: 800px;
+  min-height: 400px;
+  margin: 0 auto;
+}
+.kigou-event__box {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 100px;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.43);
+}
+.kigou-event__heading {
+  margin: 0 0 50px;
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 2em;
+  letter-spacing: 3px;
+}
+.kigou-event__date {
+  margin: 0 0 50px;
+  font-family: var(--font-serif);
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 2em;
+  letter-spacing: 3px;
+}
+.kigou-event__artists {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 2em;
+  letter-spacing: 3px;
+}
+.kigou-event__pref { font-size: 0.6em; }
+.kigou-event__venue {
+  margin: 0 0 50px;
+  font-family: var(--font-sans);
+  line-height: 2em;
+  letter-spacing: 3px;
+}
+.kigou-event__venue:last-child { margin-bottom: 0; }
+@media (min-width: 1025px) {
+  .kigou-event { background-attachment: fixed; }
+}
+@media (max-width: 1024px) {
+  .kigou-event {
+    padding: 50px;
+    background-position: center center;
+  }
+  .kigou-event__box { padding: 30px; }
+}
+@media (max-width: 767px) {
+  .kigou-event {
+    margin-top: 80px;
+    padding: 0;
+  }
+  .kigou-event__box {
+    padding: 0 20px;
+    border-radius: 0;
+  }
+  .kigou-event__heading {
+    margin: 0;
+    padding: 50px 0 30px;
+    font-size: 19.2px;
+  }
+  .kigou-event__date {
+    margin: 0;
+    padding: 0 0 30px;
+    font-size: 19.2px;
+  }
+  .kigou-event__artists {
+    font-size: 24px;
+    line-height: 1.5em;
+  }
+  .kigou-event__venue,
+  .kigou-event__venue:last-child {
+    margin: 0;
+    padding: 15px 0 50px;
+    font-size: 12.8px;
+  }
+}
+
+/* ---------- Calligraphers (work + profile card) ----------
+ * Horizontal padding = section padding + 10px column padding, centring an 800px column. */
+.kigou-artist {
+  display: flex;
+  flex-direction: column;
+  padding: 210px max(10px, calc((100% - 780px) / 2)) 10px;
+  color: var(--kigou-ink);
+}
+.kigou-artist--first { padding-top: 160px; }
+.kigou-artist--last { padding-bottom: 260px; }
+.kigou-artist__work {
+  margin-bottom: 20px;
+  text-align: center;
+}
+.kigou-artist__card {
+  display: flex;
+  margin-top: 100px;
+  border: 1px solid #7d7d7d;
+}
+.kigou-artist__body {
+  display: flex;
+  flex: 1 1 50%;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 30px;
+}
+.kigou-artist__body--duo { padding: 0 30px; }
+.kigou-artist__photos {
+  display: flex;
+  flex: 1 1 50%;
+  flex-direction: column;
+  min-width: 0;
+}
+.kigou-artist__photos img {
+  display: block;
+  width: 100%;
+}
+.kigou-artist__name {
+  font-family: var(--font-serif);
+  font-size: 28.8px;
+  font-weight: 600;
+  line-height: 2em;
+  letter-spacing: 3px;
+  text-align: center;
+}
+.kigou-artist__roman {
+  margin: -5px 0 0;
+  font-family: "Noto Serif", var(--font-sans);
+  line-height: 2em;
+  letter-spacing: 1px;
+  text-align: center;
+}
+.kigou-artist__poem {
+  margin: 45px 0 0;
+  font-family: var(--font-latin);
+  line-height: 2em;
+  letter-spacing: 1px;
+  text-align: center;
+}
+.kigou-artist__poem--long {
+  margin-top: 50px;
+  padding: 0 30px;
+  font-size: 14.4px;
+  text-align: justify;
+}
+.kigou-artist__poem--verse {
+  margin-top: 30px;
+  font-size: 14.4px;
+}
+.kigou-artist__cert {
+  margin: 0;
+  padding-top: 50px;
+  line-height: 0;
+  text-align: center;
+}
+.kigou-artist__poem--verse + .kigou-artist__cert { padding-top: 30px; }
+.cert-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border: 1px solid #fff;
+  border-radius: 3px;
+  background: var(--kigou-ink);
+  color: #fff;
+  font-family: var(--font-latin);
+  font-size: 12.8px;
+  font-weight: 500;
+  line-height: 2em;
+  letter-spacing: 3px;
+  transition: all 0.3s;
+}
+.cert-btn:hover,
+.cert-btn:focus-visible {
+  background: #fff;
+  color: var(--kigou-ink);
+}
+@media (max-width: 1024px) {
+  .kigou-artist { padding: 160px max(60px, calc((100% - 780px) / 2)) 10px; }
+  .kigou-artist--last { padding-bottom: 110px; }
+  .kigou-artist__body--duo { padding: 30px 0; }
+  .kigou-artist__body--duo + .kigou-artist__photos { justify-content: center; }
+}
+@media (max-width: 767px) {
+  .kigou-artist,
+  .kigou-artist--last {
+    margin-top: 100px;
+    padding: 10px 30px;
+  }
+  .kigou-artist__card {
+    display: block;
+    margin-top: 0;
+  }
+  .kigou-artist__body,
+  .kigou-artist__body--duo { padding: 50px 0; }
+  .kigou-artist--first .kigou-artist__body { padding: 50px 30px; }
+  .kigou-artist__poem {
+    margin-top: 0;
+    padding-top: 30px;
+  }
+  .kigou-artist__poem--long { padding: 30px 0 0; }
+  .kigou-artist__poem--verse {
+    margin-top: 30px;
+    padding-top: 0;
+  }
+  .kigou-artist__cert,
+  .kigou-artist__poem--verse + .kigou-artist__cert { padding-top: 30px; }
+}
+
+/* ---------- Archived live stream ---------- */
+.kigou-video {
+  background: var(--kigou-ink);
+  color: #fff;
+}
+.kigou-video__title {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 110px 10px 30px;
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 2em;
+  letter-spacing: 3px;
+  text-align: center;
+}
+.kigou-video__frame {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding-bottom: 150px;
+  font-family: var(--font-latin);
+  font-size: 16px;
+  line-height: 2em;
+}
+.kigou-video__frame iframe {
+  display: inline-block;
+  height: 600px;
+  vertical-align: baseline;
+}
+@media (max-width: 1024px) {
+  .kigou-video__title { padding: 30px 10px; }
+  .kigou-video__frame {
+    padding-bottom: 0;
+  }
+  .kigou-video__frame iframe { height: 420px; }
+}
+@media (max-width: 767px) {
+  .kigou-video { margin-top: 100px; }
+  .kigou-video__title {
+    padding: 40px 10px 10px;
+    font-size: 16px;
+  }
+  .kigou-video__frame {
+    padding-bottom: 20px;
+    text-align: center;
+  }
+  .kigou-video__frame iframe { height: 200px; }
+}
+
+/* ---------- Bottom tiles: the "site top" tile is defined in common.css ---------- */
+@media (max-width: 1024px) {
+  .page-kigou .page-tile--top .page-tile__arrow { width: 30%; }
+}
+
+/* ---------- Page-scoped adjustments to shared sections (common.css) ----------
+ * On the KIGOU pages the donation-info column keeps Elementor's default 10px column
+ * padding above mobile (780px text width instead of 800px on the top page), the
+ * section has 30px (not 50px) vertical padding on mobile, the donation bands are
+ * 50px taller on desktop (350px min content height instead of 300px), and on mobile
+ * their message note has no inner padding and the NEM button is not pulled up. */
+@media (min-width: 768px) {
+  .page-kigou .donate-info__inner { padding: 10px; }
+}
+@media (max-width: 767px) {
+  .page-kigou .donate-info { padding: 30px 20px; }
+  .page-kigou .donate-band__note p { padding: 0; }
+  /* The NEM button sits in its own normal-height row here (common.css pulls it up). */
+  .page-kigou .donate-band--nem .donate-band__action { height: auto; }
+  .page-kigou .donate-band--nem .donate-band__action .btn { top: 0; }
+}
+@media (min-width: 1025px) {
+  .page-kigou .donate-band__inner { min-height: 350px; }
+}
+
+/* =====================================================================
+ * EN page (/en/kigou-event/): differences from the JP layout above.
+ * ===================================================================== */
+.page-kigou-en .site-header__lang .current {
+  border-bottom-color: #00b4b4;
+  color: #00b4b4;
+}
+
+/* Hero */
+.page-kigou-en .kigou-hero__title { letter-spacing: 1px; }
+.kigou-hero__small { font-size: 0.7em; }
+
+/* Introduction */
+.page-kigou-en .kigou-intro__title { letter-spacing: 1px; }
+.page-kigou-en .kigou-intro__text { text-align: start; }
+
+/* Themes */
+.page-kigou-en .kigou-themes { max-width: 1201px; }
+.page-kigou-en .kigou-theme__pref {
+  font-size: 12.8px;
+  letter-spacing: 1px;
+}
+.page-kigou-en .kigou-theme__name { font-weight: 500; }
+.page-kigou-en .kigou-theme__sub { letter-spacing: 1px; }
+
+/* Cards */
+.page-kigou-en .kigou-card { justify-content: center; }
+.page-kigou-en .kigou-card--live { padding: 30px; }
+.page-kigou-en .kigou-card__icon { top: -40px; }
+.page-kigou-en .kigou-card__icon img { width: auto; }
+.page-kigou-en .kigou-card__title {
+  font-size: 24px;
+  line-height: 2em;
+  letter-spacing: 1px;
+}
+.page-kigou-en .kigou-card__text { text-align: center; }
+
+/* Date and venues */
+.page-kigou-en .kigou-event__heading,
+.page-kigou-en .kigou-event__artists--full { letter-spacing: 1px; }
+
+/* Calligraphers */
+.page-kigou-en .kigou-artist__name {
+  font-family: "Noto Serif", var(--font-sans);
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+.page-kigou-en .kigou-artist__poem { margin-top: 40px; }
+.page-kigou-en .kigou-artist__poem--long { text-align: start; }
+.page-kigou-en .kigou-artist__poem--verse { margin-top: 20px; }
+.page-kigou-en .kigou-artist__body--duo { padding: 0 50px; }
+.page-kigou-en .kigou-artist__body--wide { padding: 30px 50px; }
+.page-kigou-en .cert-btn { letter-spacing: 1px; }
+
+/* Donation info: the EN copy has different paragraphs/spacing */
+.page-kigou-en .donate-info__title { letter-spacing: 0; }
+.page-kigou-en .donate-info__lead { margin: 20px 0 0; }
+.page-kigou-en .donate-info__period {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  letter-spacing: 1px;
+}
+.page-kigou-en .donate-info__text p { margin: 0 0 0.9rem; }
+.page-kigou-en .donate-info__subtitle { font-weight: 400; }
+.page-kigou-en .donate-info__usage {
+  padding-bottom: 20px;
+  text-align: start;
+}
+.page-kigou-en .donate-info__link-fukushima { padding: 15px 0; }
+.page-kigou-en .donate-info__links .donate-info__link-miyagi { padding-bottom: 15px; }
+
+/* Donation bands */
+.page-kigou-en .donate-band__title { letter-spacing: 0; }
+.page-kigou-en .donate-band__text { text-align: start; }
+.page-kigou-en .donate-band--jpy .donate-band__text { text-align: justify; }
+.page-kigou-en .donate-band__note p {
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+.page-kigou-en .donate-band .btn { letter-spacing: 1px; }
+
+/* Tiles */
+.page-kigou-en .page-tile--top { background-position: center center; }
+.page-kigou-en .page-tile--top .page-tile__label { width: 55.63%; }
+.page-kigou-en .page-tile--top .page-tile__arrow {
+  width: 44.185%;
+  padding-left: 10px;
+}
+.page-kigou-en .page-tile--sakura .page-tile__label {
+  width: 68%;
+  letter-spacing: 1px;
+}
+.page-kigou-en .page-tile--sakura .page-tile__arrow { width: 31.815%; }
+
+@media (min-width: 1025px) {
+  .page-kigou-en .donate-band__inner { min-height: 300px; }
+  .page-kigou-en .donate-band__action { padding-left: 50px; }
+  .page-kigou-en .donate-band .btn { width: 100%; }
+}
+@media (max-width: 1024px) {
+  .page-kigou-en .donate-info { background-position: center center; background-size: cover; }
+  .page-kigou-en .kigou-intro { padding: 100px 30px 30px; }
+  .page-kigou-en .kigou-intro__title { font-size: 32px; }
+  .page-kigou-en .kigou-themes {
+    max-width: 1061px;
+    padding: 0 30px;
+  }
+  .page-kigou-en .kigou-cards {
+    max-width: 1060px;
+    padding: 0 30px;
+  }
+  .page-kigou-en .kigou-card,
+  .page-kigou-en .kigou-card--live { padding: 30px 20px 20px; }
+  .page-kigou-en .kigou-card__title {
+    font-size: 24px;
+    text-align: justify;
+  }
+  .page-kigou-en .kigou-card__channel-label { font-size: 16px; }
+  .page-kigou-en .kigou-artist__body--duo { padding: 30px 0; }
+  .page-kigou-en .donate-band .btn { width: auto; }
+  .page-kigou-en .page-tile--top .page-tile__label { width: 65%; }
+  .page-kigou-en .page-tile--top .page-tile__arrow {
+    width: 30%;
+    padding-left: 5px;
+  }
+  .page-kigou-en .page-tile--sakura .page-tile__label { width: 75%; }
+  .page-kigou-en .page-tile--sakura .page-tile__arrow { width: 25%; }
+}
+@media (max-width: 767px) {
+  .page-kigou-en .kigou-hero__title {
+    font-size: 19.2px;
+    text-align: center;
+  }
+  .page-kigou-en .kigou-intro { padding: 0 20px; }
+  .page-kigou-en .kigou-intro__title {
+    font-size: 24px;
+    text-align: start;
+  }
+  .page-kigou-en .kigou-themes { padding: 0; }
+  .page-kigou-en .kigou-cards { padding: 0 20px; }
+  .page-kigou-en .kigou-card,
+  .page-kigou-en .kigou-card--live { padding: 0 15px; }
+  .page-kigou-en .kigou-card--nem { padding-bottom: 30px; }
+  .page-kigou-en .kigou-card__title {
+    font-size: 20.8px;
+    text-align: center;
+  }
+  .page-kigou-en .kigou-event__date { letter-spacing: 1px; }
+  .page-kigou-en .kigou-artist__name { font-size: 24px; }
+  .page-kigou-en .kigou-artist--first .kigou-artist__body,
+  .page-kigou-en .kigou-artist__body--duo,
+  .page-kigou-en .kigou-artist__body--wide { padding: 50px 0; }
+  .page-kigou-en .kigou-artist__poem,
+  .page-kigou-en .kigou-artist__poem--long {
+    margin-top: 0;
+    padding: 30px 30px 0;
+    text-align: center;
+  }
+  .page-kigou-en .kigou-artist__poem--verse {
+    margin-top: 20px;
+    padding: 0 30px;
+  }
+  .page-kigou-en .donate-info { background-position: -91.7em 0; }
+  .page-kigou-en .donate-info__title { text-align: center; }
+  .page-kigou-en .donate-info__lead { text-align: center; }
+  .page-kigou-en .donate-info__period { letter-spacing: 1px; }
+  .page-kigou-en .donate-info__text { text-align: start; }
+  .page-kigou-en .donate-info .dots-divider { margin: 30px 0 10px; }
+  .page-kigou-en .donate-info__subtitle {
+    padding: 30px 0 calc(20px + 0.9rem);
+    font-size: 12.8px;
+    text-align: start;
+  }
+  .page-kigou-en .donate-info__links { text-align: center; }
+  .page-kigou-en .donate-band__action,
+  .page-kigou-en .donate-band--nem .donate-band__action {
+    margin-top: 15px;
+    padding: 15px 20px 0;
+  }
+  .page-kigou-en .donate-band .btn { width: 100%; }
+}
