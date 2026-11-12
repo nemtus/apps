@@ -25,6 +25,16 @@ literal form of the URL (lower-case percent-encoding gets a redirect to the uppe
 
 `public/_redirects` keeps old WordPress URLs working: the JP project pages were also linked at
 the site root (`/揮毫/`, `/桜繋ぎ/`), and `/front/` itself redirected to `/`.
+Old image URLs under `/wp-content/uploads/` redirect to the same file under `/assets/img/`.
+
+### OGP images
+
+`og:image` / `twitter:image` keep the exact URLs the WordPress site used
+(`https://311-support.nemtus.com/wp-content/uploads/2021/03/...`), and the files are served
+from that path. Crawlers only fetch `og:image` from the absolute URL, so this keeps share cards
+working in both migration phases: before the cut-over the old server still answers that URL,
+afterwards this Worker does. Because `_redirects` takes precedence over static files, the
+`2021/03` redirects are listed file by file and leave these six out; keep it that way.
 
 ## Layout
 
@@ -37,6 +47,7 @@ public/
   assets/css/{top,kigou,sakura}.css   per-page layout
   assets/js/main.js         entrance animations, scroll-to-top, carousel autoplay
   assets/img/               images, under their original WordPress file names
+  wp-content/uploads/2021/03/   the six OGP images, at their original WordPress URLs
 wrangler.toml               Cloudflare Workers (Static Assets) configuration
 ```
 
