@@ -13,6 +13,8 @@ Symbol ブロックチェーンのノード運用保守を代行するサービ�
 public/
   index.html          ランディングページ本体
   404.html            404 ページ
+  news/index.html     お知らせ一覧（/news/）
+  news/<slug>.html    お知らせ個別ページ（/news/<slug>）
   assets/style.css    スタイル（1ファイル）
 wrangler.toml         Cloudflare Workers（Static Assets）の設定
 ```
@@ -53,6 +55,26 @@ import("playwright").then(async ({ chromium }) => {
 `og:image` は絶対 URL で指定する必要があります（クローラは相対パスを解決しません）。
 ドメインを変える場合は `index.html` の `og:image` / `twitter:image` も合わせて更新してください。
 
+## お知らせ
+
+ビルド工程を持たないサイトのため、お知らせは 1 件 1 ファイルの HTML で書いています。
+Cloudflare が `.html` を省いた URL で配信するので、`public/news/<slug>.html` は
+`/news/<slug>` で開けます。slug は `YYYY-MM-<内容>` の形にしています。
+
+追加するときは次の 3 箇所を更新してください（いずれも新しい順）。
+
+1. `public/news/<slug>.html` を作る。既存の記事をコピーし、`<title>`、`meta description`、
+   `canonical`、`og:url` / `og:title` / `og:description`、`article:published_time`、
+   本文の `<time>` を書き換える。
+2. `public/news/index.html` の一覧の先頭に `<li>` を足す。
+3. `public/index.html` の `news-strip`（ヒーロー直下）の先頭に `<li>` を足す。
+   ここは最新 3 件までにして、古いものは削除する。
+
+続報は、新しい記事にせず元の記事の末尾に「追記（日付）」として足す方がわかりやすいです。
+
+外部サイトへのリンクは `class="external" target="_blank" rel="noopener noreferrer"` を
+付けます。`external` クラスでリンクの後ろに ↗ が付きます。
+
 ## 外部リンク（設定済み）
 
 | 対象                 | リンク先    | 掲載箇所                                 |
@@ -60,6 +82,7 @@ import("playwright").then(async ({ chromium }) => {
 | 申し込みフォーム     | Google Form | ヒーロー内の CTA と `#contact` の 2 箇所 |
 | プライバシーポリシー | Google Docs | フッター                                 |
 | 利用規約             | Google Docs | フッター                                 |
+| 稼働状況             | UptimeRobot | フッター、お知らせ本文                   |
 
 Google Docs は編集用の `/edit` ではなく **`/view`** で終わる URL を使っています。`/edit`
 でも閲覧者にはビューアが開きますが、公開ページから編集 URL を案内する形になるため

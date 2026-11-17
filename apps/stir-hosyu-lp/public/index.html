@@ -49,10 +49,11 @@
           <span class="wordmark__name">Stir Hosyu <b>Symbol</b></span>
           <span class="wordmark__by">by NEMTUS</span>
         </a>
-        <nav class="site-nav" aria-label="ページ内ナビゲーション">
+        <nav class="site-nav" aria-label="サイト内ナビゲーション">
           <a href="#about">サービス</a>
           <a href="#features">特徴</a>
           <a href="#plans">料金</a>
+          <a href="/news/">お知らせ</a>
           <a href="#contact">お申し込み</a>
         </nav>
       </div>
@@ -80,6 +81,25 @@
               >お申し込みフォーム</a
             >
           </div>
+        </div>
+      </section>
+
+      <!--
+        Latest news, newest first, at most 3 items. Keep in sync with the list
+        on /news/index.html when adding an article — see README.md.
+      -->
+      <section class="news-strip" aria-labelledby="news-strip-title">
+        <div class="container news-strip__inner">
+          <h2 id="news-strip-title" class="news-strip__title">お知らせ</h2>
+          <ul class="news-strip__list">
+            <li>
+              <time datetime="2026-11-18">2026年11月18日</time>
+              <a href="/news/2026-11-contabo-security-incident"
+                >Contabo 社のセキュリティインシデントに関する当サービスの確認結果</a
+              >
+            </li>
+          </ul>
+          <a class="news-strip__more" href="/news/">一覧を見る</a>
         </div>
       </section>
 
@@ -194,7 +214,15 @@
 
     <footer class="site-footer">
       <div class="container">
-        <nav class="footer-nav" aria-label="規約">
+        <nav class="footer-nav" aria-label="サイト情報">
+          <a href="/news/">お知らせ</a>
+          <a
+            class="external"
+            href="https://stats.uptimerobot.com/T424qH33CV"
+            target="_blank"
+            rel="noopener noreferrer"
+            >稼働状況</a
+          >
           <a
             href="https://docs.google.com/document/d/1I3l9c3Uhx21L-f_490xweDAq2Iis96Bdnxbst_jTJVw/view"
             >プライバシーポリシー</a
