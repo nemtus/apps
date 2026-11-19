@@ -70,6 +70,19 @@ updates:
     cooldown:
       default-days: 7
     groups:
+      # `@vitejs/plugin-react` peers a single `vite` major (6.x peers ^8), so a
+      # lone plugin major cannot resolve against the vite already installed and
+      # its pull request dies at `npm ci` (#392). Move the family together;
+      # majors are included because that is exactly when they diverge.
+      flea-market-vite:
+        applies-to: version-updates
+        patterns:
+          - "vite"
+          - "@vitejs/*"
+        update-types:
+          - major
+          - minor
+          - patch
       flea-market-minor-patch:
         applies-to: version-updates
         update-types:
@@ -94,6 +107,10 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "@typescript-eslint/parser"
         update-types: ["version-update:semver-major"]
+      # typescript-eslint (used directly here) does not support TypeScript 7 —
+      # #93 failed `npm run lint` on it. TypeScript 6 is still allowed.
+      - dependency-name: "typescript"
+        versions: [">=7"]
       # @types/node tracks the Node runtime major; hold the major.
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
@@ -129,6 +146,16 @@ updates:
     cooldown:
       default-days: 7
     groups:
+      # vite and its React plugin move together (see the flea-market entry).
+      hackathon-vite:
+        applies-to: version-updates
+        patterns:
+          - "vite"
+          - "@vitejs/*"
+        update-types:
+          - major
+          - minor
+          - patch
       hackathon-minor-patch:
         applies-to: version-updates
         update-types:
@@ -270,12 +297,25 @@ updates:
     cooldown:
       default-days: 7
     groups:
+      # vite and its React plugin move together (see the flea-market entry).
+      hackathon-lp-2026-vite:
+        applies-to: version-updates
+        patterns:
+          - "vite"
+          - "@vitejs/*"
+        update-types:
+          - major
+          - minor
+          - patch
       hackathon-lp-2026-minor-patch:
         applies-to: version-updates
         update-types:
           - minor
           - patch
     ignore:
+      # typescript-eslint does not support TypeScript 7 (see the flea-market entry).
+      - dependency-name: "typescript"
+        versions: [">=7"]
       # @types/node tracks the Node runtime major; hold the major.
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
@@ -334,6 +374,16 @@ updates:
         patterns:
           - "vitest"
           - "@vitest/*"
+      # vite and its React plugin move together (see the flea-market entry).
+      xymposium-lp-2024-vite:
+        applies-to: version-updates
+        patterns:
+          - "vite"
+          - "@vitejs/*"
+        update-types:
+          - major
+          - minor
+          - patch
       xymposium-lp-2024-minor-patch:
         applies-to: version-updates
         update-types:
@@ -345,6 +395,10 @@ updates:
       # plugin is fixed upstream.
       - dependency-name: "eslint"
         versions: [">=10"]
+      # The typescript-eslint bundled with eslint-config-next rejects TypeScript 7
+      # ("typescript-eslint does not support TS 7.0", #97).
+      - dependency-name: "typescript"
+        versions: [">=7"]
       # @types/node tracks the Node runtime major; hold the major.
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
