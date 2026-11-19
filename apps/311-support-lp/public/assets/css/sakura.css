@@ -1,0 +1,570 @@
+/*
+ * sakura.css — the "Sakura Weaving" (桜繋ぎ) blockchain-art pages:
+ *   /front/桜繋ぎ/ (JP, body.page-sakura) and /en/sakura-weaving/ (EN, body.page-sakura.page-sakura--en).
+ * Shared components come from common.css; page-scoped overrides are at the end of this file.
+ *
+ * Breakpoints: desktop >= 1025px, tablet 768–1024px, mobile <= 767px.
+ */
+
+/* ---------- Helpers ---------- */
+/* Line breaks that only exist on mobile. */
+.sp-only { display: none; }
+@media (max-width: 767px) {
+  .sp-only { display: inline; }
+}
+
+/* Body copy: an inline <span> inside a block, as in the original heading widgets. Keeping the
+ * span inline means the block's own strut (body line-height) still applies, which is what
+ * sets the line pitch of the smaller mobile text. */
+.sk-text > span {
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: 2em;
+  letter-spacing: 1px;
+}
+@media (max-width: 767px) {
+  .sk-text > span {
+    font-size: 0.8em;
+    letter-spacing: 1.8px;
+  }
+}
+
+/* Section headings (Noto Serif, 32px / 24px). */
+.sk-heading {
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 2em;
+  letter-spacing: 3px;
+  text-align: center;
+}
+@media (max-width: 767px) {
+  .sk-heading { font-size: 1.5em; }
+}
+
+/* Twemoji images, sized like WordPress's wp-emoji. */
+img.emoji {
+  display: inline;
+  width: 1em;
+  height: 1em;
+  margin: 0 0.07em;
+  vertical-align: -0.1em;
+  border: none;
+  box-shadow: none;
+}
+
+/* ---------- Hero ---------- */
+.sk-hero {
+  display: flex;
+  align-items: center;
+  min-height: 50vh;
+  background: url("../img/shutterstock_1280939815-scaled.jpg") right center / cover no-repeat;
+}
+.sk-hero > .overlay {
+  background: #000;
+  opacity: 0.5;
+}
+.sk-hero__inner {
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 10px;
+}
+.sk-hero__title {
+  margin: 100px 0 120px;
+  padding-top: 80px;
+  color: #fff;
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 2em;
+  letter-spacing: 3px;
+  text-align: center;
+}
+@media (min-width: 1025px) {
+  .sk-hero { background-attachment: fixed; }
+}
+@media (max-width: 767px) {
+  .sk-hero { padding: 0 20px; }
+  .sk-hero__title {
+    margin: 0;
+    padding: 100px 0;
+    font-size: 1.5em;
+  }
+}
+
+/* ---------- Introduction ---------- */
+.sk-intro {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.sk-intro__title {
+  margin: 100px 0 70px;
+}
+.sk-intro__text { text-align: center; }
+@media (max-width: 1024px) {
+  .sk-intro {
+    max-width: none;
+    padding: 0 30px 30px;
+  }
+}
+@media (max-width: 767px) {
+  .sk-intro { padding: 0 20px; }
+  .sk-intro__title {
+    margin: 0;
+    padding: 50px 0;
+    text-align: justify;
+  }
+}
+
+/* ---------- Image carousel ---------- */
+.sk-carousel {
+  max-width: 1000px;
+  margin: 80px auto 50px;
+}
+.carousel__track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.carousel__track::-webkit-scrollbar { display: none; }
+.carousel__slide {
+  flex: 0 0 calc(100% / 3);
+  margin: 0;
+  scroll-snap-align: start;
+}
+.carousel__slide img {
+  width: 100%;
+  vertical-align: baseline;
+}
+@media (max-width: 1024px) {
+  .sk-carousel {
+    max-width: none;
+    margin: 0;
+    padding: 30px;
+  }
+  /* Elementor's tablet default for this carousel shows two slides. */
+  .carousel__slide { flex-basis: 50%; }
+}
+@media (max-width: 767px) {
+  .sk-carousel {
+    margin: 30px 0;
+    padding: 0;
+  }
+  .sk-carousel .carousel { margin: 0 15px; }
+}
+
+/* ---------- Image + description box ---------- */
+.sk-feature-wrap {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.sk-feature {
+  display: flex;
+  border: 1px solid #d2c9c5;
+}
+.sk-feature__media { width: 62%; }
+.sk-feature__media img {
+  display: block;
+  width: 100%;
+}
+.sk-feature__body {
+  display: flex;
+  align-items: center;
+  width: 38%;
+  padding: 30px;
+}
+.sk-feature__body .sk-text { text-align: justify; }
+@media (max-width: 1024px) {
+  .sk-feature { flex-wrap: wrap; }
+  .sk-feature__media,
+  .sk-feature__body { width: 100%; }
+}
+@media (max-width: 767px) {
+  .sk-feature { border-width: 0; }
+  .sk-feature__body { padding: 30px 20px; }
+}
+
+/* ---------- Link to the web app ---------- */
+.sk-art {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  margin-top: 100px;
+  padding: 50px 80px;
+  background: url("../img/sakura_hanabira.jpg") center / cover no-repeat;
+}
+.sk-art > .overlay {
+  background: #895b5b;
+  opacity: 0.1;
+}
+.sk-art__inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 1000px;
+  min-height: 400px;
+  margin: 0 auto;
+}
+.sk-art .sk-heading { margin-bottom: 20px; }
+.sk-art__text {
+  margin-bottom: 20px;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  line-height: 2em;
+  letter-spacing: 1px;
+  text-align: center;
+}
+.sk-art__action {
+  margin-top: 30px;
+  text-align: center;
+}
+@media (min-width: 1025px) {
+  .sk-art { background-attachment: fixed; }
+}
+@media (max-width: 1024px) {
+  .sk-art { padding: 30px; }
+}
+@media (max-width: 767px) {
+  .sk-art {
+    margin-top: 50px;
+    padding: 15px 20px 50px;
+  }
+  .sk-art .sk-heading {
+    margin-bottom: 0;
+    padding: 30px 0;
+  }
+  .sk-art__text {
+    margin-bottom: 0;
+    font-size: 0.8em;
+    line-height: 1.8em;
+    text-align: justify;
+  }
+  .sk-art__action {
+    margin-top: 15px;
+    padding-top: 15px;
+  }
+  .page-sakura .donate-band__note p { padding: 0; }
+}
+
+/* ---------- How to donate ---------- */
+.sk-how {
+  display: flex;
+  align-items: center;
+  padding: 0 0 100px;
+}
+.sk-how > .overlay {
+  background: url("../img/bokashi-scaled.jpg") 0 0 / cover;
+  opacity: 0.5;
+}
+.sk-how__inner {
+  width: 100%;
+  max-width: 800px;
+  min-height: 400px;
+  margin: 0 auto;
+  padding: 10px;
+}
+.sk-how__title { margin: 100px 0 40px; }
+.sk-how__lead { margin-bottom: 40px; }
+.sk-address {
+  padding: 60px 10px;
+  border: 1px solid #cfafaf;
+  text-align: center;
+}
+.sk-address__title {
+  margin-bottom: 40px;
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 2em;
+  letter-spacing: 3px;
+}
+.sk-address__qr { margin-bottom: 20px; }
+.sk-address__qr img {
+  display: block;
+  width: 150px;
+  margin: 0 auto;
+}
+.sk-address__value { margin-bottom: 20px; }
+.sk-how__notice-title {
+  margin: 40px 0 20px;
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 2em;
+  letter-spacing: 3px;
+  text-align: center;
+}
+.sk-how__notes { margin-bottom: 20px; }
+@media (max-width: 1024px) {
+  .sk-how__inner { padding: 0 30px; }
+}
+@media (max-width: 767px) {
+  .sk-how { padding: 0 20px 50px; }
+  .sk-how__inner { padding: 0; }
+  .sk-how__title {
+    margin: 0 0 20px;
+    padding-top: 50px;
+  }
+  .sk-how__lead { margin-bottom: 40px; }
+  .sk-address__title {
+    margin-bottom: 20px;
+    padding: 0 30px;
+    font-size: 1.2em;
+  }
+  .sk-address__value { margin-bottom: 0; }
+  .sk-how__notice-title {
+    margin: 0 0 20px;
+    padding-top: 20px;
+    font-size: 1.1em;
+  }
+}
+
+/* ---------- How the art grows ---------- */
+.sk-grow {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 100px 0 0;
+}
+.sk-grow__title { margin: 50px 0; }
+.sk-grow__text {
+  padding: 0 100px;
+  text-align: justify;
+}
+.sk-grow__note {
+  margin: 50px 100px 0;
+  padding: 30px;
+  border: 1px solid #cfcfcf;
+  text-align: center;
+}
+.sk-grow__note > span { font-size: 0.9em; }
+.sk-grow__image { padding-top: 80px; }
+.sk-grow__image img {
+  display: block;
+  width: 100%;
+}
+.sk-yen-wrap {
+  margin-top: 100px;
+  padding-bottom: 50px;
+}
+.sk-yen {
+  padding: 0 0 50px;
+  border: 1px solid #836b6b;
+}
+.sk-yen__title { margin: 50px 0 20px; }
+.sk-yen__lead {
+  margin-bottom: 20px;
+  padding: 0 100px;
+  text-align: center;
+}
+.sk-yen__steps {
+  padding: 0 100px;
+  text-align: justify;
+}
+@media (max-width: 1024px) {
+  .sk-grow {
+    max-width: none;
+    padding: 30px 30px 0;
+  }
+  .sk-grow__text { padding: 0; }
+  .sk-grow__note { margin: 50px 0 0; }
+  .sk-grow__image { padding-top: 30px; }
+  .sk-yen-wrap {
+    margin-top: 0;
+    padding: 30px 0 0;
+  }
+}
+@media (max-width: 767px) {
+  .sk-grow { padding: 0; }
+  .sk-grow__title {
+    margin: 0;
+    padding: 50px 0;
+  }
+  .sk-grow__text { padding: 0 20px; }
+  .sk-grow__note {
+    margin: 30px 20px 0;
+    padding: 20px 20px 0;
+  }
+  .sk-grow__note > span { font-size: 0.7em; }
+  .sk-grow__image { padding: 20px; }
+  .sk-yen-wrap {
+    margin: 50px 0;
+    padding: 20px;
+  }
+  .sk-yen { padding: 0 20px 20px; }
+  .sk-yen__title {
+    margin: 0 0 20px;
+    padding: 40px 0 20px;
+    font-size: 1em;
+  }
+  .sk-yen__lead,
+  .sk-yen__steps { padding: 0; }
+}
+
+/* ---------- Shared components: page-specific differences ---------- */
+/* "Continuous donations": 150px gap above on desktop/tablet, tighter padding on mobile. */
+.page-sakura .donate-info { margin-top: 150px; }
+/* This page's column keeps Elementor's default 10px padding (the top page's does not). */
+.page-sakura .donate-info__inner { padding: 10px; }
+@media (max-width: 767px) {
+  .page-sakura .donate-info {
+    margin-top: 0;
+    padding: 30px 20px;
+  }
+  .page-sakura .donate-info__inner { padding: 0; }
+}
+
+/* Donation bands on mobile: unlike the top page, the NEM button sits in a normal column
+ * with a 15px + 15px gap above it (like the JPY one), and the note has no padding. */
+@media (max-width: 767px) {
+  .page-sakura .donate-band--nem .donate-band__action {
+    display: block;
+    min-height: 0;
+    margin-top: 15px;
+    padding-top: 15px;
+  }
+  .page-sakura .donate-band--nem .donate-band__action .btn { margin-top: 0; }
+  .page-sakura .donate-band__note p { padding: 0; }
+}
+
+/* Bottom tiles: these pages show "site top" + kigou (both defined in common.css). */
+
+/* ---------- Mobile copy alignment ----------
+ * Placed last so it wins over the per-section desktop alignments: every copy block is
+ * justified on mobile except the NEM address. */
+@media (max-width: 767px) {
+  .sk-text { text-align: justify; }
+  .sk-text.sk-address__value { text-align: center; }
+}
+
+/* ==========================================================================
+ * English page (/en/sakura-weaving/): the same layout with Latin-friendly spacing and a
+ * few per-element differences taken from the original's Elementor settings.
+ * ========================================================================== */
+.page-sakura--en .site-header__lang .current {
+  border-bottom-color: #00b4b4;
+  color: #00b4b4;
+}
+.page-sakura--en .sk-heading,
+.page-sakura--en .sk-hero__title,
+.page-sakura--en .sk-address__title,
+.page-sakura--en .sk-how__notice-title,
+.page-sakura--en .btn { letter-spacing: 1px; }
+.page-sakura--en .sk-feature__body .sk-text { text-align: start; }
+.page-sakura--en .sk-yen__steps { text-align: center; }
+/* The tagline is bare text (no <p>), so it has no paragraph margin. */
+.page-sakura--en .sk-art__text { margin-bottom: 20px; }
+@media (max-width: 1024px) {
+  .page-sakura--en .sk-carousel { margin: 80px 0 50px; }
+  .page-sakura--en .sk-yen-wrap { padding: 0; }
+}
+@media (max-width: 767px) {
+  .page-sakura--en .sk-intro__title { text-align: center; }
+  .page-sakura--en .sk-carousel { margin: 30px 0; }
+  .page-sakura--en .sk-art__text {
+    margin-bottom: 0;
+    text-align: center;
+  }
+  .page-sakura--en .sk-how__notice-title {
+    padding-top: 30px;
+    font-size: 1.2em;
+  }
+  .page-sakura--en .sk-how__notes { margin-bottom: 0; }
+  .page-sakura--en .sk-grow { padding: 0 20px; }
+  .page-sakura--en .sk-grow__text { padding: 0; }
+  .page-sakura--en .sk-grow__note {
+    margin: 30px 0 0;
+    padding: 20px;
+  }
+  .page-sakura--en .sk-grow__image { padding: 30px 0 0; }
+  .page-sakura--en .sk-yen-wrap {
+    margin: 50px 0;
+    padding: 0;
+  }
+  /* Copy is start-aligned on mobile here (the JP page justifies it). */
+  .page-sakura--en .sk-text { text-align: start; }
+  .page-sakura--en .sk-text.sk-grow__note { text-align: justify; }
+  .page-sakura--en .sk-text.sk-address__value { text-align: center; }
+}
+
+/* ---------- English page: shared sections ---------- */
+.page-sakura--en .donate-info__title { letter-spacing: 0; }
+.page-sakura--en .donate-info__lead { margin: 20px 0 0; }
+/* The period boxes have unequal line counts here; the text is centred vertically. */
+.page-sakura--en .donate-info__period {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 1px;
+}
+.page-sakura--en .donate-info__subtitle { font-weight: 400; }
+.page-sakura--en .donate-info__usage {
+  padding-bottom: 20px;
+  text-align: start;
+}
+.page-sakura--en .donate-info__links p { margin-bottom: 0.9rem; }
+.page-sakura--en .donate-info__link-fukushima { padding: 15px 0; }
+.page-sakura--en .donate-info__links .donate-info__link-miyagi { padding-bottom: 15px; }
+.page-sakura--en .donate-band__title { letter-spacing: 0; }
+.page-sakura--en .donate-band--nem .donate-band__text { text-align: start; }
+.page-sakura--en .donate-band__note p {
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+/* The buttons fill their column (minus a 50px left inset) on desktop. */
+.page-sakura--en .donate-band__action { padding-left: 50px; }
+.page-sakura--en .donate-band .btn { width: 100%; }
+.page-sakura--en .org-footer__name { letter-spacing: 3px; }
+.page-sakura--en .page-tile--top { background-position: center; }
+.page-sakura--en .page-tile--top .page-tile__label {
+  width: 54.148%;
+  letter-spacing: 1px;
+}
+.page-sakura--en .page-tile--top .page-tile__arrow { width: 45.667%; }
+.page-sakura--en .page-tile--kigou .page-tile__label { width: 59%; }
+.page-sakura--en .page-tile--kigou .page-tile__arrow { width: 40.815%; }
+@media (max-width: 1024px) {
+  .page-sakura--en .donate-info {
+    margin-top: 100px;
+    background-position: center;
+    background-size: cover;
+  }
+  .page-sakura--en .donate-band__action { padding-left: 0; }
+  .page-sakura--en .donate-band__title { text-align: start; }
+  .page-sakura--en .donate-band__note { padding-right: 100px; }
+  .page-sakura--en .donate-band .btn { width: auto; }
+  .page-sakura--en .page-tile--top .page-tile__label { width: 57%; }
+  .page-sakura--en .page-tile--top .page-tile__arrow { width: 25%; }
+  .page-sakura--en .page-tile--kigou .page-tile__label { width: 65%; }
+  .page-sakura--en .page-tile--kigou .page-tile__arrow { width: 30%; }
+  .page-sakura--en .page-tile__label { letter-spacing: 2px; }
+}
+@media (max-width: 767px) {
+  .page-sakura--en .donate-info {
+    margin-top: 0;
+    background-position: -91.7em 0;
+  }
+  .page-sakura--en .donate-info__lead { text-align: center; }
+  .page-sakura--en .donate-info .dots-divider { margin: 30px 0 10px; }
+  .page-sakura--en .donate-info__text,
+  .page-sakura--en .donate-info__subtitle { text-align: start; }
+  .page-sakura--en .donate-info__subtitle {
+    font-size: 0.8em;
+    line-height: 1.8em;
+  }
+  .page-sakura--en .donate-info__links { text-align: center; }
+  .page-sakura--en .donate-band__title { text-align: center; }
+  .page-sakura--en .donate-band__note { padding-right: 0; }
+  .page-sakura--en .donate-band__action { padding: 15px 20px 0; }
+  .page-sakura--en .donate-band .btn { width: 100%; }
+  .page-sakura--en .org-footer__name { letter-spacing: 2px; }
+  .page-sakura--en .org-footer__url { letter-spacing: 1px; }
+  .page-sakura--en .page-tile__label,
+  .page-sakura--en .page-tile__arrow { width: 100%; }
+}

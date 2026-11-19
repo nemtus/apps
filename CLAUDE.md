@@ -42,6 +42,11 @@ apps/
                         HTML + one CSS file, no JS. Assets-only Worker. Three links
                         (Google Form, privacy policy, terms) are placeholders until their
                         URLs exist — `grep TODO:SET-URL public/index.html`.
+  311-support-lp/       NEMTUS 3.11 earthquake reconstruction-support donation site
+                        (311-support.nemtus.com), migrated off a WordPress/Elementor install.
+                        Six pages (JP/EN × top/kigou/sakura; the JP project pages keep their
+                        Japanese-slug URLs under /front/), plain HTML + CSS + one small
+                        script. Assets-only Worker; old URLs via public/_redirects.
     flea-market/worker/ flea-market backend Worker (Better Auth on D1+KV, Stripe,
                         /api/orders, /api/files). Workspace via the apps/*/worker glob.
 packages/               Shared, headless npm-workspace packages (Cloudflare Workers):
@@ -117,7 +122,7 @@ there is silent. The full set:
 | `ci-hackathon-lp-2026` | pnpm/Next | `high` (`pnpm audit`) |
 | `ci-xymposium-lp-2024` | npm/Next: quality + vitest + Playwright e2e | `high`, `--omit=dev` |
 | `ci-xymposium-lp` | aggregator: `npm ci` → typecheck → `wrangler deploy --dry-run` | `high` |
-| `ci-static-sites` | the 6 assets-only sites: asserts they are still dependency-free, then `wrangler deploy --dry-run` per site | n/a (no deps) |
+| `ci-static-sites` | the 7 assets-only sites: asserts they are still dependency-free, then `wrangler deploy --dry-run` per site | n/a (no deps) |
 | `pinact` | SHA-pinning of every `uses:` | n/a |
 
 Two gates are deliberately not `high`. `ci-hackathon` sits at `critical` because `firebase` →

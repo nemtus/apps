@@ -448,6 +448,142 @@ td {
   }
 }
 
+/* ------------------------------------------------------------------ news -- */
+
+/* Links that open another site in a new tab. The arrow is decorative: the
+   second `content` gives it empty alt text so screen readers skip it, and a
+   browser that does not understand that syntax keeps the first declaration. */
+.external::after {
+  content: '\2197';
+  content: '\2197' / '';
+  display: inline-block;
+  margin-left: 0.2em;
+  font-size: 0.85em;
+  text-decoration: none;
+}
+
+/* One quiet row between the hero and the first section on the top page. */
+.news-strip {
+  border-block: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+
+.news-strip__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 1.25rem;
+  padding-block: 0.8rem;
+}
+
+.news-strip__title {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--fg-muted);
+}
+
+.news-strip__list {
+  flex: 1 1 20rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.news-strip__list li + li {
+  margin-top: 0.2rem;
+}
+
+.news-strip__list time {
+  margin-right: 0.75rem;
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.news-strip__more {
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--fg-muted);
+}
+
+.page-title,
+.article h1 {
+  margin: 0.5rem 0 0;
+  font-size: clamp(1.4rem, 1.15rem + 1.2vw, 2rem);
+}
+
+.news-list {
+  max-width: 44rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+
+.news-list__item {
+  display: flex;
+  flex-direction: column;
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.news-list__item time {
+  font-size: 0.85rem;
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.news-list__item a {
+  font-weight: 600;
+}
+
+.news-list__item p {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+}
+
+.article {
+  max-width: 44rem;
+}
+
+.article__header {
+  margin-bottom: 1.5rem;
+}
+
+.article__date {
+  margin: 0.75rem 0 0;
+  font-size: 0.85rem;
+  color: var(--fg-muted);
+}
+
+.section .article h2 {
+  margin: 2rem 0 0.5rem;
+  font-size: 1.2rem;
+}
+
+.article ul {
+  padding-left: 1.2rem;
+}
+
+.article li + li {
+  margin-top: 0.3rem;
+}
+
+.back-link {
+  margin-top: 2.5rem;
+  font-size: 0.9rem;
+}
+
 /* ---------------------------------------------------------------- footer -- */
 
 .site-footer {

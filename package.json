@@ -22,8 +22,8 @@
     "format:check": "prettier --check \"packages/**/*.ts\" \"apps/*/worker/**/*.ts\""
   },
   "devDependencies": {
-    "prettier": "^3.9.6",
-    "vitest": "^4.1.10"
+    "prettier": "^3.10.1",
+    "vitest": "^5.1.0"
   },
   "engines": {
     "node": ">=22"
