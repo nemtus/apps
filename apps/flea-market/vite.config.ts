@@ -3,7 +3,6 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import wasm from 'vite-plugin-wasm';
-import topLevelAwait from 'vite-plugin-top-level-await';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -13,10 +12,10 @@ export default defineConfig({
     // `symbol-crypto-wasm-node` loader reads the .wasm off disk via fs/path, which
     // does not exist in the browser — so touching SymbolFacade/KeyPair would break
     // at runtime (the build stays green because node polyfills stub `fs`). Enable
-    // async WASM + top-level await, and alias the loader to the fetch/ESM web build
-    // (see resolve.alias + optimizeDeps.exclude below).
+    // async WASM and alias the loader to the fetch/ESM web build (see
+    // resolve.alias + optimizeDeps.exclude below). The top-level await this needs
+    // ships as-is: build.target is esnext, so no transform plugin is required.
     wasm(),
-    topLevelAwait(),
     // The Symbol SDK also relies on Node builtins/globals (Buffer, crypto, stream,
     // process) in the browser — the equivalent of the old config-override.js.
     nodePolyfills({
@@ -31,7 +30,8 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    // esbuild dep pre-bundling (dev) chokes on `import "*.wasm"`; exclude it.
+    // Keep the WASM package out of dev dependency pre-bundling (esbuild before Vite 8,
+    // Rolldown since) so `import "*.wasm"` goes through vite-plugin-wasm instead.
     exclude: ['symbol-crypto-wasm-web'],
   },
   // Keep the REACT_APP_ prefix so the existing .env / .env.testnet / .env.mainnet
@@ -40,8 +40,8 @@ export default defineConfig({
   build: {
     // Firebase Hosting serves ./build (see firebase.json hosting.public).
     outDir: 'build',
-    // Top-level await (Symbol WASM init) needs a modern target — esbuild can't
-    // down-level it to the default es2020/chrome87 baseline.
+    // Top-level await (Symbol WASM init) needs a modern target; it cannot be
+    // down-levelled to the default baseline, and esnext lets it ship natively.
     target: 'esnext',
   },
   server: {
