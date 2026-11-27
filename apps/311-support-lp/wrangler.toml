@@ -22,8 +22,14 @@ compatibility_date = "2025-06-01"
 # README). Cloudflare creates the DNS record and certificate itself when the domain is
 # attached; a Custom Domain cannot be created on top of an existing A/AAAA/CNAME record,
 # so the A record that pointed at the rental server had to be deleted first.
+#
+# www.311-support.nemtus.com is attached too, only so that it keeps resolving with a valid
+# certificate (the zone's *.nemtus.com certificate does not cover a second-level
+# subdomain; a Custom Domain gets its own). A Single Redirect rule in the nemtus.com zone
+# sends it to the bare hostname with a 301 before the Worker runs; see README.
 routes = [
   { pattern = "311-support.nemtus.com", custom_domain = true },
+  { pattern = "www.311-support.nemtus.com", custom_domain = true },
 ]
 
 # The workers.dev copy served the site during phase 1 and is turned off now that the
