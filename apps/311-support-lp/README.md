@@ -111,13 +111,20 @@ keeps working the same way:
 - `wrangler.toml` attaches it as a second Custom Domain, so Cloudflare creates its DNS record
   and issues a certificate for it. The zone's `*.nemtus.com` certificate does not cover a
   second-level subdomain like this one.
-- A **Single Redirect** rule in the `nemtus.com` zone (Rules → Redirect Rules), which runs
-  before the Worker, sends it to the bare hostname:
-  - When: `http.host eq "www.311-support.nemtus.com"`
-  - Then: dynamic redirect to `concat("https://311-support.nemtus.com", http.request.uri.path)`,
-    status `301`, **Preserve query string** on
+- A zone-wide **Single Redirect** rule in the `nemtus.com` zone (Rules → Redirect Rules), which
+  runs before the Worker, sends it to the bare hostname. It was created from the "Redirect from
+  WWW to root" template and covers every proxied `www.*` hostname in the zone, not only this one:
+  - Request URL (wildcard pattern): `https://www.*`
+  - Target URL: `https://${1}`, status `301`
+  - **Preserve query string** off (the template default). The pattern is matched against the
+    full URL, so `${1}` already holds the path and the query string:
+    `https://www.311-support.nemtus.com/en/?a=1` → `https://311-support.nemtus.com/en/?a=1`.
 - The rule is dashboard configuration, not part of this repository. Without it, the `www`
   hostname would serve the same pages (their canonical URL still points at the bare hostname).
+- The pattern matches `https://` only, and **Always Use HTTPS** is deliberately off for the
+  zone, because some blockchain nodes under `nemtus.com` must stay reachable over plain HTTP.
+  So `http://www.311-support.nemtus.com/` is not redirected: it serves the same pages over
+  HTTP, as `http://311-support.nemtus.com/` does.
 
 As with the bare hostname, the Custom Domain cannot be created while the old `A` record for
 `www.311-support` exists. Delete that record first, then deploy.
