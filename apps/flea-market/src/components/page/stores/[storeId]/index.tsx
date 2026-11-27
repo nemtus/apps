@@ -5,7 +5,6 @@ import { useApi } from '../../../../hooks/useApi';
 import ErrorDialog from '../../../ui/ErrorDialog';
 import LoadingOverlay from '../../../ui/LoadingOverlay';
 import StoreCardDetail from '../../../ui/StoreCardDetail';
-import { Store } from '../../../ui/StoreCard';
 import PublicItems from './items';
 
 const PublicStore = () => {
@@ -18,7 +17,7 @@ const PublicStore = () => {
         <h2>店舗詳細</h2>
         {store ? (
           <>
-            <StoreCardDetail store={store as Store} key={store.storeId} />
+            <StoreCardDetail store={store} key={store.storeId} />
             <PublicItems />
           </>
         ) : null}

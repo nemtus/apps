@@ -5,7 +5,6 @@ import { useApi } from '../../../../../../hooks/useApi';
 import ErrorDialog from '../../../../../ui/ErrorDialog';
 import LoadingOverlay from '../../../../../ui/LoadingOverlay';
 import { Item } from '../../../../../ui/ItemCard';
-import { Store } from '../../../../../ui/StoreCard';
 import ItemCardDetail from '../../../../../ui/ItemCardDetail';
 
 const PublicItem = () => {
@@ -18,7 +17,7 @@ const PublicItem = () => {
     <Container maxWidth="sm">
       <div>
         <h2>商品詳細</h2>
-        {exists ? <ItemCardDetail store={store as Store} item={item as Item} key={store.storeId} /> : null}
+        {exists ? <ItemCardDetail store={store} item={item as Item} key={store.storeId} /> : null}
         <LoadingOverlay open={storeLoading || itemLoading} />
         <ErrorDialog open={!!(storeError ?? itemError)} error={storeError ?? itemError} />
       </div>

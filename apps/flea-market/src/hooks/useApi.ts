@@ -17,6 +17,9 @@ export function useApi<T>(
 
   useEffect(() => {
     let active = true;
+    // Deliberate reset when `deps` change (see the doc comment above): the stale data
+    // must be cleared before the new request resolves.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setData(undefined);
     setLoading(true);
     setError(undefined);

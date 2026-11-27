@@ -95,6 +95,8 @@ const OrderCard = (orderProps: OrderProps) => {
       // 何もしない
     }
     if (order.orderStatus === 'PENDING') {
+      // Loading flags for the async payload/QR generation started just below.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTransactionPayloadLoading(true);
       setTransactionUriLoading(true);
       createTransactionPayload(
