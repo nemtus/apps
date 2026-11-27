@@ -81,25 +81,24 @@ Cloudflare Workers Builds (Git integration) deploys this site; no Cloudflare tok
 GitHub. The dashboard settings are listed at the top of `wrangler.toml`.
 
 - Pull request → preview URL, commented on the PR by Cloudflare
-- Merge to `main` → production on the workers.dev URL (phase 1) or
-  <https://311-support.nemtus.com> (phase 2)
+- Merge to `main` → production on <https://311-support.nemtus.com>
 
 ### Migration from the rental server (two phases)
 
-**Phase 1 — workers.dev only (current).** `wrangler.toml` has `workers_dev = true` and no
-`routes`, so the site is served at `https://nemtus-311-support-lp.<account-subdomain>.workers.dev`
-while the WordPress site keeps serving `311-support.nemtus.com`. Nothing in DNS changes.
+**Phase 1 — workers.dev only (done).** `wrangler.toml` had `workers_dev = true` and no
+`routes`, so the site was served at `https://nemtus-311-support-lp.<account-subdomain>.workers.dev`
+while the WordPress site kept serving `311-support.nemtus.com`. Nothing in DNS changed.
 
 1. Create the Worker in the Cloudflare dashboard with the Workers Builds settings from
    `wrangler.toml` (the Worker name must be `nemtus-311-support-lp`).
 2. Merge to `main`; the build deploys to the workers.dev URL. Review it there.
 
-**Phase 2 — switch the domain.** Cloudflare refuses to create a Custom Domain on top of an
-existing DNS record, so:
+**Phase 2 — switch the domain (current configuration).** Cloudflare refuses to create a
+Custom Domain on top of an existing DNS record, so:
 
 1. In the `nemtus.com` zone, delete the `A` record for `311-support` (it points at the rental
    server). The hostname stops resolving until step 3 finishes, so do steps 1–3 together.
-2. In `wrangler.toml`, uncomment `routes` and set `workers_dev = false`; merge the PR.
+2. Merge the PR that adds `routes` and sets `workers_dev = false` in `wrangler.toml`.
 3. The deploy attaches the domain and Cloudflare issues the certificate; the site is reachable
    within a few minutes.
 4. Cancel the WordPress hosting once the new site is confirmed.
