@@ -18,23 +18,20 @@
 name = "nemtus-311-support-lp"
 compatibility_date = "2025-06-01"
 
-# Phase 1 (current): served only on the default workers.dev URL
-# (https://nemtus-311-support-lp.<account-subdomain>.workers.dev) while the old WordPress
-# site keeps serving 311-support.nemtus.com. Every page's canonical URL already points at
-# 311-support.nemtus.com, so search engines don't treat the workers.dev copy as a
-# separate site.
-workers_dev = true
+# Served on the custom domain 311-support.nemtus.com (phase 2 of the migration, see
+# README). Cloudflare creates the DNS record and certificate itself when the domain is
+# attached; a Custom Domain cannot be created on top of an existing A/AAAA/CNAME record,
+# so the A record that pointed at the rental server had to be deleted first.
+routes = [
+  { pattern = "311-support.nemtus.com", custom_domain = true },
+]
 
-# Phase 2 (cut-over, see README): delete the A record that points 311-support.nemtus.com
-# at the rental server, then uncomment this. A Custom Domain cannot be created on top of
-# an existing A/AAAA/CNAME record; Cloudflare creates the DNS record and certificate
-# itself when the domain is attached. Set `workers_dev = false` at the same time so the
-# workers.dev copy stops serving.
-# routes = [
-#   { pattern = "311-support.nemtus.com", custom_domain = true },
-# ]
+# The workers.dev copy served the site during phase 1 and is turned off now that the
+# custom domain is live.
+workers_dev = false
 
-# Publish a Preview URL for each pull-request build.
+# Publish a Preview URL for each pull-request build. Set explicitly: `preview_urls`
+# defaults to whatever `workers_dev` is, which is now off.
 preview_urls = true
 
 [assets]
