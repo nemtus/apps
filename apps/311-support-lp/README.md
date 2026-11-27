@@ -102,3 +102,22 @@ Custom Domain on top of an existing DNS record, so:
 3. The deploy attaches the domain and Cloudflare issues the certificate; the site is reachable
    within a few minutes.
 4. Cancel the WordPress hosting once the new site is confirmed.
+
+### `www.311-support.nemtus.com`
+
+The WordPress server redirected `www.311-support.nemtus.com` to the bare hostname, and that URL
+keeps working the same way:
+
+- `wrangler.toml` attaches it as a second Custom Domain, so Cloudflare creates its DNS record
+  and issues a certificate for it. The zone's `*.nemtus.com` certificate does not cover a
+  second-level subdomain like this one.
+- A **Single Redirect** rule in the `nemtus.com` zone (Rules → Redirect Rules), which runs
+  before the Worker, sends it to the bare hostname:
+  - When: `http.host eq "www.311-support.nemtus.com"`
+  - Then: dynamic redirect to `concat("https://311-support.nemtus.com", http.request.uri.path)`,
+    status `301`, **Preserve query string** on
+- The rule is dashboard configuration, not part of this repository. Without it, the `www`
+  hostname would serve the same pages (their canonical URL still points at the bare hostname).
+
+As with the bare hostname, the Custom Domain cannot be created while the old `A` record for
+`www.311-support` exists. Delete that record first, then deploy.
