@@ -9,6 +9,7 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
+    open-pull-requests-limit: 10
     # Supply-chain cooldown: wait 7 days after a release before proposing it.
     cooldown:
       default-days: 7
@@ -34,6 +35,10 @@ updates:
     cooldown:
       default-days: 7
     groups:
+      npm-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
       npm-minor-patch:
         applies-to: version-updates
         update-types:
@@ -53,9 +58,18 @@ updates:
   # superseded by #79, is an open example).
   # `apps/flea-market/worker` and `packages/*` are absent on purpose — they have
   # no lockfile of their own and are updated through the root workspace entry.
-  # The limit is lower than the root entry's because these twelve entries fire
-  # on the same weekly schedule; it caps how much lands for review at once, and
-  # each entry's limit is independent of every other's.
+  # Every entry allows 10 open version-update pull requests, and each entry's
+  # limit is independent of every other's. It used to be 5 here, and pull
+  # requests that could never go green (#93, #109, #435) sat on four of
+  # flea-market's and hackathon-lp-2026's five slots for months — one more and
+  # new updates would have stopped arriving without any signal. Security
+  # updates do not count against this limit.
+  # Each entry with dependencies also has a `<name>-security` group: without
+  # it every advisory opens its own pull request, and a package that ships a
+  # fix every few days gets it closed and reopened each time (hono and
+  # @hono/node-server went through eight pull requests across two directories
+  # in one week). Grouped, a directory's security fixes arrive as one pull
+  # request that Dependabot keeps up to date in place.
   # The `ignore` entries are held majors carried over from the per-app configs
   # of the repositories these apps came from (apps/<name>/.github/dependabot.yml,
   # inert here because GitHub reads only this file). Those copies are superseded
@@ -66,7 +80,7 @@ updates:
     directory: "/apps/flea-market"
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
     cooldown:
       default-days: 7
     groups:
@@ -83,6 +97,10 @@ updates:
           - major
           - minor
           - patch
+      flea-market-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
       flea-market-minor-patch:
         applies-to: version-updates
         update-types:
@@ -120,20 +138,20 @@ updates:
     directory: "/apps/flea-market/functions"
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
     cooldown:
       default-days: 7
     groups:
+      flea-market-functions-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
       flea-market-functions-minor-patch:
         applies-to: version-updates
         update-types:
           - minor
           - patch
     ignore:
-      # firebase-functions 7 rejects firebase-admin 14: its peer range is
-      # ^11.10.0 || ^12.0.0 || ^13.0.0. Revisit when that range widens.
-      - dependency-name: "firebase-admin"
-        update-types: ["version-update:semver-major"]
       # @types/node tracks the Node runtime major; hold the major.
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
@@ -142,7 +160,7 @@ updates:
     directory: "/apps/hackathon"
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
     cooldown:
       default-days: 7
     groups:
@@ -156,6 +174,10 @@ updates:
           - major
           - minor
           - patch
+      hackathon-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
       hackathon-minor-patch:
         applies-to: version-updates
         update-types:
@@ -197,10 +219,14 @@ updates:
     directory: "/apps/hackathon/functions"
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
     cooldown:
       default-days: 7
     groups:
+      hackathon-functions-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
       hackathon-functions-minor-patch:
         applies-to: version-updates
         update-types:
@@ -209,7 +235,8 @@ updates:
     ignore:
       # firebase-functions-test 3.5.0 (its latest) peers firebase-admin
       # ^8 || ^9 || ^10 || ^11 || ^12 || ^13 — so firebase-admin 14 makes this
-      # package unresolvable, exactly as in apps/flea-market/functions above. It
+      # package unresolvable. (apps/flea-market/functions has no such test
+      # dependency and is already on firebase-admin 14, via #484.) It
       # was bumped to ^14.2.0 once and `npm ci` failed until it was put back.
       - dependency-name: "firebase-admin"
         update-types: ["version-update:semver-major"]
@@ -236,7 +263,7 @@ updates:
     directory: "/apps/hackathon-lp"
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
     cooldown:
       default-days: 7
     groups:
@@ -250,7 +277,7 @@ updates:
     directory: "/apps/hackathon-lp-2023"
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
     cooldown:
       default-days: 7
     groups:
@@ -264,7 +291,7 @@ updates:
     directory: "/apps/hackathon-lp-2024"
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
     cooldown:
       default-days: 7
     groups:
@@ -278,7 +305,7 @@ updates:
     directory: "/apps/hackathon-lp-2025"
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
     cooldown:
       default-days: 7
     groups:
@@ -293,7 +320,7 @@ updates:
     directory: "/apps/hackathon-lp-2026"
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
     cooldown:
       default-days: 7
     groups:
@@ -307,6 +334,10 @@ updates:
           - major
           - minor
           - patch
+      hackathon-lp-2026-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
       hackathon-lp-2026-minor-patch:
         applies-to: version-updates
         update-types:
@@ -324,10 +355,14 @@ updates:
     directory: "/apps/xymposium-lp"
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
     cooldown:
       default-days: 7
     groups:
+      xymposium-lp-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
       xymposium-lp-minor-patch:
         applies-to: version-updates
         update-types:
@@ -338,7 +373,7 @@ updates:
     directory: "/apps/xymposium-lp-2024"
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
     cooldown:
       default-days: 7
     groups:
@@ -384,6 +419,10 @@ updates:
           - major
           - minor
           - patch
+      xymposium-lp-2024-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
       xymposium-lp-2024-minor-patch:
         applies-to: version-updates
         update-types:
@@ -408,7 +447,7 @@ updates:
     directory: "/apps/xymposium-lp-2025"
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
     cooldown:
       default-days: 7
     groups:
@@ -423,7 +462,7 @@ updates:
     directory: "/apps/stir-hosyu-lp"
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
     cooldown:
       default-days: 7
     groups:
@@ -438,7 +477,7 @@ updates:
     directory: "/apps/311-support-lp"
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
     cooldown:
       default-days: 7
     groups:
