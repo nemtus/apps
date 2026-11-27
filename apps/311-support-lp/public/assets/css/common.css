@@ -1,0 +1,677 @@
+/*
+ * common.css — base styles and the components shared by every page of
+ * 311-support.nemtus.com. Page-specific layout lives in top.css / kigou.css / sakura.css.
+ *
+ * Breakpoints follow the original Elementor site:
+ *   desktop >= 1025px, tablet 768–1024px, mobile <= 767px.
+ */
+
+/* ---------- Tokens ---------- */
+:root {
+  --ink: #262626;
+  --white: #fff;
+  --font-serif: "Noto Serif JP", "Noto Sans JP", serif;
+  --font-sans: "Noto Sans JP", sans-serif;
+  --font-latin: "Lato", "Noto Sans JP", sans-serif;
+}
+
+/* ---------- Reset / base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  background: #fff;
+  color: #333;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+  font-weight: 600;
+  line-height: 1;
+  color: inherit;
+}
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
+p {
+  margin: 0 0 0.9rem;
+}
+a {
+  color: #c36;
+  text-decoration: none;
+  background-color: transparent;
+}
+img {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+  border: none;
+  vertical-align: middle;
+}
+strong,
+b {
+  font-weight: bolder;
+}
+button {
+  font: inherit;
+}
+
+/* Text blocks lose the bottom margin of their last paragraph only where the original did. */
+.serif { font-family: var(--font-serif); }
+.sans { font-family: var(--font-sans); }
+.latin { font-family: var(--font-latin); }
+.u { text-decoration: underline; }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Elements shown only at some widths (Elementor "hide on desktop/tablet/mobile"). */
+@media (min-width: 1025px) {
+  .hide-pc { display: none !important; }
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+  .hide-tb { display: none !important; }
+}
+@media (max-width: 767px) {
+  .hide-sp { display: none !important; }
+}
+
+/* ---------- Entrance animations (driven by assets/js/main.js) ----------
+ * Elements with data-anim stay invisible until they scroll into view, then play the
+ * named animation once. Without JS (no .js class on <html>) they are simply visible.
+ * data-anim-sp="none" disables the animation on mobile, data-delay="500" delays it (ms). */
+.js [data-anim] { visibility: hidden; }
+.js [data-anim].is-in {
+  visibility: visible;
+  animation-duration: 1.25s;
+  animation-fill-mode: both;
+}
+.js [data-anim="fadeIn"].is-in { animation-name: fadeIn; }
+.js [data-anim="fadeInUp"].is-in { animation-name: fadeInUp; }
+.js [data-anim="fadeInDown"].is-in { animation-name: fadeInDown; }
+.js [data-anim="fadeInRight"].is-in { animation-name: fadeInRight; }
+@media (max-width: 767px) {
+  .js [data-anim-sp="none"] { visibility: visible; }
+  .js [data-anim-sp="none"].is-in { animation-name: none; }
+  .js [data-anim-sp="fadeIn"].is-in { animation-name: fadeIn; }
+  .js [data-anim-sp="fadeInUp"].is-in { animation-name: fadeInUp; }
+}
+/* data-anim-pc="none": animate on mobile only (desktop and tablet show the element as is). */
+@media (min-width: 768px) {
+  .js [data-anim-pc="none"] { visibility: visible; }
+  .js [data-anim-pc="none"].is-in { animation-name: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .js [data-anim] { visibility: visible; }
+  .js [data-anim].is-in { animation: none; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translate3d(0, 100%, 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translate3d(0, -100%, 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translate3d(100%, 0, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------- Button (pill) ---------- */
+.btn {
+  display: inline-block;
+  padding: 15px 30px;
+  border: 1px solid #fff;
+  border-radius: 50px;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--font-latin);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 2em;
+  letter-spacing: 3px;
+  text-align: center;
+  transition: all 0.3s;
+}
+.btn:hover,
+.btn:focus-visible {
+  background: #fff;
+  color: var(--ink);
+}
+@media (max-width: 767px) {
+  .btn {
+    padding: 10px 20px;
+    font-size: 0.8em;
+  }
+}
+
+/* ---------- Background overlay helper ---------- */
+.has-overlay {
+  position: relative;
+}
+.has-overlay > .overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.has-overlay > :not(.overlay) {
+  position: relative;
+}
+.has-overlay > .shape {
+  position: absolute;
+}
+
+/* ---------- Header (tablet / mobile only) ---------- */
+.site-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 255;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.site-header__logo {
+  display: flex;
+  justify-content: center;
+  width: 20%;
+}
+.site-header__logo img {
+  display: block;
+  width: 150px;
+  max-width: 150px;
+}
+.site-header__lang {
+  width: 80%;
+  margin: 0;
+  padding: 0 50px 0 0;
+  color: #fff;
+  font-family: var(--font-latin);
+  font-weight: 400;
+  line-height: 2em;
+  letter-spacing: 3px;
+  text-align: end;
+}
+.site-header__lang a {
+  color: #fff;
+}
+.site-header__lang .current {
+  padding: 2px 0 5px 2px;
+  border-bottom: solid 4px #dc4a3d;
+  color: #dc4a3d;
+  font-weight: bolder;
+}
+@media (min-width: 1025px) {
+  .site-header { display: none; }
+}
+@media (max-width: 767px) {
+  .site-header {
+    padding-top: 5px;
+  }
+  .site-header__logo { width: 25%; }
+  /* The original renders 80px x max-width 80% of an 80px-wide link = 64px. */
+  .site-header__logo img { width: 64px; }
+  .site-header__lang {
+    width: 75%;
+    padding: 0 20px 0 0;
+  }
+}
+
+/* ---------- Wave-brush shape dividers ---------- */
+.shape {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  direction: ltr;
+  pointer-events: none;
+}
+.shape svg {
+  position: relative;
+  left: 50%;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 50px;
+  transform: translateX(-50%);
+  fill: #fff;
+}
+.shape--top { top: -1px; }
+.shape--bottom { bottom: -1px; transform: rotate(180deg); }
+@media (max-width: 1024px) {
+  .shape svg { height: 50px; }
+}
+
+/* ---------- Dotted ("dots_tribal") divider ---------- */
+.dots-divider {
+  padding-block: 15px;
+}
+.dots-divider::before {
+  content: "";
+  display: block;
+  width: 100%;
+  min-height: 20px;
+  background-color: #fff;
+  -webkit-mask: url("../img/dots-tribal.svg") 0 center / auto 100% repeat-x;
+  mask: url("../img/dots-tribal.svg") 0 center / auto 100% repeat-x;
+}
+
+/* ---------- "Continuous donations" + destinations section ---------- */
+.donate-info {
+  padding: 100px 0;
+  background: url("../img/touch-2579147_1920.jpg") 0 0 / auto;
+  color: #fff;
+}
+.donate-info > .overlay {
+  background: #000;
+  opacity: 0.55;
+}
+.donate-info__inner {
+  /* A flex column, like Elementor's widget wrapper: child margins add up instead of collapsing. */
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  min-height: 400px;
+  margin: 0 auto;
+}
+.donate-info__title {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 2em;
+  letter-spacing: 3px;
+  text-align: center;
+}
+.donate-info__lead {
+  font-family: var(--font-sans);
+  line-height: 2em;
+  letter-spacing: 1px;
+  text-align: center;
+}
+.donate-info__periods {
+  display: flex;
+  margin: 20px 0;
+}
+.donate-info__period {
+  flex: 1 1 50%;
+  margin: 15px 15px 15px 0;
+  padding: 20px;
+  border: 1px solid #fff;
+  font-family: var(--font-sans);
+  font-size: 1.3em;
+  font-weight: 500;
+  line-height: 2em;
+  letter-spacing: 3px;
+  text-align: center;
+}
+.donate-info__period + .donate-info__period {
+  margin: 15px 0 15px 15px;
+}
+.donate-info__text {
+  font-family: var(--font-sans);
+  line-height: 2em;
+  letter-spacing: 1px;
+  text-align: justify;
+}
+.donate-info .dots-divider {
+  margin: 30px 0 10px;
+}
+.donate-info__subtitle {
+  margin: 30px 0 0;
+  /* 20px widget padding + the 0.9rem bottom margin of the original's <p> */
+  padding: 0 0 calc(20px + 0.9rem);
+  font-family: var(--font-serif);
+  font-size: 1.4em;
+  font-weight: 500;
+  line-height: 2em;
+  letter-spacing: 1px;
+  text-align: center;
+}
+.donate-info__subtitle p { margin: 0; }
+.donate-info__usage {
+  padding: 0 0 30px;
+}
+.donate-info__links {
+  font-family: var(--font-sans);
+  font-size: 0.9em;
+  line-height: 2em;
+  letter-spacing: 1px;
+  text-align: center;
+  text-decoration: underline;
+}
+.donate-info__links a {
+  color: #fff;
+}
+@media (min-width: 1025px) {
+  .donate-info { background-attachment: fixed; }
+}
+@media (max-width: 1024px) {
+  .donate-info { padding: 100px 30px; }
+}
+@media (max-width: 767px) {
+  .donate-info {
+    padding: 50px 20px;
+    background-position: -64em 0;
+    background-size: cover;
+  }
+  .donate-info__title {
+    font-size: 1.5em;
+    text-align: justify;
+  }
+  .donate-info__lead {
+    margin-top: 20px;
+    font-size: 0.8em;
+    text-align: start;
+  }
+  .donate-info__periods { display: block; }
+  .donate-info__period,
+  .donate-info__period + .donate-info__period {
+    margin: 0;
+    padding: 15px 0;
+    font-size: 1em;
+  }
+  .donate-info__period + .donate-info__period { margin-top: 20px; }
+  .donate-info__text,
+  .donate-info__usage {
+    font-size: 0.8em;
+    line-height: 1.8em;
+  }
+  .donate-info .dots-divider { margin: 0; }
+  .donate-info__subtitle {
+    margin: 0;
+    padding: 30px 0 calc(20px + 0.9rem);
+    font-size: 1em;
+    line-height: 1.8em;
+  }
+  .donate-info__links {
+    font-size: 0.8em;
+    line-height: 1.8em;
+    text-align: justify;
+  }
+}
+
+/* ---------- NEM / JPY donation bands ---------- */
+.donate-band {
+  overflow: hidden;
+  padding: 50px 80px;
+  background: var(--ink) center / cover no-repeat;
+  color: #fff;
+}
+.donate-band--nem { background-image: url("../img/donate.jpg"); }
+.donate-band--jpy { background-image: url("../img/turu2.jpg"); }
+.donate-band > .overlay {
+  background: #000;
+  opacity: 0.5;
+}
+.donate-band__inner {
+  display: flex;
+  align-items: center;
+  max-width: 1000px;
+  min-height: 300px;
+  margin: 0 auto;
+}
+.donate-band__body {
+  width: 65.167%;
+}
+.donate-band__action {
+  width: 34.75%;
+  text-align: right;
+}
+.donate-band__title {
+  margin-bottom: 20px;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 2em;
+  letter-spacing: 3px;
+}
+.donate-band__text {
+  display: flow-root;
+  font-family: var(--font-sans);
+  line-height: 2em;
+  letter-spacing: 1px;
+  text-align: justify;
+}
+.donate-band__note {
+  margin-top: 20px;
+  padding-right: 100px;
+}
+.donate-band__note p {
+  margin: 0;
+  padding: 10px;
+  border: 1px solid #fff;
+  font-family: var(--font-latin);
+  line-height: 2em;
+  letter-spacing: 3px;
+  text-align: center;
+}
+.donate-band .btn {
+  width: auto;
+}
+@media (max-width: 1024px) {
+  .donate-band { padding: 30px; }
+  /* Body and button wrap onto two flex lines that share the spare height equally. */
+  .donate-band__inner {
+    flex-wrap: wrap;
+    min-height: 400px;
+  }
+  .donate-band__body,
+  .donate-band__action { width: 100%; }
+  .donate-band__title,
+  .donate-band__action { text-align: center; }
+  .donate-band--jpy .donate-band__action { margin-top: 20px; }
+  .donate-band__note { padding-right: 0; }
+}
+@media (max-width: 767px) {
+  .donate-band { padding: 15px 20px 50px; }
+  .donate-band__title {
+    margin-bottom: 0;
+    padding: 30px 0;
+    font-size: 1em;
+  }
+  .donate-band__text {
+    font-size: 0.8em;
+    line-height: 1.8em;
+  }
+  /* The original pulls the NEM button 50px up out of a 1px-high column. */
+  .donate-band--nem .donate-band__action { height: 1px; }
+  .donate-band--nem .donate-band__action .btn {
+    position: relative;
+    top: -50px;
+  }
+  .donate-band--jpy .donate-band__action { margin-top: 15px; padding-top: 15px; }
+  .donate-band__note p {
+    padding: 5px 10px;
+    font-size: 0.8em;
+  }
+  .donate-band .btn { width: auto; }
+}
+
+/* ---------- Organisation footer ---------- */
+.org-footer {
+  overflow: hidden;
+  margin-bottom: 100px;
+  padding: 100px 0 0;
+  color: var(--ink);
+}
+.org-footer__inner {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.org-footer__name {
+  margin: 50px 0 0;
+  font-family: var(--font-sans);
+  line-height: 2em;
+  letter-spacing: 3px;
+  text-align: center;
+}
+.org-footer__url {
+  margin: 0;
+  font-family: var(--font-latin);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 2em;
+  letter-spacing: 3px;
+  text-align: center;
+}
+.org-footer__url a { color: var(--ink); }
+@media (max-width: 1024px) {
+  .org-footer {
+    margin-bottom: 0;
+    padding: 80px 0;
+  }
+}
+@media (max-width: 767px) {
+  .org-footer { padding: 80px 20px; }
+  .org-footer__name {
+    margin-top: 30px;
+    font-size: 0.8em;
+  }
+}
+
+/* ---------- Bottom page tiles (links to the two project pages) ---------- */
+.page-tiles {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  min-height: 120px;
+  margin-top: -5px;
+}
+.page-tile {
+  display: flex;
+  flex: 1 1 50%;
+  align-items: center;
+  padding: 40px 0;
+  background: center / cover no-repeat;
+  color: #fff;
+}
+.page-tile--sakura { background-image: url("../img/sakura_01.jpg"); background-position: 0 0; }
+.page-tile--kigou { background-image: url("../img/shutterstock_1111717889-scaled.jpg"); background-position: bottom center; }
+.page-tile > .overlay {
+  background: #000;
+  opacity: 0.35;
+  transition: background 0.3s, opacity 0.3s;
+}
+.page-tile:hover > .overlay { opacity: 0.7; }
+.page-tile--sakura:hover > .overlay { background: #4a2828; }
+.page-tile__label {
+  width: 69.586%;
+  font-family: var(--font-serif);
+  font-size: 1.2em;
+  font-weight: 500;
+  line-height: 2em;
+  letter-spacing: 3px;
+  text-align: end;
+}
+.page-tile__arrow {
+  width: 30.229%;
+  padding-left: 5px;
+  line-height: 0;
+}
+.page-tile--kigou .page-tile__label { width: 60.067%; }
+.page-tile--kigou .page-tile__arrow { width: 39.748%; padding-left: 10px; }
+.page-tile__arrow img { width: 50px; }
+/* The project pages show a "site top" tile instead of their own project's tile. */
+.page-tile--top {
+  background-image: url("../img/touch-2579147_1920.jpg");
+  background-position: 0 45%;
+}
+.page-tile--top .page-tile__label { width: 59.815%; }
+.page-tile--top .page-tile__arrow { width: 40%; }
+@media (max-width: 1024px) {
+  .page-tiles { min-height: 60px; margin-top: 0; }
+  .page-tile { padding: 30px 0; }
+  /* 11.2px text in a 16px/1.5 line box in the original: lines stay 24px tall. */
+  .page-tile__label { width: 75%; font-size: 0.7em; line-height: 24px; }
+  .page-tile__arrow,
+  .page-tile--kigou .page-tile__arrow { width: 25%; padding-left: 5px; }
+  .page-tile--kigou .page-tile__label { width: 65%; }
+  .page-tile--kigou .page-tile__arrow { width: 30%; }
+  .page-tile--top { background-position: 0 0; }
+  .page-tile--top .page-tile__label { width: 64%; }
+}
+@media (max-width: 767px) {
+  .page-tiles { display: block; }
+  .page-tile {
+    display: block;
+    padding: 20px 0;
+  }
+  .page-tile__label,
+  .page-tile--kigou .page-tile__label,
+  .page-tile--top .page-tile__label {
+    display: block;
+    width: 100%;
+    font-size: 0.8em;
+    line-height: 2em;
+    text-align: center;
+  }
+  .page-tile__arrow,
+  .page-tile--kigou .page-tile__arrow,
+  .page-tile--top .page-tile__arrow {
+    display: block;
+    width: 100%;
+    padding-left: 5px;
+    line-height: 24px;
+    text-align: center;
+  }
+}
+
+/* ---------- Scroll-to-top button ---------- */
+.to-top {
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s, visibility 0.4s;
+}
+.to-top.is-shown {
+  opacity: 1;
+  visibility: visible;
+}
+.to-top img {
+  width: 50px;
+  height: 50px;
+}
