@@ -25,8 +25,9 @@ compatibility_date = "2025-06-01"
 #
 # www.311-support.nemtus.com is attached too, only so that it keeps resolving with a valid
 # certificate (the zone's *.nemtus.com certificate does not cover a second-level
-# subdomain; a Custom Domain gets its own). A Single Redirect rule in the nemtus.com zone
-# sends it to the bare hostname with a 301 before the Worker runs; see README.
+# subdomain; a Custom Domain gets its own). A zone-wide www-to-root Single Redirect rule
+# in the nemtus.com zone sends https:// requests to the bare hostname with a 301 before
+# the Worker runs; see README.
 routes = [
   { pattern = "311-support.nemtus.com", custom_domain = true },
   { pattern = "www.311-support.nemtus.com", custom_domain = true },
