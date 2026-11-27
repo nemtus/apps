@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Box, Button, Container, Stack } from '@mui/material';
 import { api } from '../../../../../../../../configs/api';

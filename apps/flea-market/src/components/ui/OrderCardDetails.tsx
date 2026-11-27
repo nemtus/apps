@@ -77,6 +77,9 @@ const OrderCardDetail = (orderProps: OrderProps) => {
 
   useEffect(() => {
     if (order.orderStatus === 'WAITING_PRICE_INFO') {
+      // The step index follows order.orderStatus, and the PENDING branch starts the
+      // async payload/QR generation. Kept as-is to preserve behaviour.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveStepIndex(0);
     }
     if (order.orderStatus === 'PENDING') {

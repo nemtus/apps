@@ -140,8 +140,10 @@ Auth user. Admin-only actions across `firestore.rules` key off
 
 ## Conventions
 
-- TypeScript throughout; ESLint uses `airbnb` + `airbnb-typescript` +
-  `prettier`. Run `npm run format` before committing frontend changes.
+- TypeScript throughout; ESLint 9 flat config (`eslint.config.mjs`):
+  typescript-eslint + react / react-hooks / jsx-a11y / import presets + `prettier`,
+  plus the former airbnb rule set frozen in `eslint.airbnb-rules.mjs`. Run
+  `npm run format` before committing frontend changes.
 - Code comments and all user-facing strings are in Japanese — match the existing
   language when editing.
 - Node 22 is the pinned runtime for functions (`functions/package.json`

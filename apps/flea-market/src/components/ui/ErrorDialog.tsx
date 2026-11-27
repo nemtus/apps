@@ -14,6 +14,9 @@ const ErrorDialog = (props: Props) => {
   const [dialogError, setDialogError] = useState(error);
 
   useEffect(() => {
+    // Mirrors the props into local state so the dialog can also be closed locally.
+    // Kept as-is to preserve behaviour; deriving it during render is a possible follow-up.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDialogOpen(open);
     setDialogError(error);
   }, [open, error]);
