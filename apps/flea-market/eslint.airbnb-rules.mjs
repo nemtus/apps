@@ -37,7 +37,7 @@
 //   react/prefer-es6-class: Class components / propTypes only; the app has neither.
 //   react/prefer-exact-props: Class components / propTypes only; the app has neither.
 //   react/prefer-stateless-function: Class components / propTypes only; the app has neither.
-//   react/require-default-props: Class components / propTypes only; the app has neither.
+//   react/require-default-props: Demands defaultProps, which React 19 no longer supports on function components (default parameters are used instead).
 //   react/sort-comp: Class components / propTypes only; the app has neither.
 //   react/state-in-constructor: Class components / propTypes only; the app has neither.
 //   react/static-property-placement: Class components / propTypes only; the app has neither.
