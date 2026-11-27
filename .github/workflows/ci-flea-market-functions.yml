@@ -59,10 +59,8 @@ jobs:
           cache: npm
           cache-dependency-path: apps/flea-market/functions/package-lock.json
       # Audit the lockfile before install so a known-bad version is caught before its
-      # (deferred) install scripts could ever run. `high` is achievable for this package:
-      # the 7 remaining advisories are all moderate, led by a `uuid` finding whose only
-      # fix is firebase-admin 14 — a major Dependabot holds on purpose, because
-      # firebase-functions 7 peers firebase-admin ^11 || ^12 || ^13.
+      # (deferred) install scripts could ever run. With firebase-admin 14 (which dropped
+      # the vulnerable `uuid` chain) the lockfile audits clean.
       - name: Audit before install
         run: npm audit --package-lock-only --audit-level=high
       - name: Socket Firewall (firewall-free, no token)
